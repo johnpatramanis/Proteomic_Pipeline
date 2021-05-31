@@ -90,27 +90,24 @@ done;
 
 
 
-#### DE
-sample="DENISOV";
-pop="DENISOV";
+#### DENIS
+sample="DENISOVA";
+pop="DENISOVA";
 SAMPLE="$sample"_"$pop"_ADNA
 
 # samtools view -h -b -o "$pop"_"$sample"_"$chr".bam ftp://hgdownload.soe.ucsc.edu/gbdb/hg19/bbi/T_hg19_1000g.bam $chr;
 
-wget ftp://hgdownload.soe.ucsc.edu/gbdb/hg19/bbi/T_hg19_1000g.bam > "SAMPLE".bam
-samtools index -b "SAMPLE".bam;
+wget ftp://hgdownload.soe.ucsc.edu/gbdb/hg19/bbi/T_hg19_1000g.bam > "$SAMPLE".bam
+wget ftp://hgdownload.soe.ucsc.edu/gbdb/hg19/bbi/T_hg19_1000g.bam.bai > "$SAMPLE".bam.bai
 
 
 
 
 #### ANCIENT AMH	
-	
-	
-	
-	
+
 	
 
 
 
-	
+cd ..
 echo "Finished!";
