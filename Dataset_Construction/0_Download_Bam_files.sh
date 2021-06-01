@@ -97,8 +97,8 @@ SAMPLE="$sample"_"$pop"_ADNA
 
 # samtools view -h -b -o "$pop"_"$sample"_"$chr".bam ftp://hgdownload.soe.ucsc.edu/gbdb/hg19/bbi/T_hg19_1000g.bam $chr;
 
-wget ftp://hgdownload.soe.ucsc.edu/gbdb/hg19/bbi/T_hg19_1000g.bam > "$SAMPLE".bam
-wget ftp://hgdownload.soe.ucsc.edu/gbdb/hg19/bbi/T_hg19_1000g.bam.bai > "$SAMPLE".bam.bai
+wget -O "$SAMPLE".bam ftp://hgdownload.soe.ucsc.edu/gbdb/hg19/bbi/T_hg19_1000g.bam
+wget -O "$SAMPLE".bam.bai ftp://hgdownload.soe.ucsc.edu/gbdb/hg19/bbi/T_hg19_1000g.bam.bai
 
 
 
