@@ -17,7 +17,7 @@ print(CHROMOSOMES)
 ## Data Pipeline ##
 
 
-
+#Make sure bam file has correct chromosome naming scheme
 
 rule format_name:
     input:
@@ -40,7 +40,7 @@ rule format_name:
         sed -e 's/SN:X/SN:chrX/' | sed -e 's/SN:Y/SN:chrY/' | \
         sed -e 's/SN:MT/SN:chrM/' | samtools reheader - {input} > {output}"""
 
-
+#Re Index it
 rule format_index_name:
     input:
         "BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT.bam"
@@ -49,7 +49,7 @@ rule format_index_name:
     shell:
         "samtools index -b {input}"
 
-
+#Split it into target chromosomes
 rule format_split_into_chromosomes:
     input:
         BAM="BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT.bam",
@@ -90,7 +90,7 @@ rule format_split_into_chromosomes:
             # for CHR in CHROMOSOMES:
 ##
 
-
+#Use ANGSD to transform to fasta
 rule from_bam_to_fasta_ANGSD:
     input:
         expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam",CHR=CHROMOSOMES),
@@ -101,3 +101,9 @@ rule from_bam_to_fasta_ANGSD:
         COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam -r chr{CHR} -out BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR};""",CHR=CHROMOSOMES)
         for CMD in COMMANDS:
             shell(CMD)
+
+
+#######################################################################################################################################################################
+## DNA to Proteins Translation ##
+
+#Use custom R script
