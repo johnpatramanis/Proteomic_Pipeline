@@ -56,28 +56,48 @@ rule format_split_into_chromosomes:
         BAI="BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT.bam.bai",
         GENE_LOCS="Gene_locs.txt",
     output:
-        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam", CHR=CHROMOSOMES)
+        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam", CHR=CHROMOSOMES),
+        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES)
     run:
         NAME=input.BAM[:-4]
         for CHR in CHROMOSOMES:
             shell("""samtools view -b {} chr{} > {}_{}.bam; """.format(input.BAM,CHR,NAME,CHR))
+            shell("""samtools index -b {}_{}.bam; """.format(NAME,CHR))
 
 
-#
+##
+#Maybe add another formating step here for samples that are already split into chromosomes
+##
+# def get_split_chroms_or_formatted_whole(wcs):
+    # if:
+        # return input1
+    # if:
+        # return input2
+        
 
-	#cut -f 2 ./Gene_locs.txt |sort |uniq |while read chr;
-		# do  
-			
-			# echo 'Isolating Chromosome '$chr' from sample '$sample',  ';
-			# samtools view -b "$sample"_corrected.bam chr"$chr" > "$pop"_"$sample"_"$chr".bam ;
-			# echo 'Indexing Sample '$pop'_'$sample' ';
-			# samtools index -b "$pop"_"$sample"_"$chr".bam;
-			
-			# sleep 2
-			
-			
-		# done;
-        # samtools view -b BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT.bam chr1 > BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_1.bam
-        
-        
-        
+# rule format_split_into_chromosomes:
+    # input:
+        # BAM=get_split_chroms_or_formatted_whole,
+        # GENE_LOCS="Gene_locs.txt",
+    # output:
+        # expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam", CHR=CHROMOSOMES)
+    # run:
+        # if input1:
+            # NAME=input.BAM[:-4]
+            # for CHR in CHROMOSOMES:
+                # shell("""samtools view -b {} chr{} > {}_{}.bam; """.format(input.BAM,CHR,NAME,CHR))
+        # if input2:
+            # for CHR in CHROMOSOMES:
+##
+
+
+rule from_bam_to_fasta_ANGSD:
+    input:
+        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam",CHR=CHROMOSOMES),
+        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES)
+    output:
+        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES)
+    run:
+        COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam -r chr{CHR} -out BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR};""",CHR=CHROMOSOMES)
+        for CMD in COMMANDS:
+            shell(CMD)
