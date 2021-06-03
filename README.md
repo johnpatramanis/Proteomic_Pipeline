@@ -12,3 +12,5 @@ To Do list:
    1) Extend pipe to ANGSD
    2) Reform (WORKSPACE)---((OG BAM FILES), (FORMATTED BAM FILES), (SPLIT INTO CHROMOSOMES) )
    3) Extend to custom R scripts
+   4) Alternative path to FASTA files for pre split bam files
+   5) Make 'FRMT' files temporary? 
