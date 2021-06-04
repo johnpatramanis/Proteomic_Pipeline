@@ -1,4 +1,12 @@
+#Run using snakemake -j1 --latency-wait 120
+#Depend
+import os
+
+
+
+
 ##### Load Input Files and usefull info  #####
+
 
 SAMPLES=[]
 SAMPLE_FILE=open('Samples.txt','r')
@@ -122,7 +130,13 @@ rule from_bam_to_fasta_ANGSD:
         COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i BAM_FILES/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out BAM_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
-
+        #check to see if all files were made. EG if a sample lacks a Y chromosome angsd wont run for that one and wont make the file
+        #, thus we make a dummy file in its place so that the pipeline does nto crash!
+        for sample in SAMPLES:
+            for CHR in CHROMOSOMES:
+                path='./BAM_FILES/{sample}_FRMT_{CHR}.fa.gz'
+                if os.path.exists(path)==False:
+                    shell('touch ./BAM_FILES/{sample}_FRMT_{CHR}.fa.gz')
 
 #######################################################################################################################################################################
 ##Actual DNA to Proteins Translation ##
