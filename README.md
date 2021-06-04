@@ -9,7 +9,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should event
    
    
 To Do list:
-   1) Extend pipe to ANGSD
+   1) Error in ANGSD line, if no Y chromosome
    2) Reform (WORKSPACE)---((OG BAM FILES), (FORMATTED BAM FILES), (SPLIT INTO CHROMOSOMES) )
    3) Generate plot for pipeline?
    4) Extend to custom R scripts
