@@ -136,7 +136,8 @@ rule from_bam_to_fasta_ANGSD:
             for CHR in CHROMOSOMES:
                 path='./BAM_FILES/{sample}_FRMT_{CHR}.fa.gz'
                 if os.path.exists(path)==False:
-                    shell('touch ./BAM_FILES/{sample}_FRMT_{CHR}.fa.gz')
+                    shell('touch ./BAM_FILES/{sample}_FRMT_{CHR}.fa')
+                    shell('gzip ./BAM_FILES/{sample}_FRMT_{CHR}.fa')
 
 #######################################################################################################################################################################
 ##Actual DNA to Proteins Translation ##
