@@ -22,8 +22,7 @@ print(CHROMOSOMES)
 
 rule all:
     input:
-        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
-        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("BAM_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
         
         
         
@@ -112,16 +111,17 @@ rule format_split_into_chromosomes:
 ####
 
 #Use ANGSD to transform to fasta
-# rule from_bam_to_fasta_ANGSD:
-    # input:
-        # expand("BAM_FILES/{sample}_FRMT_{CHR}.bam",CHR=CHROMOSOMES),
-        # expand("BAM_FILES/{sample}_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES)
-    # output:
-        # expand("BAM_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES)
-    # run:
-        # COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i BAM_FILES/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out BAM_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES)
-        # for CMD in COMMANDS:
-            # shell(CMD)
+rule from_bam_to_fasta_ANGSD:
+    input:
+        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam",CHR=CHROMOSOMES,sample=SAMPLES),
+        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES,sample=SAMPLES)
+    output:
+        expand("BAM_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
+
+    run:
+        COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i BAM_FILES/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out BAM_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=SAMPLES)
+        for CMD in COMMANDS:
+            shell(CMD)
 
 
 #######################################################################################################################################################################
