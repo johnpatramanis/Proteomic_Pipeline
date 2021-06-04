@@ -1,5 +1,11 @@
 ##### Load Input Files and usefull info  #####
 
+SAMPLES=[]
+SAMPLE_FILE=open('Samples.txt','r')
+for line in SAMPLE_FILE:
+    SAMPLES.append(line.strip())
+print(SAMPLES)
+
 
 CHROMOSOMES=[]
 GENE_LOCS=open("Gene_locs.txt","r")
@@ -11,8 +17,18 @@ CHROMOSOMES=list(set(CHROMOSOMES))
 CHROMOSOMES.sort()
 print(CHROMOSOMES)
 
+#######################################################################################################################################################################
+## Starting Rule
 
-
+rule all:
+    input:
+        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
+        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
+        
+        
+        
+        
+        
 #######################################################################################################################################################################
 ## Data Pipeline ##
 
@@ -21,9 +37,9 @@ print(CHROMOSOMES)
 
 rule format_name:
     input:
-        "BAM_FILES/DENISOVA_DENISOVA_ADNA.bam"
+        "BAM_FILES/{sample}.bam"
     output:
-        "BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT.bam"
+        "BAM_FILES/{sample}_FRMT.bam"
     shell: 
         """samtools view -H {input} |\
         sed -e 's/SN:1/SN:chr1/' | sed -e 's/SN:2/SN:chr2/' | \
@@ -40,32 +56,37 @@ rule format_name:
         sed -e 's/SN:X/SN:chrX/' | sed -e 's/SN:Y/SN:chrY/' | \
         sed -e 's/SN:MT/SN:chrM/' | samtools reheader - {input} > {output}"""
 
+
 #Re Index it
 rule format_index_name:
     input:
-        "BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT.bam"
+        "BAM_FILES/{sample}_FRMT.bam"
     output:
-        "BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT.bam.bai"
+        "BAM_FILES/{sample}_FRMT.bam.bai"
     shell:
         "samtools index -b {input}"
+
 
 #Split it into target chromosomes
 rule format_split_into_chromosomes:
     input:
-        BAM="BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT.bam",
-        BAI="BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT.bam.bai",
+        BAM=expand("BAM_FILES/{sample}_FRMT.bam",sample=SAMPLES),
+        BAI=expand("BAM_FILES/{sample}_FRMT.bam.bai",sample=SAMPLES),
         GENE_LOCS="Gene_locs.txt",
     output:
-        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam", CHR=CHROMOSOMES),
-        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES)
+        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
+        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
     run:
-        NAME=input.BAM[:-4]
-        for CHR in CHROMOSOMES:
-            shell("""samtools view -b {} chr{} > {}_{}.bam; """.format(input.BAM,CHR,NAME,CHR))
-            shell("""samtools index -b {}_{}.bam; """.format(NAME,CHR))
+        COMMANDS1=expand("""samtools view -b BAM_FILES/{sample}_FRMT.bam chr{CHR} > BAM_FILES/{sample}_FRMT_{CHR}.bam; """,CHR=CHROMOSOMES,sample=SAMPLES)
+        COMMANDS2=expand("""samtools index -b BAM_FILES/{sample}_FRMT_{CHR}.bam;  """,CHR=CHROMOSOMES,sample=SAMPLES)
+        
+        for CMD in COMMANDS1:
+            shell(CMD)
+        for CMD2 in COMMANDS2:
+            shell(CMD2)
 
 
-##
+#####
 #Maybe add another formating step here for samples that are already split into chromosomes
 ##
 # def get_split_chroms_or_formatted_whole(wcs):
@@ -88,22 +109,22 @@ rule format_split_into_chromosomes:
                 # shell("""samtools view -b {} chr{} > {}_{}.bam; """.format(input.BAM,CHR,NAME,CHR))
         # if input2:
             # for CHR in CHROMOSOMES:
-##
+####
 
 #Use ANGSD to transform to fasta
-rule from_bam_to_fasta_ANGSD:
-    input:
-        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam",CHR=CHROMOSOMES),
-        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES)
-    output:
-        expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES)
-    run:
-        COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam -r chr{CHR} -out BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR};""",CHR=CHROMOSOMES)
-        for CMD in COMMANDS:
-            shell(CMD)
+# rule from_bam_to_fasta_ANGSD:
+    # input:
+        # expand("BAM_FILES/{sample}_FRMT_{CHR}.bam",CHR=CHROMOSOMES),
+        # expand("BAM_FILES/{sample}_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES)
+    # output:
+        # expand("BAM_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES)
+    # run:
+        # COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i BAM_FILES/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out BAM_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES)
+        # for CMD in COMMANDS:
+            # shell(CMD)
 
 
 #######################################################################################################################################################################
-## DNA to Proteins Translation ##
+##Actual DNA to Proteins Translation ##
 
 #Use custom R script
