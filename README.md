@@ -9,7 +9,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should event
    
    
 To Do list:
-   1) Dummy file command for angsd output
+   1) angsd asks if you want to overwrite-> always do?
    2) Reform (WORKSPACE)---((OG BAM FILES), (FORMATTED BAM FILES), (SPLIT INTO CHROMOSOMES) )
    3) Generate plot for pipeline?
    4) Extend to custom R scripts
