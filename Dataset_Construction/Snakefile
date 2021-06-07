@@ -20,7 +20,7 @@ GENE_LOCS=open("Gene_locs.txt","r")
 for line in GENE_LOCS:
     line=line.strip().split()
     CHROMOSOMES.append(line[1])
-print(CHROMOSOMES)
+
 CHROMOSOMES=list(set(CHROMOSOMES))
 CHROMOSOMES.sort()
 print(CHROMOSOMES)
@@ -30,7 +30,7 @@ print(CHROMOSOMES)
 
 rule all:
     input:
-        expand("BAM_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
         
         
         
@@ -44,9 +44,9 @@ rule all:
 
 rule format_name:
     input:
-        "BAM_FILES/{sample}.bam"
+        "Workspace/OG_BAM_FILES/{sample}.bam"
     output:
-        "BAM_FILES/{sample}_FRMT.bam"
+        "Workspace/FORMATTED_BAM/{sample}_FRMT.bam"
     shell: 
         """samtools view -H {input} |\
         sed -e 's/SN:1/SN:chr1/' | sed -e 's/SN:2/SN:chr2/' | \
@@ -64,33 +64,36 @@ rule format_name:
         sed -e 's/SN:MT/SN:chrM/' | samtools reheader - {input} > {output}"""
 
 
+
 #Re Index it
 rule format_index_name:
     input:
-        "BAM_FILES/{sample}_FRMT.bam"
+        "Workspace/FORMATTED_BAM/{sample}_FRMT.bam"
     output:
-        "BAM_FILES/{sample}_FRMT.bam.bai"
+        "Workspace/FORMATTED_BAM/{sample}_FRMT.bam.bai"
     shell:
         "samtools index -b {input}"
+
 
 
 #Split it into target chromosomes
 rule format_split_into_chromosomes:
     input:
-        BAM=expand("BAM_FILES/{sample}_FRMT.bam",sample=SAMPLES),
-        BAI=expand("BAM_FILES/{sample}_FRMT.bam.bai",sample=SAMPLES),
+        BAM=expand("Workspace/FORMATTED_BAM/{sample}_FRMT.bam",sample=SAMPLES),
+        BAI=expand("Workspace/FORMATTED_BAM/{sample}_FRMT.bam.bai",sample=SAMPLES),
         GENE_LOCS="Gene_locs.txt",
     output:
-        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
-        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
+        expand("Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
     run:
-        COMMANDS1=expand("""samtools view -b BAM_FILES/{sample}_FRMT.bam chr{CHR} > BAM_FILES/{sample}_FRMT_{CHR}.bam; """,CHR=CHROMOSOMES,sample=SAMPLES)
-        COMMANDS2=expand("""samtools index -b BAM_FILES/{sample}_FRMT_{CHR}.bam;  """,CHR=CHROMOSOMES,sample=SAMPLES)
+        COMMANDS1=expand("""samtools view -b Workspace/FORMATTED_BAM/{sample}_FRMT.bam chr{CHR} > Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam; """,CHR=CHROMOSOMES,sample=SAMPLES)
+        COMMANDS2=expand("""samtools index -b Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam;  """,CHR=CHROMOSOMES,sample=SAMPLES)
         
         for CMD in COMMANDS1:
             shell(CMD)
         for CMD2 in COMMANDS2:
             shell(CMD2)
+
 
 
 #####
@@ -118,27 +121,28 @@ rule format_split_into_chromosomes:
             # for CHR in CHROMOSOMES:
 ####
 
+
 #Use ANGSD to transform to fasta
 rule from_bam_to_fasta_ANGSD:
     input:
-        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam",CHR=CHROMOSOMES,sample=SAMPLES),
-        expand("BAM_FILES/{sample}_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam",CHR=CHROMOSOMES,sample=SAMPLES),
+        expand("Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES,sample=SAMPLES)
     output:
-        expand("BAM_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
 
     run:
-        COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i BAM_FILES/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out BAM_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=SAMPLES)
+        COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out Workspace/FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
         #check to see if all files were made. EG if a sample lacks a Y chromosome angsd wont run for that one and wont make the file
         #, thus we make a dummy file in its place so that the pipeline does nto crash!
         for sample in SAMPLES:
             for CHR in CHROMOSOMES:
-                path='./BAM_FILES/{sample}_FRMT_{CHR}.fa.gz'
+                path='./Workspace/FASTA_FILES/{}_FRMT_{}.fa.gz'.format(sample,CHR)
+                print(os.path.exists(path),path)
                 if os.path.exists(path)==False:
-                    shell('cp ./Workspace/OG_BAM_FILES/dummy.fa ./BAM_FILES/{sample}_FRMT_{CHR}.fa')
-                    shell('gzip ./BAM_FILES/{sample}_FRMT_{CHR}.fa')
-
+                    shell('cp ./Workspace/OG_BAM_FILES/dummy.fa ./Workspace/FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
+                    shell('gzip ./Workspace/FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
 
 
 
