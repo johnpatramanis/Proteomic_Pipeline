@@ -10,8 +10,9 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should event
    
 To Do list:
    1) angsd asks if you want to overwrite-> always do?
-   2) Reform (WORKSPACE)---((OG BAM FILES), (FORMATTED BAM FILES), (SPLIT INTO CHROMOSOMES) )
-   3) Generate plot for pipeline?
-   4) Extend to custom R scripts
-   5) Alternative path to FASTA files for pre split bam files
-   6) Make 'FRMT' files temporary? 
+   2) READ me for each subfolder
+   3) Reform (WORKSPACE)---((OG BAM FILES), (FORMATTED BAM FILES), (SPLIT INTO CHROMOSOMES) )
+   4) Generate plot for pipeline?
+   5) Extend to custom R scripts
+   6) Alternative path to FASTA files for pre split bam files
+   7) Make 'FRMT' files temporary? 
