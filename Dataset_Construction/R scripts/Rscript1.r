@@ -1,5 +1,6 @@
 args = commandArgs(trailingOnly=TRUE)
-#command to run:    Rscript Rscript1.r './DENISOVA_DENISOVA_ADNA_FRMT_19.fa.gz' '../../Gene_locs.txt' '../GENE_FASTA_FILES/'
+#command to run:    Rscript Rscript1.r 'sample_file' 'Gene_locs_file' 'output_location'
+#command to run:    Rscript R\ scripts/Rscript1.r Workspace/FASTA_FILES/HG00614_FRMT_19.fa.gz Gene_locs.txt Workspace/GENE_FASTA_FILES/
 
 library(ShortRead)
 
@@ -23,9 +24,19 @@ print(curgenes)
 
 
 for(i in 1:length(curgenes[,1])){
-    seq<-as.character(DNAString(as.character(sread(fa)))[curgenes[i,3]:curgenes[i,4]]) ## Isolate location of gene in chromosome, start-stop
-    newseq<-ShortRead(sread=DNAStringSet(seq), id=BStringSet(paste0(smp, "_", curgenes[i,1], "_", curgenes[i,2], "_", curgenes[i,3], "_", curgenes[i,4]))) # prepare fasta sequence
-    writeFasta(newseq, paste0(args[3],smp, "_", curgenes[i,1], ".fa")) # write it out
-}
+	
+	SEQ_HERE<-as.character(DNAString(as.character(sread(fa))))
+	
+	if (nchar(SEQ_HERE)>=1000){
+		seq<-as.character(DNAString(as.character(sread(fa)))[curgenes[i,3]:curgenes[i,4]]) ## Isolate location of gene in chromosome, start-stop
+		newseq<-ShortRead(sread=DNAStringSet(seq), id=BStringSet(paste0(smp, "_", curgenes[i,1], "_", curgenes[i,2], "_", curgenes[i,3], "_", curgenes[i,4]))) # prepare fasta sequence
+		writeFasta(newseq, paste0(args[3],smp, "_", curgenes[i,1], ".fa")) # write it out
+		}
 
-
+	else{
+		seq<-as.character(DNAString(as.character(sread(fa)))) ## Isolate location of gene in chromosome, start-stop
+		newseq<-ShortRead(sread=DNAStringSet(seq), id=BStringSet(paste0(smp, "_", curgenes[i,1], "_", curgenes[i,2], "_", curgenes[i,3], "_", curgenes[i,4])))
+		writeFasta(newseq, paste0(args[3],smp, "_", curgenes[i,1], ".fa")) # write it out
+		}
+	
+		}

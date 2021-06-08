@@ -16,15 +16,18 @@ print(SAMPLES)
 
 
 CHROMOSOMES=[]
+GENES=[]
 GENE_LOCS=open("Gene_locs.txt","r")
 for line in GENE_LOCS:
     line=line.strip().split()
     CHROMOSOMES.append(line[1])
+    GENES.append(line[0])
+    
 
 CHROMOSOMES=list(set(CHROMOSOMES))
 CHROMOSOMES.sort()
 print(CHROMOSOMES)
-
+print(GENES)
 
 STARTS='./starts.txt'
 
@@ -161,6 +164,26 @@ rule from_bam_to_fasta_ANGSD:
 
 #Use custom R script
 
+
+rule Isolate_Gene_from_fasta:
+    input:
+        expand("Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
+    output:
+        expand("Workspace/GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
+
+    run:
+        COMMANDS=expand("""Rscript ./R\ scripts/Rscript1.r Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz Gene_locs.txt Workspace/GENE_FASTA_FILES/;""",CHR=CHROMOSOMES,sample=SAMPLES)
+        for CMD in COMMANDS:
+            shell(CMD)
+        #check to see if all files were made. EG if a sample lacks a Y chromosome angsd wont run for that one and wont make the file
+        #, thus we make a dummy file in its place so that the pipeline does nto crash!
+        for sample in SAMPLES:
+            for CHR in CHROMOSOMES:
+                path='./Workspace/FASTA_FILES/{}_FRMT_{}.fa.gz'.format(sample,CHR)
+                print(os.path.exists(path),path)
+                if os.path.exists(path)==False:
+                    shell('cp ./Workspace/OG_BAM_FILES/dummy.fa ./Workspace/FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
+                    shell('gzip ./Workspace/FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
 
 
 
