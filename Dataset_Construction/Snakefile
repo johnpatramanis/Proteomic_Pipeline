@@ -25,6 +25,16 @@ CHROMOSOMES=list(set(CHROMOSOMES))
 CHROMOSOMES.sort()
 print(CHROMOSOMES)
 
+
+STARTS='./starts.txt'
+
+PROT_REF_FILES='./Genes_human/'
+
+EIT='./EIT/';
+
+GENE_LOCS='./Gene_locs.txt';
+
+
 #######################################################################################################################################################################
 ## Starting Rule
 
@@ -150,3 +160,8 @@ rule from_bam_to_fasta_ANGSD:
 ##Actual DNA to Proteins Translation ##
 
 #Use custom R script
+
+
+
+
+
