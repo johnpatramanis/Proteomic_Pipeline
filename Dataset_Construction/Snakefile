@@ -177,14 +177,3 @@ rule Isolate_Gene_from_fasta:
             shell(CMD)
         #check to see if all files were made. EG if a sample lacks a Y chromosome angsd wont run for that one and wont make the file
         #, thus we make a dummy file in its place so that the pipeline does nto crash!
-        for sample in SAMPLES:
-            for CHR in CHROMOSOMES:
-                path='./Workspace/FASTA_FILES/{}_FRMT_{}.fa.gz'.format(sample,CHR)
-                print(os.path.exists(path),path)
-                if os.path.exists(path)==False:
-                    shell('cp ./Workspace/OG_BAM_FILES/dummy.fa ./Workspace/FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
-                    shell('gzip ./Workspace/FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
-
-
-
-
