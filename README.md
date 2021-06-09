@@ -8,10 +8,10 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should event
    
    
    
-To Do list:
-   2) Generate plot for pipeline? - install graphiz?
-   3) Rerun from start
-   4) Extend to custom R scripts
-   5) angsd asks if you want to overwrite-> always do?
-   6) Alternative path to FASTA files for pre split bam files
-   7) Make 'FRMT' files temporary? 
+To Do list: (Dataset Construction)
+   4) Extend to custom R scripts (1/4 Done)
+   5) Rename folders
+   6) Dependencies!?
+   7) angsd asks if you want to overwrite-> always do?
+   8) Alternative path to FASTA files for pre split bam files
+   9) Make 'FRMT' files temporary? 
