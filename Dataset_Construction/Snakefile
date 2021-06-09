@@ -43,7 +43,7 @@ GENE_LOCS='./Gene_locs.txt';
 
 rule all:
     input:
-        expand("Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
         
         
         
@@ -175,5 +175,6 @@ rule Isolate_Gene_from_fasta:
         COMMANDS=expand("""Rscript ./R\ scripts/Rscript1.r Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz Gene_locs.txt Workspace/GENE_FASTA_FILES/;""",CHR=CHROMOSOMES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
-        #check to see if all files were made. EG if a sample lacks a Y chromosome angsd wont run for that one and wont make the file
-        #, thus we make a dummy file in its place so that the pipeline does nto crash!
+
+
+

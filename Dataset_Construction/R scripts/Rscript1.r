@@ -27,7 +27,7 @@ for(i in 1:length(curgenes[,1])){
 	
 	SEQ_HERE<-as.character(DNAString(as.character(sread(fa))))
 	
-	if (nchar(SEQ_HERE)>=1000){
+	if (nchar(SEQ_HERE)>=700){
 		seq<-as.character(DNAString(as.character(sread(fa)))[curgenes[i,3]:curgenes[i,4]]) ## Isolate location of gene in chromosome, start-stop
 		newseq<-ShortRead(sread=DNAStringSet(seq), id=BStringSet(paste0(smp, "_", curgenes[i,1], "_", curgenes[i,2], "_", curgenes[i,3], "_", curgenes[i,4]))) # prepare fasta sequence
 		writeFasta(newseq, paste0(args[3],smp, "_", curgenes[i,1], ".fa")) # write it out
