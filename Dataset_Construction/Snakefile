@@ -43,7 +43,7 @@ GENE_LOCS='./Gene_locs.txt';
 
 rule all:
     input:
-        expand("Workspace/GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
         
         
         
@@ -162,7 +162,8 @@ rule from_bam_to_fasta_ANGSD:
 #######################################################################################################################################################################
 ##Actual DNA to Proteins Translation ##
 
-#Use custom R script
+#Use custom R scripts
+#Isolate Gene segment from chromosome fasta
 
 
 rule Isolate_Gene_from_fasta:
@@ -177,4 +178,15 @@ rule Isolate_Gene_from_fasta:
             shell(CMD)
 
 
+#Splice Gene segment from gene fasta, keep exones
 
+rule Splice_Genes:
+    input:
+        expand("Workspace/GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
+    output:
+        expand("Workspace/SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+
+    run:
+        COMMANDS=expand("""Rscript ./R\ scripts/Rscript2.r Workspace/GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa starts.txt ./EIT/ Workspace/SPLICED_GENE_FILES/ ;""",GENE=GENES,sample=SAMPLES)
+        for CMD in COMMANDS:
+            shell(CMD)
