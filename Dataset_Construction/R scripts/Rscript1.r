@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly=TRUE)
 #command to run:    Rscript Rscript1.r 'sample_file' 'Gene_locs_file' 'output_location'
-#command to run:    Rscript R\ scripts/Rscript1.r Workspace/FASTA_FILES/HG00614_FRMT_19.fa.gz Gene_locs.txt Workspace/GENE_FASTA_FILES/
+#command to run (from Dataset_Construction folder):    Rscript R\ scripts/Rscript1.r Workspace/FASTA_FILES/HG00614_FRMT_19.fa.gz Gene_locs.txt Workspace/GENE_FASTA_FILES/
 
 library(ShortRead)
 
@@ -34,7 +34,7 @@ for(i in 1:length(curgenes[,1])){
 		}
 
 	else{
-		seq<-as.character(DNAString(as.character(sread(fa)))) ## Isolate location of gene in chromosome, start-stop
+		seq<-as.character(paste(rep('-',607),collapse='')) ## Isolate location of gene in chromosome, start-stop
 		newseq<-ShortRead(sread=DNAStringSet(seq), id=BStringSet(paste0(smp, "_", curgenes[i,1], "_", curgenes[i,2], "_", curgenes[i,3], "_", curgenes[i,4])))
 		writeFasta(newseq, paste0(args[3],smp, "_", curgenes[i,1], ".fa")) # write it out
 		}

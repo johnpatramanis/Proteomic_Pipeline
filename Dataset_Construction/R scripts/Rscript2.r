@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly=TRUE)
 #command to run:    Rscript Rscript1.r 'sample_file' 'Starts_file' 'EIT_folder_location' 'output_location'
-#command to run:    Rscript R\ scripts/Rscript2.r Workspace/GENE_FASTA_FILES/ starts.txt ./EIT/ Workspace/SPLICED_GENE_FILES/HG00614_FRMT_COL1A1.fa
+#command to run(from Dataset_Construction folder):    Rscript R\ scripts/Rscript2.r Workspace/GENE_FASTA_FILES/HG00614_FRMT_AMELX.fa starts.txt ./EIT/ Workspace/SPLICED_GENE_FILES/
 
 library(ShortRead)
 
@@ -12,10 +12,12 @@ info<-read.table(args[2], h=T, as.is=T) # name of each gene/ where each gene sta
 
 #for each fasta file (one fasta per gene)
 
-gene<-strsplit(gsub(".fa", "", fas), "_")[[1]][length(strsplit(gsub(".fa", "", fas), "_")[[1]])] #gene name from file name
+name<-strsplit(gsub(".fa", "", fas), "/")[[1]][length(strsplit(gsub(".fa", "", fas), "/")[[1]])]
+gene<-strsplit(name,"_")[[1]][length(strsplit(name,"_")[[1]])]#gene name from file name
+samp<-paste(strsplit(name,"_")[[1]][1:length(strsplit(name,"_")[[1]])-1],collapse='_') # Sample name from file name
 fa<-readFasta(fas) #readFasta loads the fasta file into R
 fa<-DNAString(as.character(sread(fa))) #Turn iNAString
-samp<-paste(strsplit(gsub(".fa", "", fas), "_")[[1]][1:length(strsplit(gsub(".fa", "", fas), "_")[[1]])-1],collapse='_') # Sample name from file name
+
 
 tab<-read.table(paste0(args[3], gene, "_ei.txt"), as.is=T, sep="\t") # Exon / Intron file
 
@@ -61,13 +63,9 @@ if (nchar(fa)>=700) {
     newseq<-ShortRead(sread=DNAStringSet(seqs), id=BStringSet(ids))
     
     writeFasta(newseq, paste0(args[4],samp, "_", gene, "_spliced.fa"))
-    }
-
-else{
-
+    
+    } else{
     ids<-paste0(samp, "_", gene, "_spliced")
-    newseq<-ShortRead(sread=fa, id=BStringSet(ids))
+    newseq<-ShortRead(sread=DNAStringSet(as.character(fa)), id=BStringSet(ids))
     writeFasta(newseq, paste0(args[4],samp, "_", gene, "_spliced.fa"))
-    
     }
-    
