@@ -46,8 +46,7 @@ GENE_LOCS='./Gene_locs.txt';
 
 rule all:
     input:
-        expand("Workspace/BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
-        
+        expand("Workspace/PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
         
         
         
@@ -211,3 +210,14 @@ rule Translate_through_blastools:
             for sample in SAMPLES:
                 shell("""/home/rjt939/BLAST/blast-2.2.26/bin/blastall  -p tblastn -i ./Genes_human/{}  -d Workspace/SPLICED_GENE_FILES/{}_FRMT_{}_spliced.fa -o Workspace/BLASTED_GENES/{}_FRMT_{}_spliced.blast -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;""".format(GENES_TO_REFERENCES[GENE],sample,GENE,sample,GENE))
                 
+
+
+rule Extract_blastools_output:
+    input:
+        expand("Workspace/BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
+    output:
+        expand("Workspace/PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
+    run:
+        COMMANDS1=expand("""Rscript R\ scripts/Rscript3.r ./Workspace/BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast Workspace/PROTEINS_FASTAS/ ;""",GENE=GENES,sample=SAMPLES)
+        for CMD in COMMANDS1:
+            shell(CMD)
