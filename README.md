@@ -11,7 +11,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should event
 To Do list: (Dataset Construction)
    1) Extend to custom R scripts - Blastools (3/4 Done)
    2) Rename folders
-   3) Dependencies!?
+   3) Dependencies and software (eg blastools version x.x)!?
    4) angsd asks if you want to overwrite-> always do?
    5) Alternative path to FASTA files for pre split bam files
    6) Make 'FRMT' files temporary? 
