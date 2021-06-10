@@ -34,7 +34,7 @@ for(i in 1:length(curgenes[,1])){
 		}
 
 	else{
-		seq<-as.character(paste(rep('-',607),collapse='')) ## Isolate location of gene in chromosome, start-stop
+		seq<-as.character(paste(rep('N',607),collapse='')) ## Isolate location of gene in chromosome, start-stop
 		newseq<-ShortRead(sread=DNAStringSet(seq), id=BStringSet(paste0(smp, "_", curgenes[i,1], "_", curgenes[i,2], "_", curgenes[i,3], "_", curgenes[i,4])))
 		writeFasta(newseq, paste0(args[3],smp, "_", curgenes[i,1], ".fa")) # write it out
 		}

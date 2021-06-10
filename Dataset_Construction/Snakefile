@@ -17,17 +17,20 @@ print(SAMPLES)
 
 CHROMOSOMES=[]
 GENES=[]
+GENES_TO_REFERENCES={}
 GENE_LOCS=open("Gene_locs.txt","r")
 for line in GENE_LOCS:
     line=line.strip().split()
     CHROMOSOMES.append(line[1])
     GENES.append(line[0])
+    GENES_TO_REFERENCES[line[0]]=line[4]
     
 
 CHROMOSOMES=list(set(CHROMOSOMES))
 CHROMOSOMES.sort()
 print(CHROMOSOMES)
 print(GENES)
+print(GENES_TO_REFERENCES)
 
 STARTS='./starts.txt'
 
@@ -43,7 +46,7 @@ GENE_LOCS='./Gene_locs.txt';
 
 rule all:
     input:
-        expand("Workspace/SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
         
         
         
@@ -190,3 +193,21 @@ rule Splice_Genes:
         COMMANDS=expand("""Rscript ./R\ scripts/Rscript2.r Workspace/GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa starts.txt ./EIT/ Workspace/SPLICED_GENE_FILES/ ;""",GENE=GENES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
+
+
+
+rule Translate_through_blastools:
+    input:
+        expand("Workspace/SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+    output:
+        expand("Workspace/BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
+    run:
+        COMMANDS1=expand("""/home/rjt939/BLAST/ncbi-blast-2.6.0+/bin/makeblastdb -dbtype nucl -in Workspace/SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa;""",GENE=GENES,sample=SAMPLES)
+        
+        
+        for CMD in COMMANDS1:
+            shell(CMD)
+        for GENE in GENES:
+            for sample in SAMPLES:
+                shell("""/home/rjt939/BLAST/blast-2.2.26/bin/blastall  -p tblastn -i ./Genes_human/{}  -d Workspace/SPLICED_GENE_FILES/{}_FRMT_{}_spliced.fa -o Workspace/BLASTED_GENES/{}_FRMT_{}_spliced.blast -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;""".format(GENES_TO_REFERENCES[GENE],sample,GENE,sample,GENE))
+                
