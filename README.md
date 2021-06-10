@@ -9,7 +9,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should event
    
    
 To Do list: (Dataset Construction)
-   1) Extend to custom R scripts - Blastools (2/4 Done)
+   1) Extend to custom R scripts - Blastools (3/4 Done)
    2) Rename folders
    3) Dependencies!?
    4) angsd asks if you want to overwrite-> always do?
