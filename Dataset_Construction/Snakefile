@@ -1,5 +1,5 @@
-#Run using snakemake -j1 --latency-wait 120
-#Depend
+#Run using snakemake -j1 --latency-wait 120 --use-conda
+#Dependancies to be used - R / Rpackages: ShortRead / angsd / blast-legacy (v2.2.26) / blast (v2.2.31)
 import os
 import os.path
 
@@ -146,6 +146,8 @@ rule from_bam_to_fasta_ANGSD:
         expand("Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
 
     run:
+        #2 lists, one of ancient samples and one of modern ones
+        #COMMANDS1=expand() #for ancient samples
         COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out Workspace/FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
