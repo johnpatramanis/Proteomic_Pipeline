@@ -1,5 +1,6 @@
-**Proteomic_Pipeline**
+**Proteomic_Pipeline - Under Construction!**
 
+What is it?
 Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should eventually include the download of prerequisites!
 1) Dataset Construction 
    Scripts to download proteomic data, transform DNA datasets to protein ones and properly format them.
@@ -11,7 +12,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should event
 To Do list: (Dataset Construction)
    1) Finalise protein product / tidy up output
    2) Rename folders?
-   3) Dependencies and software (eg blastools version x.x)!?
+   3) Dependencies and software: Get slim list of conda env - > split it up to sub env? - test if conda stuff working
    4) angsd asks if you want to overwrite-> always do?
    5) Alternative path to FASTA files for pre split bam files
    6) Make 'FRMT' files temporary? 
