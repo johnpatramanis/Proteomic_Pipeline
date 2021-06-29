@@ -16,4 +16,5 @@ To Do list: (Dataset Construction)
    3) Dependencies and software: Get slim list of conda env - > split it up to sub env? - Rscript and R?
    4) angsd asks if you want to overwrite-> always do?
    5) Alternative path to FASTA files for pre split bam files
-   6) Make 'FRMT' files temporary? 
+   6) Make 'FRMT' files temporary?
+   7) Pre bam file input?
