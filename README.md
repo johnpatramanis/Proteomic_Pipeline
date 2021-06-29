@@ -13,7 +13,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should event
 To Do list: (Dataset Construction)
    1) Finalise protein product / tidy up output
    2) Rename folders?
-   3) Dependencies and software: Get slim list of conda env - > split it up to sub env? - test if conda stuff working - Rscript and R?
+   3) Dependencies and software: Get slim list of conda env - > split it up to sub env? - Rscript and R?
    4) angsd asks if you want to overwrite-> always do?
    5) Alternative path to FASTA files for pre split bam files
    6) Make 'FRMT' files temporary? 
