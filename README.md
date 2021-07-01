@@ -76,7 +76,7 @@ Once this is done, remember to activate the enviroment we just created by typing
 <br/><br/>
 <br/><br/>
    
-**Development To Do list: (Dataset Construction)**
+**Development To Do list: (Dataset Construction)** - By Yiannis , for Yiannis
    1) Rename folders?
    2) Dependencies and software: Get slim list of conda env - > split it up to sub env? - Rscript and R?
    3) angsd asks if you want to overwrite-> always do?
