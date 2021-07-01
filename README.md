@@ -12,7 +12,10 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
    
 **Instalation - User Guide**
 
-Step 1)
+This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that.
+
+Step 1) Conda
+First check if you have conda installed on your computer by typing 'conda' in the command line.
 
 
 
