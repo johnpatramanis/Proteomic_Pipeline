@@ -9,7 +9,13 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
 2) Analysis (Under development)
    Scripts to assemble a proteomic dataset, format and prepare it for a phylgenetic analysis- including the actual phylogenetic tree creation
    
-   #################################################################################################################################################################################
+   
+   
+   
+   
+   
+   
+   
    
 **Instalation - User Guide**
 
