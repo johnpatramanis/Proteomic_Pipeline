@@ -1,13 +1,27 @@
 **Proteomic_Pipeline - Under Construction!**
 
-What is it?
+**What is it?**
 
-Compiled scripts to enable phyloproteomic analysis suing Snakemake. Should eventually include the download of prerequisites!
-1) Dataset Construction 
+Compiled scripts to enable phyloproteomic analysis suing Snakemake.
+
+1) Dataset Construction (Working check bellow for instalation)
    Scripts to download proteomic data, transform DNA datasets to protein ones and properly format them.
-2) Analysis
+2) Analysis (Under development)
    Scripts to assemble a proteomic dataset, format and prepare it for a phylgenetic analysis- including the actual phylogenetic tree creation
    
+   
+**Instalation - User Guide**
+
+Step 1)
+
+
+
+
+Step 2)
+
+
+
+
    
    
 To Do list: (Dataset Construction)
