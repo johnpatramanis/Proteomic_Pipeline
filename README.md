@@ -13,8 +13,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
 <br/><br/>
 <br/><br/>
 <br/><br/>
-<br/><br/>
-<br/><br/>
+
    
    
    
@@ -72,7 +71,10 @@ Once this is done, remember to activate the enviroment we just created by typing
    
    
    
-   
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
    
 **Development To Do list: (Dataset Construction)**
    1) Rename folders?
