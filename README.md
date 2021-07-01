@@ -55,7 +55,10 @@ and move into the directory that we will work in:
 Now we are ready for one of the mos important steps: creating a functionng enviroment within conda that contains all the required dependencies for the pipeline to work!
 Make sure you are in the **'Proteomic_Pipeline/Dataset_Construction/'** fodler and that there is a **'Translator.yml'** file in there.
 If so simply type: ``` conda env create -f Translator.yml ```
-   
+This may take a while to install everything...
+Once this is done, remember to activate the enviroment we just created by typing:
+``` conda activate Translator ```
+
    
    
    
