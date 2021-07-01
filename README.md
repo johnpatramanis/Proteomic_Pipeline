@@ -42,7 +42,7 @@ Now with both conda and mamba installed we will download the package itself into
 
 And now lets download the github repository, the core of the pipeline usig git clone. First move to a directory where you want to have this pipeline installed. Then simply type:
 
-''' git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git '''
+``` git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git ```
 
 and move into the directory that we will work in:
 
