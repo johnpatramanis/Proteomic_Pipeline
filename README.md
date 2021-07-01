@@ -25,6 +25,11 @@ This pipeline also requires snakemake to work. Snakemake suggest that you have M
 and conda will take care of the rest.
 
 
+**Step 3) Activation and Git clone**
+Now with both conda and mamba installed we will download the package itself into your computer. Before we do that first lets activate the conda base enviroment.
+
+'conda activate base'
+
 
 
    
