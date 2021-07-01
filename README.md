@@ -24,7 +24,23 @@ Step 2)
 
    
    
-To Do list: (Dataset Construction)
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+**Development To Do list: (Dataset Construction)**
    1) Rename folders?
    2) Dependencies and software: Get slim list of conda env - > split it up to sub env? - Rscript and R?
    3) angsd asks if you want to overwrite-> always do?
