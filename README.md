@@ -30,7 +30,7 @@ This pipeline is based on conda to deploy all the required dependencies for it t
 
 **Step 2) Mamba**
 
-This pipeline also requires snakemake to work. Snakemake suggest that you have Mamba installed with conda so we will also do that. With conda installed succesfully, you can simply type : 'conda install -n base -c conda-forge mamba'
+This pipeline also requires snakemake to work. Snakemake suggest that you have Mamba installed with conda so we will also do that. With conda installed succesfully, you can simply type : ``` conda install -n base -c conda-forge mamba ```
 and conda will take care of the rest.
 
 
@@ -38,7 +38,7 @@ and conda will take care of the rest.
 
 Now with both conda and mamba installed we will download the package itself into your computer. Before we do that first lets activate the conda base enviroment.
 
-'conda activate base'
+``` conda activate base ```
 
 And now lets download the github repository, the core of the pipeline usig git clone. First move to a directory where you want to have this pipeline installed. Then simply type:
 
@@ -46,7 +46,7 @@ And now lets download the github repository, the core of the pipeline usig git c
 
 and move into the directory that we will work in:
 
-'cd '
+``` cd Proteomic_Pipeline/Dataset_Construction/ ```
    
    
    
