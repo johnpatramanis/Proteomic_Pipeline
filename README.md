@@ -17,3 +17,4 @@ To Do list: (Dataset Construction)
    4) Alternative path to FASTA files for pre split bam files
    5) Make 'FRMT' files temporary?
    6) Pre bam file input?
+   7) Different use for ancient / modern samples
