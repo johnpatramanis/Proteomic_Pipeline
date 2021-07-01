@@ -15,17 +15,20 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
 This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that.
 
 **Step 1)** **Conda**
+
 This pipeline is based on conda to deploy all the required dependencies for it to function. First check if you have conda installed on your computer by typing 'conda' in the command line. If a bunch of options pop up then move to the next step. If nothing happens, then look here on how to install it: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 
 
 
 
 **Step 2) Mamba**
+
 This pipeline also requires snakemake to work. Snakemake suggest that you have Mamba installed with conda so we will also do that. With conda installed succesfully, you can simply type : 'conda install -n base -c conda-forge mamba'
 and conda will take care of the rest.
 
 
 **Step 3) Activation and Git clone**
+
 Now with both conda and mamba installed we will download the package itself into your computer. Before we do that first lets activate the conda base enviroment.
 
 'conda activate base'
