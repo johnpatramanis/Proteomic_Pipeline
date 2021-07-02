@@ -63,8 +63,21 @@ Once this is done, remember to activate the enviroment we just created by typing
 
    
    
-   
-   
+**Step 5) Prepare your Data for translation**
+
+If everything worked until now, then we are almost set! Now we just need to get some DNA data to translate them over to proteins. If you are using a species that is already aligned to the Human genome (ch37) then all you need to do is place your bam files in the '/Dataset_Construction/Workspace/OG_BAM_FILES' folder and then in the '/Dataset_Construction/' folder edit the 'samples.txt' file to contain each sample name per line. If your bam file is named SAMPLE.bam then simply write the name SAMPLE in the sample.txt file. 
+
+If you don't have any bam files at hand or simply want to test if the pipeline works, you can type ``` bash 0_Download_Bam_files.sh``` and some bam files will be downloaded and placed in the right folder. The samples.txt file also by default corresponds to these samples.
+
+
+
+
+If your bam files are aligned to a different species or reference genome, then things will get more complicated as other files need to be re-adjusted. if you want to target different proteins than the enamel presets, then you also need to make some adjustments. These are described in step number **.
+
+
+**Step 6) Execute the translation**
+With your sample files set up, all you need to do now is initiate the process. Type ```snakemake -j1 ``` to begin.
+If everything works out, you should get your resulting proteins in the 'Dataset_Construction/Workspace/FINAL_OUTPUT' folder.
    
    
    
