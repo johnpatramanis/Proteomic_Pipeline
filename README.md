@@ -82,7 +82,9 @@ Type ```snakemake -j1 ``` to begin.
 If everything works out, you should get your resulting proteins in the 'Dataset_Construction/Workspace/FINAL_OUTPUT' folder.
    
    
-   
+**Step 7) Adjusting for different target proteins**
+
+**Step 8) Adjusting for different reference genome**
    
    
    
