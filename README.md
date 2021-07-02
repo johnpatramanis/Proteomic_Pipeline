@@ -76,7 +76,9 @@ If your bam files are aligned to a different species or reference genome, then t
 
 
 **Step 6) Execute the translation**
-With your sample files set up, all you need to do now is initiate the process. Type ```snakemake -j1 ``` to begin.
+
+With your sample files set up, all you need to do now is initiate the process.
+Type ```snakemake -j1 ``` to begin.
 If everything works out, you should get your resulting proteins in the 'Dataset_Construction/Workspace/FINAL_OUTPUT' folder.
    
    
