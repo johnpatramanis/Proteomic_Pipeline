@@ -19,6 +19,6 @@ SAMPLE="$sample"_"$pop"
 
 
 wget -O "$SAMPLE".bam ftp.sra.ebi.ac.uk/vol1/ERZ324/ERZ324295/LP6005443-DNA_B06.srt.aln.bam
-
+samtools index -b "$SAMPLE".bam
 
 cd  ../../
