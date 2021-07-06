@@ -19,7 +19,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
    
    
    
-**Instalation - User Guide**
+**Instalation - User Guide for Dataset Preparation**
 
 This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that.
 
