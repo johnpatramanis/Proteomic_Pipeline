@@ -1,1 +1,0 @@
-BAM files split into chromosmes will be placed in this folder
