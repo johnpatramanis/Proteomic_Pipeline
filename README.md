@@ -99,4 +99,4 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
    4) Make 'FRMT' files temporary?
    5) Pre bam file input?
    6) Different use for ancient / modern samples
-   7) Uniprot data?
+   7) Uniprot data - BIG !
