@@ -94,10 +94,8 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
 <br/><br/>
    
 **Development To Do list: (Dataset Construction)** - By Yiannis , for Yiannis
-   1) 
-   2) Dependencies and software: Get slim list of conda env - > split it up to sub env? - Rscript and R?
-   3) angsd asks if you want to overwrite-> always do?
-   4) Alternative path to FASTA files for pre split bam files
-   5) Make 'FRMT' files temporary?
-   6) Pre bam file input?
-   7) Different use for ancient / modern samples
+   1) Dependencies and software: Get slim list of conda env - > split it up to sub env? - Rscript and R?
+   3) Alternative path to FASTA files for pre split bam files
+   4) Make 'FRMT' files temporary?
+   5) Pre bam file input?
+   6) Different use for ancient / modern samples
