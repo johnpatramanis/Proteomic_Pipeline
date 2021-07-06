@@ -52,9 +52,9 @@ GENE_LOCS='./Gene_locs.txt';
 
 rule all:
     input:
-        expand("Workspace/FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
-        expand("Workspace/FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
-        expand("Workspace/FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
+        expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
+        expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
+        expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
 
 
 
@@ -69,9 +69,9 @@ rule all:
 
 rule format_name:
     input:
-        "Workspace/OG_BAM_FILES/{sample}.bam"
+        "Workspace/1_OG_BAM_FILES/{sample}.bam"
     output:
-        "Workspace/FORMATTED_BAM/{sample}_FRMT.bam"
+        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
     shell: 
         """samtools view -H {input} |\
         sed -e 's/SN:1/SN:chr1/' | sed -e 's/SN:2/SN:chr2/' | \
@@ -93,9 +93,9 @@ rule format_name:
 #Re Index it
 rule format_index_name:
     input:
-        "Workspace/FORMATTED_BAM/{sample}_FRMT.bam"
+        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
     output:
-        "Workspace/FORMATTED_BAM/{sample}_FRMT.bam.bai"
+        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai"
     shell:
         "samtools index -b {input}"
 
@@ -104,15 +104,15 @@ rule format_index_name:
 #Split it into target chromosomes
 rule format_split_into_chromosomes:
     input:
-        BAM=expand("Workspace/FORMATTED_BAM/{sample}_FRMT.bam",sample=SAMPLES),
-        BAI=expand("Workspace/FORMATTED_BAM/{sample}_FRMT.bam.bai",sample=SAMPLES),
+        BAM=expand("Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam",sample=SAMPLES),
+        BAI=expand("Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai",sample=SAMPLES),
         GENE_LOCS="Gene_locs.txt",
     output:
-        expand("Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
-        expand("Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
+        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
     run:
-        COMMANDS1=expand("""samtools view -b Workspace/FORMATTED_BAM/{sample}_FRMT.bam chr{CHR} > Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam; """,CHR=CHROMOSOMES,sample=SAMPLES)
-        COMMANDS2=expand("""samtools index -b Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam;  """,CHR=CHROMOSOMES,sample=SAMPLES)
+        COMMANDS1=expand("""samtools view -b Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam chr{CHR} > Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam; """,CHR=CHROMOSOMES,sample=SAMPLES)
+        COMMANDS2=expand("""samtools index -b Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam;  """,CHR=CHROMOSOMES,sample=SAMPLES)
         
         for CMD in COMMANDS1:
             shell(CMD)
@@ -124,7 +124,7 @@ rule format_split_into_chromosomes:
 #####
 #Maybe add another formating step here for samples that are already split into chromosomes
 ##
-# def get_split_chroms_or_formatted_whole(wcs):
+# def get_3_SPLIT_CHRoms_or_formatted_whole(wcs):
     # if:
         # return input1
     # if:
@@ -133,7 +133,7 @@ rule format_split_into_chromosomes:
 
 # rule format_split_into_chromosomes:
     # input:
-        # BAM=get_split_chroms_or_formatted_whole,
+        # BAM=get_3_SPLIT_CHRoms_or_formatted_whole,
         # GENE_LOCS="Gene_locs.txt",
     # output:
         # expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam", CHR=CHROMOSOMES)
@@ -150,26 +150,26 @@ rule format_split_into_chromosomes:
 #Use ANGSD to transform to fasta
 rule from_bam_to_fasta_ANGSD:
     input:
-        expand("Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam",CHR=CHROMOSOMES,sample=SAMPLES),
-        expand("Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam",CHR=CHROMOSOMES,sample=SAMPLES),
+        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES,sample=SAMPLES)
     output:
-        expand("Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
 
     run:
         #2 lists, one of ancient samples and one of modern ones
         #COMMANDS1=expand() #for ancient samples
-        COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out Workspace/FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=SAMPLES)
+        COMMANDS=expand("""angsd -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
         #check to see if all files were made. EG if a sample lacks a Y chromosome angsd wont run for that one and wont make the file
         #, thus we make a dummy file in its place so that the pipeline does nto crash!
         for sample in SAMPLES:
             for CHR in CHROMOSOMES:
-                path='./Workspace/FASTA_FILES/{}_FRMT_{}.fa.gz'.format(sample,CHR)
+                path='./Workspace/4_FASTA_FILES/{}_FRMT_{}.fa.gz'.format(sample,CHR)
                 print(os.path.exists(path),path)
                 if os.path.exists(path)==False:
-                    shell('cp ./Workspace/OG_BAM_FILES/dummy.fa ./Workspace/FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
-                    shell('gzip ./Workspace/FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
+                    shell('cp ./Workspace/1_OG_BAM_FILES/dummy.fa ./Workspace/4_FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
+                    shell('gzip ./Workspace/4_FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
 
 
 
@@ -182,12 +182,12 @@ rule from_bam_to_fasta_ANGSD:
 
 rule Isolate_Gene_from_fasta:
     input:
-        expand("Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
     output:
-        expand("Workspace/GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
 
     run:
-        COMMANDS=expand("""Rscript ./R\ scripts/Rscript1.r Workspace/FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz Gene_locs.txt Workspace/GENE_FASTA_FILES/;""",CHR=CHROMOSOMES,sample=SAMPLES)
+        COMMANDS=expand("""Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/;""",CHR=CHROMOSOMES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
 
@@ -196,12 +196,12 @@ rule Isolate_Gene_from_fasta:
 
 rule Splice_Genes:
     input:
-        expand("Workspace/GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
     output:
-        expand("Workspace/SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
 
     run:
-        COMMANDS=expand("""Rscript ./R\ scripts/Rscript2.r Workspace/GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa starts.txt ./EIT/ Workspace/SPLICED_GENE_FILES/ ;""",GENE=GENES,sample=SAMPLES)
+        COMMANDS=expand("""Rscript ./R\ scripts/Rscript2.r Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa starts.txt ./EIT/ Workspace/6_SPLICED_GENE_FILES/ ;""",GENE=GENES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
 
@@ -209,46 +209,46 @@ rule Splice_Genes:
 
 rule Translate_through_blastools:
     input:
-        expand("Workspace/SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
     output:
-        expand("Workspace/BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
     run:
-        COMMANDS1=expand("""makeblastdb -dbtype nucl -in Workspace/SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa;""",GENE=GENES,sample=SAMPLES)
+        COMMANDS1=expand("""makeblastdb -dbtype nucl -in Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa;""",GENE=GENES,sample=SAMPLES)
         
         
         for CMD in COMMANDS1:
             shell(CMD)
         for GENE in GENES:
             for sample in SAMPLES:
-                shell("""blastall  -p tblastn -i ./Genes_human/{}  -d Workspace/SPLICED_GENE_FILES/{}_FRMT_{}_spliced.fa -o Workspace/BLASTED_GENES/{}_FRMT_{}_spliced.blast -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;""".format(GENES_TO_REFERENCES[GENE],sample,GENE,sample,GENE))
+                shell("""blastall  -p tblastn -i ./Genes_human/{}  -d Workspace/6_SPLICED_GENE_FILES/{}_FRMT_{}_spliced.fa -o Workspace/7_BLASTED_GENES/{}_FRMT_{}_spliced.blast -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;""".format(GENES_TO_REFERENCES[GENE],sample,GENE,sample,GENE))
                 
 
 
 rule Extract_blastools_output:
     input:
-        expand("Workspace/BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
     output:
-        expand("Workspace/PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
     run:
-        COMMANDS1=expand("""Rscript R\ scripts/Rscript3.r ./Workspace/BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast Workspace/PROTEINS_FASTAS/ ;""",GENE=GENES,sample=SAMPLES)
+        COMMANDS1=expand("""Rscript R\ scripts/Rscript3.r ./Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast Workspace/8_PROTEINS_FASTAS/ ;""",GENE=GENES,sample=SAMPLES)
         for CMD in COMMANDS1:
             shell(CMD)
             
             
 rule Assemble_protein_dataset:
     input:
-        expand("Workspace/PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
     output:
-        expand("Workspace/FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
-        expand("Workspace/FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
-        expand("Workspace/FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
+        expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
+        expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
+        expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
     run:
-        COMMANDS1=expand("""touch Workspace/FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; cat Workspace/PROTEINS_FASTAS/*_{GENE}_translated.fa >>Workspace/FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; """,GENE=GENES)
-        COMMANDS2=expand("""touch Workspace/FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; cat Workspace/PROTEINS_FASTAS/{sample}_FRMT_*_translated.fa >>Workspace/FINAL_OUTPUT/PER_PROTEIN/{sample}_PROT_REFERENCE.fa; """,sample=SAMPLES)
+        COMMANDS1=expand("""touch Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/*_{GENE}_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; """,GENE=GENES)
+        COMMANDS2=expand("""touch Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_*_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{sample}_PROT_REFERENCE.fa; """,sample=SAMPLES)
         
         for CMD in COMMANDS1:
             shell(CMD)
         for CMD in COMMANDS2:
             shell(CMD)    
-        shell(""" cat Workspace/PROTEINS_FASTAS/*_translated.fa >>Workspace/FINAL_OUTPUT/ALL_PROT_REFERENCE.fa; """)    
+        shell(""" cat Workspace/8_PROTEINS_FASTAS/*_translated.fa >>Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa; """)    
         
