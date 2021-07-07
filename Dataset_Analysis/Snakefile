@@ -1,7 +1,7 @@
 #Run using snakemake -j1 --latency-wait 120 --use-conda
 
 
-#Dependancies to be used - R / Rpackages: ShortRead / angsd / blast-legacy (v2.2.26) / blast (v2.2.31)
+#Dependancies to be used 
 #conda env export --from-history > environment.yaml
 #conda env create --name testenv --file environment.yaml
 
@@ -14,37 +14,19 @@ import os.path
 ##### Load Input Files and usefull info  #####
 
 
-SAMPLES=[]
-SAMPLE_FILE=open('Samples.txt','r')
-for line in SAMPLE_FILE:
-    SAMPLES.append(line.strip())
-print(SAMPLES)
+DATASETS={}
+DATASETS_FILE=open('Datasets.txt','r')
 
+Labels=DATASETS_FILE.readline()
 
-CHROMOSOMES=[]
-GENES=[]
-GENES_TO_REFERENCES={}
-GENE_LOCS=open("Gene_locs.txt","r")
-for line in GENE_LOCS:
+for line in DATASETS_FILE:
     line=line.strip().split()
-    CHROMOSOMES.append(line[1])
-    GENES.append(line[0])
-    GENES_TO_REFERENCES[line[0]]=line[4]
+    Dataset=line[0]
+    AncSamples=line[1].split(',')
+    DATASETS[Dataset]=[x for x in AncSamples]
     
+print(DATASETS)
 
-CHROMOSOMES=list(set(CHROMOSOMES))
-CHROMOSOMES.sort()
-print(CHROMOSOMES)
-print(GENES)
-print(GENES_TO_REFERENCES)
-
-STARTS='./starts.txt'
-
-PROT_REF_FILES='./Genes_human/'
-
-EIT='./EIT/';
-
-GENE_LOCS='./Gene_locs.txt';
 
 
 #######################################################################################################################################################################
@@ -52,25 +34,24 @@ GENE_LOCS='./Gene_locs.txt';
 
 rule all:
     input:
-        expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
-        expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
-        expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
-
-
+        expand("{DATASETS}.info",DATASETS=DATASETS.keys())
 
 
 
 
 #######################################################################################################################################################################
-## Data Pipeline ##
+## Dataset Pipeline ##
 
 
-#Re Index it
-rule format_index_name:
+#Organise Datasets
+rule Organise_Data:
     input:
-        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
+        "Datasets.txt"
     output:
-        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai"
-    shell:
-        "samtools index -b {input}"
+        expand("{DATASETS}.info",DATASETS=DATASETS.keys())
+    run:
+        
+        for DATASET,ANC_SAMPLES in DATASETS.items():
+            print(DATASET,ANC_SAMPLES)
+            shell("""echo '{}' >  Workspace/1_OG_Dataset/{}.info;""".format('\n'.join(ANC_SAMPLES),DATASET))
  
