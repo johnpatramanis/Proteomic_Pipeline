@@ -1,0 +1,76 @@
+#Run using snakemake -j1 --latency-wait 120 --use-conda
+
+
+#Dependancies to be used - R / Rpackages: ShortRead / angsd / blast-legacy (v2.2.26) / blast (v2.2.31)
+#conda env export --from-history > environment.yaml
+#conda env create --name testenv --file environment.yaml
+
+
+import os
+import os.path
+
+
+
+##### Load Input Files and usefull info  #####
+
+
+SAMPLES=[]
+SAMPLE_FILE=open('Samples.txt','r')
+for line in SAMPLE_FILE:
+    SAMPLES.append(line.strip())
+print(SAMPLES)
+
+
+CHROMOSOMES=[]
+GENES=[]
+GENES_TO_REFERENCES={}
+GENE_LOCS=open("Gene_locs.txt","r")
+for line in GENE_LOCS:
+    line=line.strip().split()
+    CHROMOSOMES.append(line[1])
+    GENES.append(line[0])
+    GENES_TO_REFERENCES[line[0]]=line[4]
+    
+
+CHROMOSOMES=list(set(CHROMOSOMES))
+CHROMOSOMES.sort()
+print(CHROMOSOMES)
+print(GENES)
+print(GENES_TO_REFERENCES)
+
+STARTS='./starts.txt'
+
+PROT_REF_FILES='./Genes_human/'
+
+EIT='./EIT/';
+
+GENE_LOCS='./Gene_locs.txt';
+
+
+#######################################################################################################################################################################
+## Starting Rule
+
+rule all:
+    input:
+        expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
+        expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
+        expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
+
+
+
+
+
+
+#######################################################################################################################################################################
+## Data Pipeline ##
+
+
+#Re Index it
+rule format_index_name:
+    input:
+        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
+    output:
+        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai"
+    shell:
+        "samtools index -b {input}"
+ 
