@@ -18,23 +18,45 @@ DATASETS={}
 DATASETS_FILE=open('Datasets.txt','r')
 
 Labels=DATASETS_FILE.readline()
-
+counter=1
 for line in DATASETS_FILE:
     line=line.strip().split()
     Dataset=line[0]
     AncSamples=line[1].split(',')
-    DATASETS[Dataset]=[x for x in AncSamples]
     
+    print(DATASETS)
+    print(Dataset,AncSamples)
+    
+    if Dataset in DATASETS:
+        DATASETS[Dataset].append([x for x in AncSamples])
+        print('yikes')
+
+    else:
+        print('wow')
+        DATASETS[Dataset]=[[x for x in AncSamples]]
+        
+        
 print(DATASETS)
 
+JOINED_NAMES=[]
+for DATASET,ANC_SAMPLES in DATASETS.items():
+    for SAMPLES in ANC_SAMPLES:
+        JOINED_NAMES.append('-'.join([DATASET,'-'.join(SAMPLES)]))
 
-
+print(JOINED_NAMES) 
+    
+#######################################################################################################################################################################
+#######################################################################################################################################################################
 #######################################################################################################################################################################
 ## Starting Rule
 
+
+
+
 rule all:
     input:
-        expand("{DATASETS}.info",DATASETS=DATASETS.keys())
+        expand("Workspace/1_OG_Dataset/{DATASETS}.info",DATASETS=DATASETS.keys()),
+        [ 'Workspace/2_GENES/Genes_{}.txt'.format(x) for x in JOINED_NAMES ]
 
 
 
@@ -48,10 +70,24 @@ rule Organise_Data:
     input:
         "Datasets.txt"
     output:
-        expand("{DATASETS}.info",DATASETS=DATASETS.keys())
+        expand("Workspace/1_OG_Dataset/{DATASETS}.info",DATASETS=DATASETS.keys())
     run:
         
         for DATASET,ANC_SAMPLES in DATASETS.items():
-            print(DATASET,ANC_SAMPLES)
-            shell("""echo '{}' >  Workspace/1_OG_Dataset/{}.info;""".format('\n'.join(ANC_SAMPLES),DATASET))
+            for SAMPLES in ANC_SAMPLES:
+                shell("""echo '{}' >>  Workspace/1_OG_Dataset/{}.info;""".format(','.join(SAMPLES),DATASET)) #append all versions of analysis
  
+
+
+
+#Create a Genes folder for every dataset
+rule Create_Genes_Folders:
+    input:
+        "Datasets.txt"
+    output:
+        [ 'Workspace/2_GENES/Genes_{}.txt'.format(x) for x in JOINED_NAMES ]
+    run:
+        for DATASET,ANC_SAMPLES in DATASETS.items():
+            for SAMPLES in ANC_SAMPLES:
+                shell(""" touch Workspace/2_GENES/Genes_{}.txt ;""".format('-'.join([DATASET,'-'.join(SAMPLES)])))
+        
