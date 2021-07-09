@@ -24,15 +24,11 @@ for line in DATASETS_FILE:
     Dataset=line[0]
     AncSamples=line[1].split(',')
     
-    print(DATASETS)
-    print(Dataset,AncSamples)
     
     if Dataset in DATASETS:
         DATASETS[Dataset].append([x for x in AncSamples])
-        print('yikes')
 
     else:
-        print('wow')
         DATASETS[Dataset]=[[x for x in AncSamples]]
         
         
@@ -43,7 +39,6 @@ for DATASET,ANC_SAMPLES in DATASETS.items():
     for SAMPLES in ANC_SAMPLES:
         JOINED_NAMES.append('-'.join([DATASET,'-'.join(SAMPLES)]))
 
-print(JOINED_NAMES) 
     
 #######################################################################################################################################################################
 #######################################################################################################################################################################
@@ -90,5 +85,16 @@ rule Create_Genes_Folders:
     run:
         for DATASET,ANC_SAMPLES in DATASETS.items():
             for SAMPLES in ANC_SAMPLES:
-                shell(""" touch Workspace/2_GENES/Genes_{}.txt ;""".format('-'.join([DATASET,'-'.join(SAMPLES)])))
-        
+
+                if isinstance(SAMPLES, list) is True:
+                    print(SAMPLES)
+                    for SAMPLE in SAMPLES:
+                        print(SAMPLE)
+                        shell("""SAMPLE_NAME={}; REF='Workspace/1_OG_Dataset/{}'; grep ">"$SAMPLE_NAME $REF | rev | cut -f 1 -d "_" | rev |cut -f 1 -d ">" |cut -f 1 -d '/' > TMP;""".format(SAMPLE,DATASET))
+                        
+                if isinstance(SAMPLES, list) is False:
+                    print(SAMPLES)
+                    shell("""SAMPLE_NAME={}; REF='Workspace/1_OG_Dataset/{}'; grep ">"$SAMPLE_NAME $REF | rev | cut -f 1 -d "_" | rev |cut -f 1 -d ">" |cut -f 1 -d '/' > TMP;""".format(SAMPLES,DATASET))
+                
+                shell("""cat TMP | sort | uniq > Workspace/2_GENES/Genes_{}.txt;""".format('-'.join([DATASET,'-'.join(SAMPLES)])))
+                shell("""rm TMP;""")
