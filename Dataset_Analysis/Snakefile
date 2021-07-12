@@ -112,6 +112,7 @@ rule Create_Genes_Folders2:
         [ 'Workspace/2_DATASETS/{}/Foldering_Done'.format(x) for x in JOINED_NAMES ]
     run:
         for X in JOINED_NAMES:
+            shell(""" cat Genes.txt |while read line; do rm -rf $line; mkdir $line; done;""")
             Xm=X.split('-')
             DATASET=Xm[0]
             SAMPLES=Xm[1:]
