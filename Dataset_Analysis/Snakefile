@@ -39,7 +39,7 @@ for DATASET,ANC_SAMPLES in DATASETS.items():
     for SAMPLES in ANC_SAMPLES:
         JOINED_NAMES.append('-'.join([DATASET,'-'.join(SAMPLES)]))
 
-    
+print(JOINED_NAMES)
 #######################################################################################################################################################################
 #######################################################################################################################################################################
 #######################################################################################################################################################################
@@ -50,8 +50,8 @@ for DATASET,ANC_SAMPLES in DATASETS.items():
 
 rule all:
     input:
-        expand("Workspace/1_OG_Dataset/{DATASETS}.info",DATASETS=DATASETS.keys()),
-        [ 'Workspace/2_GENES/Genes_{}.txt'.format(x) for x in JOINED_NAMES ]
+        ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES],
+        [ 'Workspace/2_DATASETS/{}/Foldering_Done'.format(x) for x in JOINED_NAMES ]
 
 
 
@@ -65,12 +65,12 @@ rule Organise_Data:
     input:
         "Datasets.txt"
     output:
-        expand("Workspace/1_OG_Dataset/{DATASETS}.info",DATASETS=DATASETS.keys())
+        ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES]
     run:
         
         for DATASET,ANC_SAMPLES in DATASETS.items():
             for SAMPLES in ANC_SAMPLES:
-                shell("""echo '{}' >>  Workspace/1_OG_Dataset/{}.info;""".format(','.join(SAMPLES),DATASET)) #append all versions of analysis
+                shell("""echo '{}' >  Workspace/2_DATASETS/{}/Samples.txt;""".format(','.join(SAMPLES),'-'.join([DATASET,'-'.join(SAMPLES)]))) #append all versions of analysis
  
 
 
@@ -81,20 +81,44 @@ rule Create_Genes_Folders:
     input:
         "Datasets.txt"
     output:
-        [ 'Workspace/2_GENES/Genes_{}.txt'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/Genes.txt'.format(x) for x in JOINED_NAMES ]
     run:
-        for DATASET,ANC_SAMPLES in DATASETS.items():
+    
+        for DATASET,ANC_SAMPLES in DATASETS.items(): # Create and fill in the Genes.txt file for each dataset
+        
+            
             for SAMPLES in ANC_SAMPLES:
-
+            
+            
                 if isinstance(SAMPLES, list) is True:
                     print(SAMPLES)
                     for SAMPLE in SAMPLES:
-                        print(SAMPLE)
                         shell("""SAMPLE_NAME={}; REF='Workspace/1_OG_Dataset/{}'; grep ">"$SAMPLE_NAME $REF | rev | cut -f 1 -d "_" | rev |cut -f 1 -d ">" |cut -f 1 -d '/' > TMP;""".format(SAMPLE,DATASET))
                         
+                        
                 if isinstance(SAMPLES, list) is False:
-                    print(SAMPLES)
                     shell("""SAMPLE_NAME={}; REF='Workspace/1_OG_Dataset/{}'; grep ">"$SAMPLE_NAME $REF | rev | cut -f 1 -d "_" | rev |cut -f 1 -d ">" |cut -f 1 -d '/' > TMP;""".format(SAMPLES,DATASET))
                 
-                shell("""cat TMP | sort | uniq > Workspace/2_GENES/Genes_{}.txt;""".format('-'.join([DATASET,'-'.join(SAMPLES)])))
+                
+                shell("""cat TMP | sort | uniq > Workspace/2_DATASETS/{}/Genes.txt;""".format('-'.join([DATASET,'-'.join(SAMPLES)])))
                 shell("""rm TMP;""")
+
+
+
+rule Create_Genes_Folders2:
+    input:
+        [ 'Workspace/2_DATASETS/{}/Genes.txt'.format(x) for x in JOINED_NAMES ]
+    output:
+        [ 'Workspace/2_DATASETS/{}/Foldering_Done'.format(x) for x in JOINED_NAMES ]
+    run:
+        for X in JOINED_NAMES:
+            Xm=X.split('-')
+            DATASET=Xm[0]
+            SAMPLES=Xm[1:]
+            print(DATASET,SAMPLES)
+            #Use dataset name as input for the R script
+            
+            
+            
+            
+            shell("""touch Workspace/2_DATASETS/{}/Foldering_Done;""".format(X))
