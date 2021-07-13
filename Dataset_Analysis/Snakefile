@@ -1,7 +1,7 @@
 #Run using snakemake -j1 --latency-wait 120 --use-conda
 
 
-#Dependancies to be used 
+#Dependancies to be used R, ShortRead, Snakemake, MUSCLE,
 #conda env export --from-history > environment.yaml
 #conda env create --name testenv --file environment.yaml
 
@@ -51,7 +51,7 @@ print(JOINED_NAMES)
 rule all:
     input:
         ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES],
-        [ 'Workspace/2_DATASETS/{}/Foldering_Done'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/Alignment_Done'.format(x) for x in JOINED_NAMES ]
 
 
 
@@ -70,7 +70,7 @@ rule Organise_Data:
         
         for DATASET,ANC_SAMPLES in DATASETS.items():
             for SAMPLES in ANC_SAMPLES:
-                shell("""echo '{}' >  Workspace/2_DATASETS/{}/Samples.txt;""".format(','.join(SAMPLES),'-'.join([DATASET,'-'.join(SAMPLES)]))) #append all versions of analysis
+                shell("""echo '{}' >  Workspace/2_DATASETS/{}/Samples.txt;""".format('\n'.join(SAMPLES),'-'.join([DATASET,'-'.join(SAMPLES)]))) #append all versions of analysis
  
 
 
@@ -105,6 +105,8 @@ rule Create_Genes_Folders:
 
 
 
+#For every dataset, split it into gene specific sub-datasets
+
 rule Create_Genes_Folders2:
     input:
         [ 'Workspace/2_DATASETS/{}/Genes.txt'.format(x) for x in JOINED_NAMES ]
@@ -112,14 +114,39 @@ rule Create_Genes_Folders2:
         [ 'Workspace/2_DATASETS/{}/Foldering_Done'.format(x) for x in JOINED_NAMES ]
     run:
         for X in JOINED_NAMES:
-            shell(""" cat Genes.txt |while read line; do rm -rf $line; mkdir $line; done;""")
+            # shell("""cat Workspace/2_DATASETS/{}/Genes.txt |while read line; do rm -rf $line; mkdir $line; done;""".format(X))
             Xm=X.split('-')
             DATASET=Xm[0]
             SAMPLES=Xm[1:]
             print(DATASET,SAMPLES)
             #Use dataset name as input for the R script
             
-            
-            
+            shell("""Rscript Rscripts/Rscript1.r /Workspace/2_DATASETS/{} Workspace/1_OG_Dataset/{};""".format(X,DATASET))
             
             shell("""touch Workspace/2_DATASETS/{}/Foldering_Done;""".format(X))
+            
+            
+            
+#Align each dataset            
+
+rule Align_Gene_Datasets:
+    input:
+        [ 'Workspace/2_DATASETS/{}/Foldering_Done'.format(x) for x in JOINED_NAMES ]
+    output:
+        [ 'Workspace/2_DATASETS/{}/Alignment_Done'.format(x) for x in JOINED_NAMES ]
+    run:
+        for X in JOINED_NAMES:
+            
+            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do /home/rjt939/MUSCLE/muscle3.8.31_i86linux64 -in Workspace/2_DATASETS/{}/$line/$line"_o.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa"; done;""".format(X,X,X))
+            shell("""touch Workspace/2_DATASETS/{}/Alignment_Done;""".format(X))
+            
+            
+        
+        
+rule Generate_Stats_and_Check_LM_AminoAcids:
+    input:
+        [ 'Workspace/2_DATASETS/{}/Foldering_Done'.format(x) for x in JOINED_NAMES ]
+    output:
+        [ 'Workspace/2_DATASETS/{}/Alignment_Done'.format(x) for x in JOINED_NAMES ]
+    run:       
+        

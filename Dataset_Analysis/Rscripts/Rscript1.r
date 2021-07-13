@@ -21,7 +21,7 @@ for(i in 1:length(genes)){
 	
 	
 	subDir <- genes[i]
-	dir.create(file.path(mainDir, subDir), showWarnings = FALSE)
+	dir.create(file.path(mainDir, subDir), showWarnings = FALSE) # Create Gene specific subfolder
 
 	d<-file.path(mainDir,genes[i])
 	setwd(d)

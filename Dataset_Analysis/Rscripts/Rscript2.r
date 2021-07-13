@@ -1,0 +1,224 @@
+args = commandArgs(trailingOnly=TRUE)
+
+#command to run:    Rscript Rscript1.r WorkingDir  
+#command to run (from Dataset_Construction folder):    Rscript Rscripts/Rscript1.r /Workspace/2_DATASETS/New_Ref_Seq_3_21_1846.fa-H_antecessor-1846
+
+
+library(ShortRead)
+
+directory<-args[1] #The directory location for the new folders to be created 
+mainDir<-getwd() #get current dir, assumes output dir is a subfodler!
+setwd(file.path(mainDir,directory))
+genes<-readLines("Genes.txt") #In the 2_DATASETS appropriate folder 
+
+Samples<-readLines("Samples.txt")
+
+
+
+
+
+
+## Info output
+################################################################################################################################
+# 0 sample name
+# 0.1 gene name
+# 1. total number of sites in aln
+# 2. total number of non-missing sites in the ancient sample
+# 3. number of seg. sites in aln
+# 4. number of seg. sites in the ancient sample
+# 5. number of seg.&non-singletons sites in aln (here singleton means a seg site where only one sample has a difference)
+# 6. number of seg-&non-singletons sites in the ancient sample (here singleton means a seg site where only one sample has a difference)
+# 7. number of seg. sites where the ancient sample has a unique site
+
+
+
+
+
+
+
+
+
+#################################################################
+##SET UP FUNCTIONS
+
+is.integer0 <- function(x){
+  is.integer(x) && length(x) == 0L
+}
+
+GetNotInfoPos<-function(x){
+x<-x[x=="X" | x=="-"]
+return(length(x))
+}
+
+GetSegSites<-function(x){
+return(length(unique(x[as.character(x)!="-" & as.character(x)!="X"])))
+}
+
+
+GetSingletons<-function(x){
+if(length(unique(x[as.character(x)!="-" & as.character(x)!="X"]))==1){
+    return(0)
+}else if(length(unique(x[as.character(x)!="-" & as.character(x)!="X"]))==2){
+    if((table(x[as.character(x)!="-" & as.character(x)!="X"])[1]==1) |(table(x[as.character(x)!="-" & as.character(x)!="X"])[2]==1)){
+        return(1)
+    }else{
+        return(0)
+}
+}else{
+return(0)
+}
+}
+
+
+GetAncientUnique<-function(x, aid){
+    if(length(unique(x))>1){
+        if(sum(x==x[aid])==1){
+             return(1)
+        }else{
+              return(0)
+        }
+    }else{
+          return(0)
+    }
+}
+
+
+###############################################################################
+###### FUNCTIONS END
+
+
+
+
+
+
+
+
+
+###### GET INFO
+
+for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Singletons etc)
+    tab<-NULL
+    for(g in 1:length(genes)){
+            setwd(file.path(mainDir,directory, genes[g]))
+            f<-paste0(genes[g], "_aln.fa")
+            
+            fa<-readAAStringSet(f)
+            print(fa)
+            fatabble<-as.matrix(t(as.data.frame(strsplit(as.character(fa), ""))))
+            print(fatabble)
+            
+            # When you have multiple ancient samples, you should analyse them one by one. So lets remove the rest of them, if they exist for analysing this one
+            for (non_sam in Samples){
+                if (non_sam!=sam){
+                    To_Remove=grep(non_sam,row.names(fatabble))
+
+                    if (is.integer0(To_Remove)==FALSE){
+                        fatabble=fatabble[-To_Remove,]
+                        fa=fa[-To_Remove]
+                        }
+                }
+            }
+            
+            
+            fanonmissing<-fatabble[,(fatabble[grep(sam, names(fa)),]!="-" & fatabble[grep(sam, names(fa)),]!="X")]
+            print(fanonmissing)
+            if(dim(fanonmissing)[2]>0){
+                ## total sites
+                TotalSites<-dim(fatabble)[2]
+                SitesAncient<-dim(fanonmissing)[2]
+                
+                
+                ##seg sites
+                ss<-apply(fatabble, 2, GetSegSites)
+                SegSites<-length(ss[ss>1])
+                ss<-apply(fanonmissing, 2, GetSegSites)
+                SegSitesAncient<-length(ss[ss>1])
+                
+                #singletons
+                ss<-apply(fatabble, 2, GetSingletons)
+                NonSingSites<-SegSites-length(ss[ss==1])
+                ss<-apply(fanonmissing, 2, GetSingletons)
+                NonSignAncient <-SegSitesAncient-length(ss[ss==1])
+                
+                #ancient unique
+                AncientUnique<-sum(apply(fanonmissing, 2, GetAncientUnique, grep(sam, names(fa)))==1)
+                tab<-rbind(tab, c(sam, genes[g], TotalSites, SitesAncient, SegSites, SegSitesAncient, NonSingSites, NonSignAncient, AncientUnique, f))
+                
+                
+            }
+            else{
+                message("Error - Not enough Site for Sample found")
+                }
+        }
+
+    setwd(file.path(mainDir,directory))
+
+    colnames(tab)<-c("Sample_name", "Gene_name", "Total_sites", "Sites_in_ancient", "Segregating_sites", "a_Segregating_sites", "Non_singletons", "a_Non_singletons", "Unique_ancient_sites", "File_name")
+
+    #change name here:
+    write.table(tab, file=paste0("Alignments_info_2021_","Sample_",sam,".txt"), col.names=T, row.names=F, quote=F, sep="\t")
+}
+#######################################################################################################################################################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+print("Moving to I,L switching")
+#######################################################################################################################################################################################################################################
+#####Switch Animo Acids I and L
+
+library(ShortRead)
+
+
+
+setwd(directory)
+
+genes<-readLines("Genes.txt")
+
+#### should be changed per sample 
+
+for(g in 1:length(genes)){              #### for every gene
+    setwd(paste0(directory, genes[g]))   ### go to the dir
+    f<-paste0(genes[g], "_aln.fa")       ## grab the aligned fasta file
+    fa<-readAAStringSet(f)               ## get it as a biostring
+    fatabble<-as.matrix(t(as.data.frame(strsplit(as.character(fa), ""))))  # transform it to a matrix
+    aid<-grep(sam, names(fa))
+    Jsites<-which(fatabble[aid,]=="I" | fatabble[aid,]=="L")    # find which sites of sample have either an I or L
+    if(length(Jsites)>0){   #for every one of these sites
+        for(s in 1:length(Jsites)){
+            cursite<-fatabble[,Jsites[s]]
+            optssite<-as.character(cursite[-grep(sam, names(cursite))])
+            if(length(table(optssite[optssite=="L" | optssite=="I"]))==1){
+                cursite[cursite=="L" | cursite=="I"]<-names(table(optssite[optssite=="L" | optssite=="I"]))
+            }
+            else{
+                cursite[cursite=="L" | cursite=="I"]<-"L"
+            }
+            fatabble[,Jsites[s]]<-cursite
+            }
+        newseq<-apply(fatabble, 1, paste, collapse="")
+        names(newseq)<-names(fa)
+        writeXStringSet(AAStringSet(newseq), gsub(".fa", "_e.fa", f))
+        }
+    else{
+        writeXStringSet(fa, gsub(".fa", "_e.fa", f))
+    }
+}
+
+
+
