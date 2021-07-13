@@ -1,6 +1,6 @@
 ###Download bam files
 
-cd Workspace/OG_BAM_FILES/
+cd Workspace/1_OG_BAM_FILES/
 
 #### DENIS
 sample="DENISOVA";
