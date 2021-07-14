@@ -156,7 +156,7 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
     colnames(tab)<-c("Sample_name", "Gene_name", "Total_sites", "Sites_in_ancient", "Segregating_sites", "a_Segregating_sites", "Non_singletons", "a_Non_singletons", "Unique_ancient_sites", "File_name")
 
     #change name here:
-    write.table(tab, file=paste0("Alignments_info_2021_","Sample_",sam,".txt"), col.names=T, row.names=F, quote=F, sep="\t")
+    write.table(tab, file=paste0("Alignments_info_","Sample_",sam,".txt"), col.names=T, row.names=F, quote=F, sep="\t")
 }
 #######################################################################################################################################################################################################################################
 

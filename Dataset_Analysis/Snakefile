@@ -51,7 +51,7 @@ print(JOINED_NAMES)
 rule all:
     input:
         ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES],
-        [ 'Workspace/2_DATASETS/{}/Alignment_Done'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
 
 
 
@@ -126,7 +126,7 @@ rule Create_Genes_Folders2:
             shell("""touch Workspace/2_DATASETS/{}/Foldering_Done;""".format(X))
             
             
-            
+
 #Align each dataset            
 
 rule Align_Gene_Datasets:
@@ -145,8 +145,35 @@ rule Align_Gene_Datasets:
         
 rule Generate_Stats_and_Check_LM_AminoAcids:
     input:
-        [ 'Workspace/2_DATASETS/{}/Foldering_Done'.format(x) for x in JOINED_NAMES ]
-    output:
         [ 'Workspace/2_DATASETS/{}/Alignment_Done'.format(x) for x in JOINED_NAMES ]
+    output:
+        [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
     run:       
-        
+        for X in JOINED_NAMES:
+            shell("""Rscript Rscripts/Rscript2.r /Workspace/2_DATASETS/{} ;""".format(X))
+            shell("""touch Workspace/2_DATASETS/{}/Info_and_Checking_Done ;""".format(X))
+
+
+
+
+# rule Generate_Concatenated_Datasets:
+    # input:
+        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
+    # output:
+        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
+    # run:        
+        # for X in JOINED_NAMES:
+
+
+
+
+
+
+
+# rule Generate_Phylip_Format:
+    # input:
+        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
+    # output:
+        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
+    # run:        
+        # for X in JOINED_NAMES:           
