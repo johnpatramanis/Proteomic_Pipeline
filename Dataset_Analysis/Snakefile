@@ -51,7 +51,7 @@ print(JOINED_NAMES)
 rule all:
     input:
         ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES],
-        [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/Concatenation_Done'.format(x) for x in JOINED_NAMES ]
 
 
 
@@ -156,14 +156,15 @@ rule Generate_Stats_and_Check_LM_AminoAcids:
 
 
 
-# rule Generate_Concatenated_Datasets:
-    # input:
-        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
-    # output:
-        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
-    # run:        
-        # for X in JOINED_NAMES:
-
+rule Generate_Concatenated_Datasets:
+    input:
+        [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
+    output:
+        [ 'Workspace/2_DATASETS/{}/Concatenation_Done'.format(x) for x in JOINED_NAMES ]
+    run:        
+        for X in JOINED_NAMES:
+            shell("""Rscript Rscripts/Rscript3.r /Workspace/2_DATASETS/{} 0.1 ;""".format(X))
+            shell("""touch Workspace/2_DATASETS/{}/Concatenation_Done ;""".format(X))
 
 
 

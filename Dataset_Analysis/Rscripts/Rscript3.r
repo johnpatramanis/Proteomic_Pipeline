@@ -1,6 +1,6 @@
 #--args $HOME_DIR $SAMPLE_NAME $COMPLETENESS_CUTOFF;
 #command to run:    Rscript Rscript3.r  
-#command to run (from Dataset_Construction folder):    Rscript Rscripts/Rscript3.r /Workspace/2_DATASETS/New_Ref_Seq_3_21_1846.fa-H_antecessor-1846 K 0.3
+#command to run (from Dataset_Construction folder):    Rscript Rscripts/Rscript3.r /Workspace/2_DATASETS/New_Ref_Seq_3_21_1846.fa-H_antecessor-1846 0.2
 
 
 args = commandArgs(trailingOnly=TRUE)
@@ -44,6 +44,8 @@ Samples<-readLines("Samples.txt")
 
 
 
+
+
 #########################################################################################################################################################################
 #### Filter proteins (optional)
 
@@ -64,7 +66,7 @@ if (CUTOFF==TRUE){ # This loop cycles through the genes. If any of the samples p
         for (i in 1:dim(gene_file)[1]){
             COMPLETENESS= (as.numeric(gene_file[i,4]) / as.numeric(gene_file[i,3]))
         
-            if (COMPLETENESS>=as.numeric(args[3])){
+            if (COMPLETENESS>=as.numeric(args[2])){
                 genes=c(genes,as.character(gene_file[i,2]))
                 print(paste0("Acceptable Gene: ",as.character(gene_file[i,2])," with missingness: ",as.character(1-COMPLETENESS)))
             }
@@ -79,7 +81,9 @@ if (CUTOFF==TRUE){ # This loop cycles through the genes. If any of the samples p
 
 
 write(genes, file = "Concatenated_Proteins.txt")
-print(as.numeric(args[3]))
+
+
+
 
 
 
@@ -102,8 +106,8 @@ ALL_NAMES=c()
 CONC=c()
 LENGTH=0
 for(g in 1:length(genes)){   
-
-    setwd(paste0(directory,genes[g]))
+    
+    setwd(file.path(mainDir,directory,genes[g]))
     fasta_here<-readAAStringSet(paste0("./",genes[g],"_aln_e.fa"))
     
 ###################################################### To gather all names, from all fasta
@@ -179,6 +183,7 @@ f_dowle(CONC, "X")
 
 
 
+
 ############################################################################################################################################################################
 #### Masking of Samples Optional, should require a list to do so. If TRUE, runs
 
@@ -187,23 +192,37 @@ MASKED_SAMPS=c()
 
 if (MASKED==TRUE){
     
-    MASKED_SAMPS=c("Gorilla-gorilla","HUMAN","Pan_troglodytes","Pongo_abelii")
-    ANC_SAMPL=args[2]
-    ANC_SAMPL=CONC[which(CONC[,1]==ANC_SAMPL)]
-    MISSING=which(ANC_SAMPL[,]=="-" | ANC_SAMPL[,]=="\\?" | ANC_SAMPL[,]=="X" )
+    for (samp in Samples){
     
-    
-    for (SMPL in 1:length(MASKED_SAMPS)){
+        MASKED_SAMPS=c("Gorilla-gorilla","HUMAN","Pan_troglodytes","Pongo_abelii")
+        ANC_SAMPL=samp
+        ANC_SAMPL=CONC[which(CONC[,1]==ANC_SAMPL)]
+        MISSING=which(ANC_SAMPL[,]=="-" | ANC_SAMPL[,]=="\\?" | ANC_SAMPL[,]=="X" )
         
-        MASKED_SAMPLE=CONC[which(CONC[,1]==MASKED_SAMPS[SMPL])]
-        MASKED_SAMPLE[,1]=paste0("MASKED_",as.character(MASKED_SAMPLE[,1]))
-        MASKED_SAMPLE[,MISSING]="-"
-        CONC=rbind(CONC,MASKED_SAMPLE)
+        
+        for (SMPL in 1:length(MASKED_SAMPS)){
+            
+            MASKED_SAMPLE=CONC[which(CONC[,1]==MASKED_SAMPS[SMPL])]
+            
+            if (dim(MASKED_SAMPLE)[1]>=2){
+                MASKED_SAMPLE=MASKED_SAMPLE[1,]
+                
+                
+            }
+            
+            
+            MASKED_SAMPLE[,1]=paste0("MASKED_AS_",samp,'_',as.character(MASKED_SAMPLE[,1]))
+            print(MASKED_SAMPLE[,1])
+            MASKED_SAMPLE[,MISSING]="-"
+            CONC=rbind(CONC,MASKED_SAMPLE)
+            
+        }
         
     }
     
-    
 }
+
+
 
 
 
@@ -265,8 +284,8 @@ FINAL_SEQ<-apply(CONC[ ,!"rn"], 1, paste, collapse="")
 FINAL_SEQ<-AAStringSet(FINAL_SEQ)
 names(FINAL_SEQ)<-CONC$rn
 
-
-setwd(directory)
+dir.create(file.path(mainDir, directory,'CONCATINATED'), showWarnings = FALSE)
+setwd(file.path(mainDir, directory,'CONCATINATED'))
 writeXStringSet(FINAL_SEQ, "CONCATINATED_o.fa")
 
 
