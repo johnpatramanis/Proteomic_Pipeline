@@ -51,7 +51,7 @@ print(JOINED_NAMES)
 rule all:
     input:
         ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES],
-        [ 'Workspace/2_DATASETS/{}/Phylip_Format_Done'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ]
 
 
 
@@ -106,7 +106,7 @@ rule Create_Genes_Folders:
 
 
 #For every dataset, split it into gene specific sub-datasets
-
+#
 rule Create_Genes_Folders2:
     input:
         [ 'Workspace/2_DATASETS/{}/Genes.txt'.format(x) for x in JOINED_NAMES ]
@@ -127,8 +127,9 @@ rule Create_Genes_Folders2:
             
             
 
-#Align each dataset            
 
+#Align each dataset            
+#
 rule Align_Gene_Datasets:
     input:
         [ 'Workspace/2_DATASETS/{}/Foldering_Done'.format(x) for x in JOINED_NAMES ]
@@ -141,8 +142,8 @@ rule Align_Gene_Datasets:
             shell("""touch Workspace/2_DATASETS/{}/Alignment_Done;""".format(X))
             
             
-        
-        
+#Generate statistics for each sample in each dataset, swap L/M aminoacids based on reference samples           
+#            
 rule Generate_Stats_and_Check_LM_AminoAcids:
     input:
         [ 'Workspace/2_DATASETS/{}/Alignment_Done'.format(x) for x in JOINED_NAMES ]
@@ -154,8 +155,8 @@ rule Generate_Stats_and_Check_LM_AminoAcids:
             shell("""touch Workspace/2_DATASETS/{}/Info_and_Checking_Done ;""".format(X))
 
 
-
-
+#Concatenate Genes into one new fasta           
+#
 rule Generate_Concatenated_Datasets:
     input:
         [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
@@ -169,8 +170,8 @@ rule Generate_Concatenated_Datasets:
 
 
 
-
-
+#Convert FASTA files to Phylip format        
+#
 rule Generate_Phylip_Format:
     input:
         [ 'Workspace/2_DATASETS/{}/Concatenation_Done'.format(x) for x in JOINED_NAMES ]
@@ -181,19 +182,27 @@ rule Generate_Phylip_Format:
             shell("""Rscript Rscripts/Rscript4.r /Workspace/2_DATASETS/{};""".format(X))
             shell("""touch Workspace/2_DATASETS/{}/Phylip_Format_Done;""".format(X))
         
+#Run PhyML for each individual protein and generate trees      
+#           
+rule Run_PhyML_Individual_Genes:
+    input:
+        [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
+    output:
+        [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ]
+    run:        
+        for X in JOINED_NAMES:          
+            shell(""" cd Workspace/2_DATASETS/{};\
+            cat Genes.txt |while read line;\
+            do cd $line;\
+            RAND=$(( $RANDOM %99999));\
+            /home/rjt939/PHYML/phyml/src/phyml -i $line"_aln_e.phy" -d aa -b 100 -m JTT -c 4 -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 3 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check;\
+            cd ..;\
+            done;""".format(X))
+            shell("""touch Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done;""".format(X))
         
         
-# rule Run_PhyML_Individual_Genes:
-    # input:
-        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
-    # output:
-        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
-    # run:        
-        # for X in JOINED_NAMES:          
-        
-        
-        
-        
+#Run PhyML on the concatenated datasets
+#        
         
 # rule Run_PhyML_Concatenated_Genes:
     # input:
