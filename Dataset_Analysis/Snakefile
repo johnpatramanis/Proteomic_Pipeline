@@ -51,7 +51,8 @@ print(JOINED_NAMES)
 rule all:
     input:
         ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES],
-        [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ],
+        [ 'Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done'.format(x) for x in JOINED_NAMES ]
 
 
 
@@ -200,14 +201,23 @@ rule Run_PhyML_Individual_Genes:
             done;""".format(X))
             shell("""touch Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done;""".format(X))
         
-        
+       
+
+
+       
 #Run PhyML on the concatenated datasets
 #        
         
-# rule Run_PhyML_Concatenated_Genes:
-    # input:
-        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
-    # output:
-        # [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
-    # run:        
-        # for X in JOINED_NAMES:              
+rule Run_PhyML_Concatenated_Genes:
+    input:
+        [ 'Workspace/2_DATASETS/{}/Concatenation_Done'.format(x) for x in JOINED_NAMES ]
+    output:
+        [ 'Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done'.format(x) for x in JOINED_NAMES ]
+    run:        
+        for X in JOINED_NAMES:
+            shell( """ RAND=$(( $RANDOM %999));\
+            cd Workspace/2_DATASETS/{};\
+            cd ./CONCATINATED;\
+            /home/rjt939/PHYML/phyml/src/phyml -i CONCATINATED_aln_e.phy -d aa -b 100 -m JTT -c 4 -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 3 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check;\
+            cd ..;\ """.format(X))
+            shell("""touch Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done;""".format(X))
