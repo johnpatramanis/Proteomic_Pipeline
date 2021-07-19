@@ -71,7 +71,7 @@ rule format_name:
     input:
         "Workspace/1_OG_BAM_FILES/{sample}.bam"
     output:
-        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
+        temp("Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam")
     shell: 
         """samtools view -H {input} |\
         sed -e 's/SN:1/SN:chr1/' | sed -e 's/SN:2/SN:chr2/' | \
@@ -90,12 +90,12 @@ rule format_name:
 
 
 
-#Re Index it
+#Re-Index it
 rule format_index_name:
     input:
         "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
     output:
-        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai"
+        temp("Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai")
     shell:
         "samtools index -b {input}"
 
@@ -108,8 +108,8 @@ rule format_split_into_chromosomes:
         BAI=expand("Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai",sample=SAMPLES),
         GENE_LOCS="Gene_locs.txt",
     output:
-        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
-        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
+        temp(expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES)),
+        temp(expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES))
     run:
         COMMANDS1=expand("""samtools view -b Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam chr{CHR} > Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam; """,CHR=CHROMOSOMES,sample=SAMPLES)
         COMMANDS2=expand("""samtools index -b Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam;  """,CHR=CHROMOSOMES,sample=SAMPLES)
