@@ -1,4 +1,3 @@
-#--args $HOME_DIR $SAMPLE_NAME $COMPLETENESS_CUTOFF;
 #command to run:    Rscript Rscript3.r  
 #command to run (from Dataset_Construction folder):    Rscript Rscripts/Rscript3.r /Workspace/2_DATASETS/New_Ref_Seq_3_21_1846.fa-H_antecessor-1846 0.2
 
@@ -28,6 +27,10 @@ mainDir<-getwd() #get current dir, assumes output dir is a subfodler!
 setwd(file.path(mainDir,directory))
 
 genes<-readLines("Genes.txt") #In the 2_DATASETS appropriate folder 
+
+
+
+
 
 Samples<-readLines("Samples.txt")
 
@@ -80,7 +83,7 @@ if (CUTOFF==TRUE){ # This loop cycles through the genes. If any of the samples p
 }
 
 
-write(genes, file = "Concatenated_Proteins.txt")
+write(genes, file = "./Concatenated_Proteins.txt")
 
 
 
@@ -204,7 +207,7 @@ if (MASKED==TRUE){
             
             MASKED_SAMPLE=CONC[which(CONC[,1]==MASKED_SAMPS[SMPL])]
             
-            if (dim(MASKED_SAMPLE)[1]>=2){
+            if ( dim(MASKED_SAMPLE)[1]>=2 ){
                 MASKED_SAMPLE=MASKED_SAMPLE[1,]
                 
                 

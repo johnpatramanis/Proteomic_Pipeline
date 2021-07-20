@@ -51,8 +51,7 @@ print(JOINED_NAMES)
 rule all:
     input:
         ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES],
-        [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ],
-        [ 'Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ]
 
 
 
@@ -165,8 +164,10 @@ rule Generate_Concatenated_Datasets:
         [ 'Workspace/2_DATASETS/{}/Concatenation_Done'.format(x) for x in JOINED_NAMES ]
     run:        
         for X in JOINED_NAMES:
-            shell("""Rscript Rscripts/Rscript3.r /Workspace/2_DATASETS/{} 0.1 ;""".format(X))
+            shell("""Rscript Rscripts/Rscript3.r /Workspace/2_DATASETS/{} 0.2 ;""".format(X))
             shell("""touch Workspace/2_DATASETS/{}/Concatenation_Done ;""".format(X))
+
+
 
 
 
@@ -183,11 +184,17 @@ rule Generate_Phylip_Format:
             shell("""Rscript Rscripts/Rscript4.r /Workspace/2_DATASETS/{};""".format(X))
             shell("""touch Workspace/2_DATASETS/{}/Phylip_Format_Done;""".format(X))
         
+
+
+
+
+
+
 #Run PhyML for each individual protein and generate trees      
 #           
 rule Run_PhyML_Individual_Genes:
     input:
-        [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/Phylip_Format_Done'.format(x) for x in JOINED_NAMES ]
     output:
         [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ]
     run:        
@@ -210,7 +217,8 @@ rule Run_PhyML_Individual_Genes:
         
 rule Run_PhyML_Concatenated_Genes:
     input:
-        [ 'Workspace/2_DATASETS/{}/Concatenation_Done'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/Concatenation_Done'.format(x) for x in JOINED_NAMES ],
+        [ 'Workspace/2_DATASETS/{}/Phylip_Format_Done'.format(x) for x in JOINED_NAMES ]
     output:
         [ 'Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done'.format(x) for x in JOINED_NAMES ]
     run:        
