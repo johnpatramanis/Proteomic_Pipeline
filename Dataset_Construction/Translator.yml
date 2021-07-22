@@ -103,6 +103,7 @@ dependencies:
   - googleapis-common-protos=1.53.0=py39hf3d152e_0
   - graphite2=1.3.14=h23475e2_0
   - graphviz=2.47.2=h85b4f2f_0
+  - grep=3.4=h9d02d08_1
   - gsl=2.6=he838d99_2
   - gtk2=2.24.33=h539f30e_1
   - gts=0.7.6=h64030ff_2
