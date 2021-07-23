@@ -99,9 +99,13 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
 <br/><br/>
    
 **Development To Do list: (Dataset Construction)** - By Yiannis , for Yiannis
-   1) Dependencies and software: Get slim list of conda env - > split it up to sub env? - Rscript and R?
+   1) Dependencies and software: split it up to sub env? - Rscript and R?
    3) Alternative path to FASTA files for pre split bam files
    4) Make 'FRMT' files temporary?
    5) Pre bam file input?
    6) Different use for ancient / modern samples
    7) Uniprot data - BIG !
+   
+  **Development To Do list: (Dataset Analysis)** - By Yiannis , for Yiannis
+  1) Split up env per step?
+  2) Extend to BEAST software 
