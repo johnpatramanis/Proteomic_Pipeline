@@ -100,7 +100,7 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
    
 **Development To Do list: (Dataset Construction)** - By Yiannis , for Yiannis
    1) Dependencies and software: split it up to sub env? - Rscript and R?
-   3) Alternative path to FASTA files for pre split bam files
+   3) Alternative path to FASTA files for pre split bam files ( https://stackoverflow.com/questions/40510347/can-snakemake-avoid-ambiguity-when-two-different-rule-paths-can-generate-a-given ) 
    4) Make 'FRMT' files temporary?
    5) Pre bam file input?
    6) Different use for ancient / modern samples
