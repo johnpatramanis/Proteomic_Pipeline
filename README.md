@@ -104,7 +104,7 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
    4) Make 'FRMT' files temporary?
    5) Pre bam file input?
    6) Different use for ancient / modern samples
-   7) Uniprot data - BIG !
+   7) Uniprot data - BIG ! help: https://www.ebi.ac.uk/proteins/api/doc/#proteins_search_anchor
    
   **Development To Do list: (Dataset Analysis)** - By Yiannis , for Yiannis
   1) Split up env per step?
