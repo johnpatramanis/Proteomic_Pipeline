@@ -99,7 +99,7 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
 <br/><br/>
    
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
-   0) How to contact datbases help: https://www.ebi.ac.uk/proteins/api/doc/#proteins_search_anchor
+   0) How to contact datbases help: https://www.ebi.ac.uk/proteins/api/doc/#proteins_search_anchor / http://rest.ensembl.org/
    1) Get Protein - Gene name
    2) Get Coordinates on genome (start and end) + strand
    3) Get Fasta file of protein
