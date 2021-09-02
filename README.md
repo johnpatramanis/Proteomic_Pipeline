@@ -98,15 +98,20 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
 <br/><br/>
 <br/><br/>
    
-**Development To Do list: (Dataset Construction)** - By Yiannis , for Yiannis
-   1) Dependencies and software: split it up to sub env? - Rscript and R?
-   3) Alternative path to FASTA files for pre split bam files ( https://stackoverflow.com/questions/40510347/can-snakemake-avoid-ambiguity-when-two-different-rule-paths-can-generate-a-given ) 
+**Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
+   0) How to contact datbases help: https://www.ebi.ac.uk/proteins/api/doc/#proteins_search_anchor
+   1) Get Protein - Gene name
+   2) Get Coordinates on genome (start and end) + strand
+   3) Get Fasta file of protein
+   4) Get at least one exons - introns table
+   5) Isoforms???
+**Development To Do list: (Dataset Construction)** 
+   1) Dependencies and software: split it up to sub env? - Rscript and R? maybe no
    4) Make 'FRMT' files temporary?
    5) Pre bam file input?
    6) Different use for ancient / modern samples
-   7) Uniprot data - BIG ! help: https://www.ebi.ac.uk/proteins/api/doc/#proteins_search_anchor
    
   **Development To Do list: (Dataset Analysis)** - By Yiannis , for Yiannis
-  1) Split up env per step?
+  1) Split up env per step? maybe no
   2) Extend to BEAST software or BEAST alternatives that do MSC
   3) Phylogenetic Network construction
