@@ -105,6 +105,7 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
    3) Get Fasta file of protein
    4) Get at least one exons - introns table
    5) Isoforms???
+ 
 **Development To Do list: (Dataset Construction)** 
    1) Dependencies and software: split it up to sub env? - Rscript and R? maybe no
    4) Make 'FRMT' files temporary?
