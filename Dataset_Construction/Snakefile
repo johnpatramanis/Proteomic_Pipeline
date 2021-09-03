@@ -34,9 +34,9 @@ for line in GENE_LOCS:
 
 CHROMOSOMES=list(set(CHROMOSOMES))
 CHROMOSOMES.sort()
-print(CHROMOSOMES)
-print(GENES)
-print(GENES_TO_REFERENCES)
+# print(CHROMOSOMES)
+# print(GENES)
+# print(GENES_TO_REFERENCES)
 
 STARTS='./starts.txt'
 
@@ -59,8 +59,6 @@ rule all:
 
 
 
-
-
 #######################################################################################################################################################################
 ## Data Pipeline ##
 
@@ -71,7 +69,7 @@ rule format_name:
     input:
         "Workspace/1_OG_BAM_FILES/{sample}.bam"
     output:
-        temp("Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam")
+        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
     shell: 
         """samtools view -H {input} |\
         sed -e 's/SN:1/SN:chr1/' | sed -e 's/SN:2/SN:chr2/' | \
@@ -95,56 +93,121 @@ rule format_index_name:
     input:
         "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
     output:
-        temp("Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai")
+        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai"
     shell:
         "samtools index -b {input}"
 
 
 
-#Split it into target chromosomes
+
+
+
+
+
+
+#Input for spliting: Is it one bam files with all chromosomes or split up into smaller bam files (per chromosome)
+def my_inputs(samples,chromosomes):
+    
+    sample_list=[]
+    
+    for S in samples:
+        
+        
+        path='Workspace/1_OG_BAM_FILES/' + str(S) + '.bam'
+        
+        if (os.path.isfile(path))==True:
+            S='Workspace/2_FORMATTED_BAM/'+ str(S) +'_FRMT.bam'
+            sample_list.append(S)
+    
+        if (os.path.isfile(path))==False:
+        
+            Bam_List=[] #file paths for individual chromosomes 
+            Check_List=[] #check if any chromosomes bams are missing
+            
+            for CHR in chromosomes:
+                path1='Workspace/1_OG_BAM_FILES/' + str(S) +'_{}'.format(CHR) + '.bam' #possible naming scheme 1
+                
+                if (os.path.isfile(path1))==True:
+                    Bam_List.append(path1)
+
+                else:
+                    Check_List.append(CHR)
+
+            sample_list.append(Bam_List)
+                
+
+    
+    return sample_list
+
+
+#Same for .bai files
+def my_inputs2(samples,chromosomes):
+    
+    sample_list=[]
+    
+    for S in samples:
+        
+        
+        path='Workspace/1_OG_BAM_FILES/' + str(S) + '.bam'
+        
+        if (os.path.isfile(path))==True:
+            S='Workspace/2_FORMATTED_BAM/'+ str(S) +'_FRMT.bam.bai'
+            sample_list.append(S)
+
+    
+    return sample_list
+
+
+
+
+
+
+
+
+
+
+
+#Split it into target chromosomes if one bam file, format each bam file if already split into chromosomes
 rule format_split_into_chromosomes:
     input:
-        BAM=expand("Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam",sample=SAMPLES),
-        BAI=expand("Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai",sample=SAMPLES),
+        BAM=my_inputs(SAMPLES,CHROMOSOMES),
+        BAI=my_inputs2(SAMPLES,CHROMOSOMES),
         GENE_LOCS="Gene_locs.txt",
     output:
-        temp(expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES)),
-        temp(expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES))
+        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
+        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
     run:
-        COMMANDS1=expand("""samtools view -b Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam chr{CHR} > Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam; """,CHR=CHROMOSOMES,sample=SAMPLES)
-        COMMANDS2=expand("""samtools index -b Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam;  """,CHR=CHROMOSOMES,sample=SAMPLES)
         
-        for CMD in COMMANDS1:
-            shell(CMD)
-        for CMD2 in COMMANDS2:
-            shell(CMD2)
-
-
-
-#####
-#Maybe add another formating step here for samples that are already split into chromosomes
-##
-# def get_3_SPLIT_CHRoms_or_formatted_whole(wcs):
-    # if:
-        # return input1
-    # if:
-        # return input2
+        for S in input.BAM:
         
+            SAMPLE_HERE=S.split('/')[-1]
+            SAMPLE_HERE='_'.join(SAMPLE_HERE.split('_')[0:-1])            
+                    
+            if ('_FRMT' in S) == False:
+                
+                CHR=S.split('/')[-1]
+                CHR=(CHR.split('.')[0]).split('_')[-1]
+                print('Sample {} is already split into Chromosome-level-Bams.\n Processing Bam file {} which should correspond to chromosome {}.'.format(SAMPLE_HERE,S,CHR))
+                
+                shell("""samtools index -b {} """.format(S)) #make sure its indexed
+                
+                shell("""samtools view -H {} | sed -e 's/SN:{}/SN:chr{}/' | samtools reheader - {} > Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam;""".format(S,CHR,CHR,S,SAMPLE_HERE,CHR)) #format it
+                
+                shell("""samtools index -b Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam;""".format(SAMPLE_HERE,CHR)) #Re-index it
 
-# rule format_split_into_chromosomes:
-    # input:
-        # BAM=get_3_SPLIT_CHRoms_or_formatted_whole,
-        # GENE_LOCS="Gene_locs.txt",
-    # output:
-        # expand("BAM_FILES/DENISOVA_DENISOVA_ADNA_FRMT_{CHR}.bam", CHR=CHROMOSOMES)
-    # run:
-        # if input1:
-            # NAME=input.BAM[:-4]
-            # for CHR in CHROMOSOMES:
-                # shell("""samtools view -b {} chr{} > {}_{}.bam; """.format(input.BAM,CHR,NAME,CHR))
-        # if input2:
-            # for CHR in CHROMOSOMES:
-####
+
+            if ('_FRMT' in S) == True:
+                for CHR in CHROMOSOMES:
+                    print('Sample {} will now be split into Chromosome-level-Bams.\n Processing chromosome {}.'.format(SAMPLE_HERE,CHR))
+                    
+                    shell("""samtools view -b Workspace/2_FORMATTED_BAM/{}_FRMT.bam chr{} > Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam; """.format(SAMPLE_HERE,CHR,SAMPLE_HERE,CHR))
+                    
+                    shell("""samtools index -b Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam;  """.format(SAMPLE_HERE,CHR))
+
+
+
+
+
 
 
 #Use ANGSD to transform to fasta
@@ -166,7 +229,7 @@ rule from_bam_to_fasta_ANGSD:
         for sample in SAMPLES:
             for CHR in CHROMOSOMES:
                 path='./Workspace/4_FASTA_FILES/{}_FRMT_{}.fa.gz'.format(sample,CHR)
-                print(os.path.exists(path),path)
+
                 if os.path.exists(path)==False:
                     shell('cp ./Workspace/1_OG_BAM_FILES/dummy.fa ./Workspace/4_FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
                     shell('gzip ./Workspace/4_FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
@@ -244,7 +307,7 @@ rule Assemble_protein_dataset:
         expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
     run:
         COMMANDS1=expand("""touch Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/*_{GENE}_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; """,GENE=GENES)
-        COMMANDS2=expand("""touch Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_*_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{sample}_PROT_REFERENCE.fa; """,sample=SAMPLES)
+        COMMANDS2=expand("""touch Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_*_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; """,sample=SAMPLES)
         
         for CMD in COMMANDS1:
             shell(CMD)
