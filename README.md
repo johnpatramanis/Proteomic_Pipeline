@@ -86,7 +86,14 @@ With your sample files set up, all you need to do now is initiate the process.
 Type ```snakemake -j1 ``` to begin.
 If everything works out, you should get your resulting proteins in the 'Dataset_Construction/Workspace/FINAL_OUTPUT' folder.
    
-   
+
+
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
+
+
 
 **Instalation of Dataset Analysis (Phylogenetic Reconstruction) **
 If you have already gone through the previous pipeline (Dataset Analysis) you can skip steps 1 and 2 and go straight to step 3!
@@ -155,6 +162,10 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
    
 
 
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
 
    
 <br/><br/>
