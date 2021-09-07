@@ -21,7 +21,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
    
 **Instalation of Pipelines and User Guide for _Dataset Preparation_ /  _Dataset Analysis_**
 
-This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that. Steps 1-2 need only be done once for every computer. If for example you just want to run the Dataset Preparation pipeline, look bellow for its instalation guide and go through all the steps. If you then also want to run the Dataset Analysis,scroll further down and find its guide, you can skip steps 1 and 2 however, if you've gone through them once.
+This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that. Steps 1-3 need only be done once for every computer. If for example you just want to run the Dataset Preparation pipeline, look bellow for its instalation guide and go through all the steps. If you then also want to run the Dataset Analysis,scroll further down and find its guide, you can skip steps 1,2 and 3 however, if you've gone through them once.
 
 **Instalation of Dataset Preparation and set up**
 
@@ -97,7 +97,7 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
 
 **Instalation of Dataset Analysis (Phylogenetic Reconstruction)**
 
-If you have already gone through the previous pipeline (Dataset Analysis) you can skip steps 1 and 2 and go straight to step 3!
+If you have already gone through the previous pipeline (Dataset Analysis) you can skip steps 1-3 and go straight to step 4!
 
 **Step 1)** **Conda**
 
