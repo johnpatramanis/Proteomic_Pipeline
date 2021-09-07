@@ -83,7 +83,7 @@ c) You are located in the main directory ( ..../Dataset_Construction/ ) at the e
 **Step 6) Execute the translation**
 
 With your sample files set up, all you need to do now is initiate the process.
-Type ```snakemake -j1 ``` to begin.
+Type ```snakemake -j1 ``` to begin. The command -j1 controls how many cores will be used by the pipeline, e.g. -j8 uses 8 cores, -j16 uses 16 etc
 If everything works out, you should get your resulting proteins in the 'Dataset_Construction/Workspace/FINAL_OUTPUT' folder.
    
 
@@ -149,9 +149,9 @@ Finally in the Proteomic_Pipeline/Dataset_Analysis/ folder there should be a 'Da
 
 **Step 6) Run the Phylogenies! **
 
-With your sample files set up, all you need to do now is initiate the process.
-Type ```snakemake -j1 ``` to begin.
-If everything works out, you should get your resulting proteins in the 'Dataset_Construction/Workspace/FINAL_OUTPUT' folder.
+With your dataset files all set up, all you need to do now is initiate the process.
+Type ```snakemake -j1 ``` to begin. The command -j1 controls how many cores will be used by the pipeline, e.g. -j8 uses 8 cores, -j16 uses 16 etc.
+If everything works out, you should get your resulting tree files in the appropriate folder in Worksapce.
    
    
 
