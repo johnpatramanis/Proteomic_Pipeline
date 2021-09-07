@@ -4,9 +4,9 @@
 
 Compiled scripts to enable phyloproteomic analysis suing Snakemake.
 
-1) Dataset Construction (Working check bellow for instalation)
+1) Dataset Construction
    Scripts to download proteomic data, transform DNA datasets to protein ones and properly format them.
-2) Analysis (Under development)
+2) Analysis 
    Scripts to assemble a proteomic dataset, format and prepare it for a phylgenetic analysis- including the actual phylogenetic tree creation
    
 <br/><br/>
@@ -19,7 +19,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
    
    
    
-**Instalation - User Guide for _Dataset Preparation_**
+**Instalation of Pipelines and User Guide for _Dataset Preparation_**
 
 This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that.
 
@@ -50,13 +50,16 @@ And now lets download the github repository, the core of the pipeline usig git c
 and move into the directory that we will work in:
 
 ``` cd Proteomic_Pipeline/Dataset_Construction/ ```
-   
-   
+
+or 
+
+ ``` cd Proteomic_Pipeline/Dataset_Analysis/ ```  
    
 **Step 4) Enviroment Creation**   
 
 Now we are ready for one of the mos important steps: creating a functionng enviroment within conda that contains all the required dependencies for the pipeline to work!
-Make sure you are in the **'Proteomic_Pipeline/Dataset_Construction/'** fodler and that there is a **'Translator.yml'** file in there.
+If you want to use the Dataset Construction pipeline for example, make sure you are in the **'Proteomic_Pipeline/Dataset_Construction/'** fodler and that there is a **'Translator.yml'** file in there.
+If you want to use the Dataset_Analysis pipeline , make sure you are in the **'Proteomic_Pipeline/Dataset_Analysis/'**
 If so simply type: ``` conda env create -f Translator.yml ```
 This may take a while to install everything...
 Once this is done, remember to activate the enviroment we just created by typing:
