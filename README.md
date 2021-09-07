@@ -142,9 +142,10 @@ Once this is done, remember to activate the enviroment we just created by typing
 
 Once you have activated the conda enviroment, your computer should now have a couple of more tools installed and available to use: e.g. MUSCLE (aligner for fasta files), PhyML (Phylogenetic tree construction) and a number of R packages. These will be used by the pipeline automatically, but you can also use them on your onw if you want.
 
+There is practicaly only one thing you need to set up for this pipeline: your dataset. Your dataset should be .fasta format file, containing all the sequences you want to use and labeled correctly. Each fasta entry that contains the amino acid sequence of one protein should have a label like this: **Pan_troglodytes_AHSG/1-368** . The "/" seperating the label from the information of the sequence is optional, but the important thing is that the label of each entry is composed of the **name of the sample first** eg Pan_troglodytes and then followed by the name of the gene/protein **AND** connected together using an **\_**. A fasta file example will be later included to better showcase how this looks and to also act as a test file.   
 
 
-**Step 6) Execute the translation**
+**Step 6) Run the Phylogenies! **
 
 With your sample files set up, all you need to do now is initiate the process.
 Type ```snakemake -j1 ``` to begin.
