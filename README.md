@@ -95,7 +95,8 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
 
 
 
-**Instalation of Dataset Analysis (Phylogenetic Reconstruction) **
+**Instalation of Dataset Analysis (Phylogenetic Reconstruction)**
+
 If you have already gone through the previous pipeline (Dataset Analysis) you can skip steps 1 and 2 and go straight to step 3!
 
 **Step 1)** **Conda**
