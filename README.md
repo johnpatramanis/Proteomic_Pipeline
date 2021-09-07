@@ -138,21 +138,11 @@ Once this is done, remember to activate the enviroment we just created by typing
 ``` conda activate Analyser ```
 
 
-**Step 5) Prepare your Data for translation**
+**Step 5) Set up your Dataset for the Analysis**
 
-If everything worked until now, then we are almost set! Now we just need to get some DNA data to translate them over to proteins. If you are using a species that is already aligned to the Human genome (ch37) then all you need to do is place your bam files in the '/Dataset_Construction/Workspace/1_OG_BAM_FILES' folder and then in the '/Dataset_Construction/' folder edit the 'samples.txt' file to contain each sample name per line. If your bam file is named 'SAMPLE.bam' then simply write the name 'SAMPLE' in the sample.txt file. Make sure each bam file is indexed as well (its accompanied by a bam.bai file). If not use samtools index -b command to do so in the 1_OG_BAM_FILES folder.
-
-If you don't have any bam files at hand or simply want to test if the pipeline works, you can type ``` bash 0_Download_Bam_files.sh``` and some bam files will be downloaded and placed in the right folder. The samples.txt file also by default corresponds to these samples. Keep in mind that these files are around 100GB each, so make sure you have space!
+Once you have activated the conda enviroment, your computer should now have a couple of more tools installed and available to use: e.g. MUSCLE (aligner for fasta files), PhyML (Phylogenetic tree construction) and a number of R packages. These will be used by the pipeline automatically, but you can also use them on your onw if you want.
 
 
-
-
-If your bam files are aligned to a different species or reference genome, then things will get more complicated as other files need to be re-adjusted. if you want to target different proteins than the enamel presets, then you also need to make some adjustments. These are described in step number 7 & 8.
-
-To sum up:
-a) Bam files along with their bai index file should be in the Dataset_Construction/Workspace/1_OG_BAM_FILES/ 
-b) The 'Samples.txt' file should have the name of each bam file (without the .bam ending), 1 name per line. Also make sure you dont have an empty line, or it will try to find a bam file named ''.bam
-c) You are located in the main directory ( ..../Dataset_Construction/ ) at the end of this step
 
 **Step 6) Execute the translation**
 
