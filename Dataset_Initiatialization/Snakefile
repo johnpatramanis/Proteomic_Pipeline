@@ -5,7 +5,7 @@
 #conda env export --from-history > environment.yaml
 #conda env create --name testenv --file environment.yaml
 
-
+import time
 import os
 import os.path
 
@@ -23,7 +23,6 @@ PROTEIN_FILE=open('Proteins.txt','r')
 for line in PROTEIN_FILE:
     GENES.append(line.strip())
 
-print(GENES)
 
 
 
@@ -35,17 +34,13 @@ for line in ORGANISM_FILE:
         REFERENCE.append(line[1])
 
 
-print(GENES)
-print(ORGANISM)
-print(REFERENCE)
-
 
 #######################################################################################################################################################################
 ## Starting Rule
 
 rule all:
     input:
-        expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
+        expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
 
 
 #######################################################################################################################################################################
@@ -61,26 +56,38 @@ rule Get_Ensembl_Gene_IDs:
         expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM),
         expand('Workspace/1_Gene_IDs/{organism}/Missing_IDs.txt',organism=ORGANISM)
     run:
+
         for ORG in ORGANISM:
+        
+            #Check if path for organism exists/create it
             path='Workspace/1_Gene_IDs/'+str(ORG)
             if os.path.exists(path)==False:
                 os.makedirs(path)
             
+            #Get GeneID for every gene of list
+            limiter=0
             for GENE in GENES:
+                
+                #limiter, because requesting too many files in too short of a time, will cause IP to be blocked
+                if limiter%100==0:
+                    time.sleep(1)
+                    
                 shell(""" python3 Python_Scripts/Search_Uniprot.py {} {}""".format(GENE,ORG))
-
+                
+                limiter+=1
 
 
 rule Get_Ensembl_Transcript_IDs:
     input:
         expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM),
-        'Missing_IDs.txt'
+        expand('Workspace/1_Gene_IDs/{organism}/Missing_IDs.txt',organism=ORGANISM)
     output:
         expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
     run:
 
         for ORG in ORGANISM:
-        
+            
+            #check for missing Gene IDs
             MISSING_FILE=open('Workspace/1_Gene_IDs/{}/Missing_IDs.txt'.format(ORG),'r')
             MISSING_GENES=[]
             for line in MISSING_FILE:
@@ -88,20 +95,27 @@ rule Get_Ensembl_Transcript_IDs:
             FOUND_GENES=[x for x in GENES if x not in MISSING_GENES]    
             
             
+            #Check if path for organism exists/create it
             path='Workspace/2_Transcript_IDs/'+str(ORG)
             if os.path.exists(path)==False:
                 os.makedirs(path)
             
             
-            
+            limiter=0
+            #Get transcript ID for every GeneID
             for GENE in FOUND_GENES:
-            
+                
+                #limiter, because requesting too many files in too short of a time, will cause IP to be blocked
+                if limiter % 100 == 0:
+                    time.sleep(1)
+                
                 with open('Workspace/1_Gene_IDs/{}/{}'.format(ORG,GENE)) as f:
                     GENE_ID = f.readline().strip()
                 shell('''python Python_Scripts/Search_Ensembl.py {} {} {}'''.format(GENE,GENE_ID,ORG))
                 
+                limiter+=1
               
-              
+            #for missing GeneIDs make dummy in its place
             for GENE in MISSING_GENES:
             
                 if GENE!='':
