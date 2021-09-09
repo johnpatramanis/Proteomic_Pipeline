@@ -123,7 +123,7 @@ if r.json!=[]:
     
     
     OUTPUT_FILE=open('Workspace/1_Gene_IDs/{}/{}'.format(ORGANISM,GENE),'w')
-    MISSING_IDS=open('Missing_IDs.txt','w')
+    MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Missing_IDs.txt'.format(ORGANISM),'w')
     
     if GENE_IDs!=[]:
         GENE_ID=most_common(GENE_IDs)

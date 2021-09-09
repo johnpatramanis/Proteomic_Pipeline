@@ -53,12 +53,13 @@ rule all:
 
 ####
 
-rule format_name:
+rule Get_Ensembl_Gene_IDs:
     input:
         "Proteins.txt",
         "Organism.txt"
     output:
-        expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
+        expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM),
+        expand('Workspace/1_Gene_IDs/{organism}/Missing_IDs.txt',organism=ORGANISM)
     run:
         for ORG in ORGANISM:
             path='Workspace/1_Gene_IDs/'+str(ORG)
@@ -70,3 +71,21 @@ rule format_name:
 
 
 
+rule Get_Ensembl_Transcript_IDs:
+    input:
+        expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM),
+        'Missing_IDs.txt'
+    output:
+        expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM),
+        'Missing_IDs.txt'
+    run:
+        MISSING_FILE=open('Missing_IDs.txt','r')
+        MISSING_GENES=[]
+        for line in MISSING_FILE:
+            MISSING_GENES.append(line.strip())
+        FOUND_GENES=[x for x in GENES if x not in MISSING_GENES]    
+            
+        for ORG in ORGANISM:
+            for GENE in FOUND_GENES:
+        
+        for ORG
