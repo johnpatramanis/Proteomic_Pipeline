@@ -1,0 +1,69 @@
+#Run using snakemake -j1 --latency-wait 120 --use-conda
+
+
+#Dependancies to be used - R / Rpackages: ShortRead / angsd / blast-legacy (v2.2.26) / blast (v2.2.31)
+#conda env export --from-history > environment.yaml
+#conda env create --name testenv --file environment.yaml
+
+
+import os
+import os.path
+
+
+
+##### Load Input Files and usefull info  #####
+
+
+GENES=[]
+ORGANISM=[]
+REFERENCE=[]
+
+
+PROTEIN_FILE=open('Proteins.txt','r')
+for line in PROTEIN_FILE:
+    GENES.append(line.strip())
+
+print(GENES)
+
+
+
+ORGANISM_FILE=open('Organism.txt','r')
+for line in ORGANISM_FILE:
+    line=line.strip().split('\t')
+    ORGANISM.append(line[0])
+    if (len(line)==2):
+        REFERENCE.append(line[1])
+
+
+print(GENES)
+print(ORGANISM)
+print(REFERENCE)
+
+
+#######################################################################################################################################################################
+## Starting Rule
+
+rule all:
+    input:
+        expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
+
+
+#######################################################################################################################################################################
+## Data Pipeline ##
+
+####
+
+rule format_name:
+    input:
+        "Proteins.txt",
+        "Organism.txt"
+    output:
+        expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
+    run:
+        for ORG in ORGANISM:
+            shell('''mkdir Workspace/1_Gene_IDs/{} '''.format(ORG))
+            for GENE in GENES:
+                shell(""" python3 Python_Scripts/Search_Uniprot.py {} {}""".format(GENE,ORG))
+
+
+
