@@ -76,16 +76,34 @@ rule Get_Ensembl_Transcript_IDs:
         expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM),
         'Missing_IDs.txt'
     output:
-        expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM),
-        'Missing_IDs.txt'
+        expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
     run:
-        MISSING_FILE=open('Missing_IDs.txt','r')
-        MISSING_GENES=[]
-        for line in MISSING_FILE:
-            MISSING_GENES.append(line.strip())
-        FOUND_GENES=[x for x in GENES if x not in MISSING_GENES]    
-            
+
         for ORG in ORGANISM:
-            for GENE in FOUND_GENES:
         
-        for ORG
+            MISSING_FILE=open('Workspace/1_Gene_IDs/{}/Missing_IDs.txt'.format(ORG),'r')
+            MISSING_GENES=[]
+            for line in MISSING_FILE:
+                MISSING_GENES.append(line.strip())
+            FOUND_GENES=[x for x in GENES if x not in MISSING_GENES]    
+            
+            
+            path='Workspace/2_Transcript_IDs/'+str(ORG)
+            if os.path.exists(path)==False:
+                os.makedirs(path)
+            
+            
+            
+            for GENE in FOUND_GENES:
+            
+                with open('Workspace/1_Gene_IDs/{}/{}'.format(ORG,GENE)) as f:
+                    GENE_ID = f.readline().strip()
+                shell('''python Python_Scripts/Search_Ensembl.py {} {} {}'''.format(GENE,GENE_ID,ORG))
+                
+              
+              
+            for GENE in MISSING_GENES:
+            
+                if GENE!='':
+                    shell('''touch Workspace/2_Transcript_IDs/{}/{} '''.format(ORG,GENE))
+            
