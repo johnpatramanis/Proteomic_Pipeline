@@ -61,7 +61,10 @@ rule format_name:
         expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
     run:
         for ORG in ORGANISM:
-            shell('''mkdir Workspace/1_Gene_IDs/{} '''.format(ORG))
+            path='Workspace/1_Gene_IDs/'+str(ORG)
+            if os.path.exists(path)==False:
+                os.makedirs(path)
+            
             for GENE in GENES:
                 shell(""" python3 Python_Scripts/Search_Uniprot.py {} {}""".format(GENE,ORG))
 
