@@ -176,7 +176,7 @@ If everything works out, you should get your resulting tree files in the appropr
    5) Isoforms???
  
 **Development To Do list: (Dataset Construction)** 
-   1) Dependencies and software: split it up to sub env? - Rscript and R? maybe no
+   1) IMPORTANT FIX reading of template fasta files-> organism name and Protein name should be switched in time!
    4) Make 'FRMT' files temporary?
    5) Pre bam file input?
    6) Different use for ancient / modern samples
