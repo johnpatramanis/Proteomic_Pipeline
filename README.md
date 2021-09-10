@@ -167,6 +167,8 @@ If everything works out, you should get your resulting tree files in the appropr
 <br/><br/>
 <br/><br/>
    
+   
+   
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
    0) How to contact datbases help: https://www.ebi.ac.uk/proteins/api/doc/#proteins_search_anchor / http://rest.ensembl.org/
    1) Get Protein - Gene name
@@ -177,6 +179,7 @@ If everything works out, you should get your resulting tree files in the appropr
  
 **Development To Do list: (Dataset Construction)** 
    1) IMPORTANT FIX reading of template fasta files-> organism name and Protein name should be switched in time!
+   2) IMPORTANT Try the --no-build method for creating a yml file from conda env
    4) Make 'FRMT' files temporary?
    5) Pre bam file input?
    6) Different use for ancient / modern samples
