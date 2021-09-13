@@ -1,7 +1,5 @@
 import requests, sys
 import re
-import sys
-
 #Example input: AMELX ENSG00000125363 Homo_sapiens
 
 def most_common(lst):
@@ -18,10 +16,6 @@ ext = "/lookup/id/{}?expand=1".format(GENE_ID)
  
 r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
 
-
-if not r.ok:
-  r.raise_for_status()
-  sys.exit()
 
 TRNSCRPT_ID=''
 

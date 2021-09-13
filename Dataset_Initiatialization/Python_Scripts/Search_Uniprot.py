@@ -30,9 +30,6 @@ requestURL = "https://www.ebi.ac.uk/proteins/api/proteins?offset=0&size=100&gene
 
 r = requests.get(requestURL, headers={ "Accept" : "application/json"})
 
-if not r.ok:
-  r.raise_for_status()
-  sys.exit()
 
 # If any hits
 if r.json!=[]:

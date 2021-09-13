@@ -1,0 +1,2 @@
+Here each file with the name of a Gene/Protein will contain the FASTA sequence (Canonical Isoform prioritized) for that protein in the database.
+If a protein has a missing ID it will produce a missing sequence.
