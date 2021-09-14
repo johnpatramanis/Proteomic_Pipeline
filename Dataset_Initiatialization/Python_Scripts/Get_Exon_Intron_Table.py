@@ -14,11 +14,10 @@ elif len(sys.argv)==3:
     GENE=sys.argv[1]
     TRNSCR_ID=''
     ORGANISM=sys.argv[2]
-    SEQ='N'*100
 
 
 server = "http://rest.ensembl.org"
-ext = "/sequence/id/{}?type=protein".format(TRNSCR_ID)
+ext = "/lookup/id/{}?expand=1".format(TRNSCR_ID)
  
 r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
 
@@ -32,32 +31,39 @@ if r.json!=[]:
     #Find best result!
     #If multiple hits
     if (isinstance(MJ, list))==True:
-    
+        
         LS=MJ[0]
-        if 'seq' in LS.keys():
-            SEQ=LS['seq']
-            
-        else:
-            SEQ='X'*100
+        
+        START=int(LS['start'])
+        for EXON1,EXON2 in LS['Exon'].items():
+            print(EXON1,EXON2)
+        
+        
+        # for i,k in LS.items():
+            # print(i,k)
             
         
     
     #If single hit, then just select that
     if (isinstance(MJ, list))==False:
     
-        if 'seq' in MJ.keys():
-            SEQ=MJ['seq']
-            
-        else:
-            SEQ='X'*100
+        START=int(MJ['start'])
+        print(START)
+        for EXON1 in MJ['Exon']:
+            print(EXON1)
+        
+        # for i,k in MJ.items():
+            # print(i,k)
+    
 
 
-#if ID file empty
+
+
+
+#if Transcript ID file empty
 if r.json==[]:
     SEQ='-'*100
    
     
-FASTA='>'+GENE+'_'+ORGANISM+'\n'+SEQ
-Fasta_ouptut=open('Workspace/3_FASTA_Seqs/{}/{}.fa'.format(ORGANISM,GENE),'w')
-Fasta_ouptut.write(FASTA)
-print(FASTA)
+TABLE_FILE=open('{}_ei.txt'.format(GENE),'a')
+
