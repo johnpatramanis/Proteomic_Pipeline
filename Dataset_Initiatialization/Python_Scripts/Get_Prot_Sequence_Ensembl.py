@@ -10,10 +10,10 @@ if len(sys.argv)==4:
     ORGANISM=sys.argv[3]
 
 
-elif:len(sys.argv)==3:
+elif len(sys.argv)==3:
     GENE=sys.argv[1]
     TRNSCR_ID=''
-    ORGANISM=sys.argv[3]
+    ORGANISM=sys.argv[2]
     SEQ='N'*100
 
 
