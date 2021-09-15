@@ -80,6 +80,7 @@ a) Bam files along with their bai index file should be in the Dataset_Constructi
 b) The 'Samples.txt' file should have the name of each bam file (without the .bam ending), 1 name per line. Also make sure you dont have an empty line, or it will try to find a bam file named ''.bam
 c) You are located in the main directory ( ..../Dataset_Construction/ ) at the end of this step
 
+
 **Step 6) Execute the translation**
 
 With your sample files set up, all you need to do now is initiate the process.
@@ -147,7 +148,7 @@ There is practicaly only one thing you need to set up for this pipeline: your da
 Finally in the Proteomic_Pipeline/Dataset_Analysis/ folder there should be a 'Datasets.txt' file. Open that file to edit it. In the first column you should put the full name of your dataset file (the one we just moved in the Workspace) and in the second one the name of the target sample (the ancient one you want to assign phylogeneticaly). If your dataset contains multiple ancient samples, I highly suggest 'analysing' them at the same time, by writing all of their names in the second column, seperated only by commas. Each row should have 2 items: name of the dataset file and the name of the sample(s). If you want to process multiple datasets, just add more rows!
 
 
-**Step 6) Run the Phylogenies! **
+**Step 6) Run the Phylogenies!**
 
 With your dataset files all set up, all you need to do now is initiate the process.
 Type ```snakemake -j1 ``` to begin. The command -j1 controls how many cores will be used by the pipeline, e.g. -j8 uses 8 cores, -j16 uses 16 etc.
