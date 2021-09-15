@@ -61,18 +61,8 @@ if r.json!=[]:
                 EXON_NAME_LIST.append('Intron')
             
  
-    # for i,k in MJ.items():
-        # print(i,k)
-
-
-
-
-#if Transcript ID file empty
-if r.json==[]:
-    SEQ='-'*100
-   
     
-TABLE_FILE=open('{}_ei.txt'.format(GENE),'w')
+TABLE_FILE=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,GENE),'w')
 
 for L in range(0,len(EXON_LENGTH_LIST)):
     TABLE_FILE.write('{}\t{}\n'.format(EXON_NAME_LIST[L],EXON_LENGTH_LIST[L]))
