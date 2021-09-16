@@ -58,6 +58,6 @@ if r.json==[]:
    
     
 FASTA='>'+GENE+'_'+ORGANISM+'\n'+SEQ
-Fasta_ouptut=open('Workspace/3_FASTA_Seqs/{}/{}.fa'.format(ORGANISM,GENE),'w')
+Fasta_ouptut=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,GENE),'w')
 Fasta_ouptut.write(FASTA)
 print(FASTA)

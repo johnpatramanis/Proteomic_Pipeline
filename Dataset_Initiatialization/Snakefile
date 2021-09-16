@@ -42,7 +42,9 @@ for line in ORGANISM_FILE:
 rule all:
     input:
         ["Workspace/5_Loc_Files/{}/{}/starts.txt".format(x,REFERENCE[x]) for x in ORGANISM],
-        ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(x,REFERENCE[x]) for x in ORGANISM]
+        ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(x,REFERENCE[x]) for x in ORGANISM],
+        expand("Workspace/4_EITs/{organism}/{sample}_ei.txt",sample=GENES,organism=ORGANISM),
+        expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=ORGANISM)
 
 
 #######################################################################################################################################################################
@@ -135,12 +137,12 @@ rule Get_FASTA_Sequence_from_Transcript_ID:
     input:
         expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
     output:
-        expand("Workspace/3_FASTA_Seqs/{organism}/{sample}.fa",sample=GENES,organism=ORGANISM)
+        expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=ORGANISM)
     run:
         for ORG in ORGANISM:
         
             #Check if path for organism exists/create it
-            path='Workspace/3_FASTA_Seqs/'+str(ORG)
+            path='Workspace/3_FASTA_Seqs/Genes_'+str(ORG)
             if os.path.exists(path)==False:
                 os.makedirs(path)
             
@@ -188,7 +190,7 @@ rule Get_Exon_Intron_Table_from_Transcript_ID:
                 
 rule Get_Location_Info_from_Ensemble_Gene_ID:
     input:
-        expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
+        expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
     output:
         ["Workspace/5_Loc_Files/{}/{}/starts.txt".format(x,REFERENCE[x]) for x in ORGANISM],
         ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(x,REFERENCE[x]) for x in ORGANISM]
@@ -208,7 +210,7 @@ rule Get_Location_Info_from_Ensemble_Gene_ID:
                     time.sleep(1)
                 
 
-                with open('Workspace/1_Gene_IDs/{}/{}'.format(ORG,GENE)) as f:
+                with open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE)) as f:
                     GENE_ID = f.readline().strip()
                 
                 shell('''python3 Python_Scripts/Get_Assembly_Location.py {} {} {} {}'''.format(GENE,GENE_ID,ORG,REFERENCE[ORG]))
