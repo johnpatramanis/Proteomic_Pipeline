@@ -41,7 +41,8 @@ for line in ORGANISM_FILE:
 
 rule all:
     input:
-        expand("Workspace/4_EITs/{organism}/{sample}_ei.txt",sample=GENES,organism=ORGANISM)
+        ["Workspace/5_Loc_Files/{}/{}/starts.txt".format(x,REFERENCE[x]) for x in ORGANISM],
+        ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(x,REFERENCE[x]) for x in ORGANISM]
 
 
 #######################################################################################################################################################################
@@ -189,8 +190,8 @@ rule Get_Location_Info_from_Ensemble_Gene_ID:
     input:
         expand("Workspace/1_Gene_IDs/{organism}/{sample}",sample=GENES,organism=ORGANISM)
     output:
-        ["Workspace/5_Loc_Files/{}/{}/starts.txt".format(x,REFERENCE[X]) for x in ORGANISM],
-        ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(x,REFERENCE[X]) for x in ORGANISM]
+        ["Workspace/5_Loc_Files/{}/{}/starts.txt".format(x,REFERENCE[x]) for x in ORGANISM],
+        ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(x,REFERENCE[x]) for x in ORGANISM]
     run:
         for ORG in ORGANISM:
         

@@ -74,11 +74,7 @@ if r.json!=[]:
                 CURRENT_ASSEMBLY=NEW_MAP['assembly']
             
             
-print(START)           
-print(END)           
-print(STRAND)           
-print(SEQ_REGION)      
-print(CURRENT_ASSEMBLY)      
+print('\nGenerating Gene info for Gene: {}\nLocation: {}:{}-{}\tstrand:{}\nAssembly Name: {} '.format(GENE,SEQ_REGION,START,END,STRAND,CURRENT_ASSEMBLY))             
             
 
 if STRAND==1:
