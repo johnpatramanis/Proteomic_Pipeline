@@ -40,7 +40,7 @@ CHROMOSOMES.sort()
 
 STARTS='./starts.txt'
 
-PROT_REF_FILES='./Genes_human/'
+PROT_REF_FILES='./Genes/'
 
 EIT='./EIT/';
 
@@ -283,7 +283,7 @@ rule Translate_through_blastools:
             shell(CMD)
         for GENE in GENES:
             for sample in SAMPLES:
-                shell("""blastall  -p tblastn -i ./Genes_human/{}  -d Workspace/6_SPLICED_GENE_FILES/{}_FRMT_{}_spliced.fa -o Workspace/7_BLASTED_GENES/{}_FRMT_{}_spliced.blast -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;""".format(GENES_TO_REFERENCES[GENE],sample,GENE,sample,GENE))
+                shell("""blastall  -p tblastn -i ./Genes/{}  -d Workspace/6_SPLICED_GENE_FILES/{}_FRMT_{}_spliced.fa -o Workspace/7_BLASTED_GENES/{}_FRMT_{}_spliced.blast -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;""".format(GENES_TO_REFERENCES[GENE],sample,GENE,sample,GENE))
                 
 
 
