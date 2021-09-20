@@ -1,23 +1,25 @@
 args = commandArgs(trailingOnly=TRUE)
-#command to run:    Rscript Rscript1.r 'sample_file' 'Starts_file' 'EIT_folder_location' 'output_location'
-#command to run(from Dataset_Construction folder):    Rscript R\ scripts/Rscript2.r Workspace/GENE_FASTA_FILES/HG00614_FRMT_AMELX.fa starts.txt ./EIT/ Workspace/SPLICED_GENE_FILES/
+#command to run:    Rscript Rscript2.r 'sample_file' 'Starts_file' 'EIT_folder_location' 'output_location'
+#command to run(from Dataset_Construction folder):    Rscript R\ scripts/Rscript2.r Workspace/5_GENE_FASTA_FILES/DENISOVA_DENISOVA_ADNA_FRMT_COL1A1.fa starts.txt ./EIT/ Workspace/6_SPLICED_GENE_FILES/
 
 library(ShortRead)
 
 
 fas<-args[1]
-info<-read.table(args[2], h=T, as.is=T) # name of each gene/ where each gene starts / which strand
+info<-read.table(args[2], h=F, as.is=T) # name of each gene/ where each gene starts / which strand
 
 
 
 #for each fasta file (one fasta per gene)
 
-name<-strsplit(gsub(".fa", "", fas), "/")[[1]][length(strsplit(gsub(".fa", "", fas), "/")[[1]])]
-gene<-strsplit(name,"_")[[1]][length(strsplit(name,"_")[[1]])]#gene name from file name
-samp<-paste(strsplit(name,"_")[[1]][1:length(strsplit(name,"_")[[1]])-1],collapse='_') # Sample name from file name
+name<-gsub(".fa", "", fas)
+name<-strsplit(basename(name), "_FRMT_")
+gene<-name[[1]][2]#gene name from file name
+samp<-name[[1]][1] # Sample name from file name
 fa<-readFasta(fas) #readFasta loads the fasta file into R
 fa<-DNAString(as.character(sread(fa))) #Turn iNAString
 
+print(c(samp,gene))
 
 tab<-read.table(paste0(args[3], gene, "_ei.txt"), as.is=T, sep="\t") # Exon / Intron file
 
@@ -62,10 +64,10 @@ if (nchar(fa)>=700) {
     
     newseq<-ShortRead(sread=DNAStringSet(seqs), id=BStringSet(ids))
     
-    writeFasta(newseq, paste0(args[4],samp, "_", gene, "_spliced.fa"))
+    writeFasta(newseq, paste0(args[4],samp, "_FRMT_", gene, "_spliced.fa"))
     
     } else{
     ids<-paste0(samp, "_", gene, "_spliced")
     newseq<-ShortRead(sread=DNAStringSet(as.character(fa)), id=BStringSet(ids))
-    writeFasta(newseq, paste0(args[4],samp, "_", gene, "_spliced.fa"))
+    writeFasta(newseq, paste0(args[4],samp, "_FRMT_", gene, "_spliced.fa"))
     }
