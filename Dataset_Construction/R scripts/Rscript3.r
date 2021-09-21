@@ -18,7 +18,7 @@ samp<-name[[1]][1] # Sample name from file name
 
 
 fout<-paste0(args[2],samp,'_FRMT_',gene, "_translated.fa")  #name of output fasta (protein)
-h<-samp  # just the sample name
+h<-paste0(samp,'_',gene) # just the sample name
 
 #for each blast file
 blout<-fas   #grab each file
