@@ -172,10 +172,7 @@ If everything works out, you should get your resulting tree files in the appropr
    
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
    0) How to contact datbases help: https://www.ebi.ac.uk/proteins/api/doc/#proteins_search_anchor / http://rest.ensembl.org/
-   1) Get Protein - Gene name
-   2) Get Coordinates on genome (start and end) + strand
-   3) Get Fasta file of protein
-   4) Get at least one exons - introns table
+   1) Combine all downloaded data into a folder
    5) Isoforms???
  
 **Development To Do list: (Dataset Construction)** 
