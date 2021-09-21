@@ -21,6 +21,9 @@ for line in SAMPLE_FILE:
 print(SAMPLES)
 
 
+
+
+
 CHROMOSOMES=[]
 GENES=[]
 GENES_TO_REFERENCES={}
@@ -52,7 +55,9 @@ GENE_LOCS='./Gene_locs.txt';
 
 rule all:
     input:
-        expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
+        expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
+        expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
 
 
 
@@ -281,7 +286,7 @@ rule Translate_through_blastools:
             shell(CMD)
         for GENE in GENES:
             for sample in SAMPLES:
-                shell("""blastall  -p tblastn -i ./Genes_human/{}  -d Workspace/6_SPLICED_GENE_FILES/{}_FRMT_{}_spliced.fa -o Workspace/7_BLASTED_GENES/{}_FRMT_{}_spliced.blast -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;""".format(GENES_TO_REFERENCES[GENE],sample,GENE,sample,GENE))
+                shell("""blastall  -p tblastn -i ./Genes/{}  -d Workspace/6_SPLICED_GENE_FILES/{}_FRMT_{}_spliced.fa -o Workspace/7_BLASTED_GENES/{}_FRMT_{}_spliced.blast -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;""".format(GENES_TO_REFERENCES[GENE],sample,GENE,sample,GENE))
                 
 
 
@@ -291,7 +296,7 @@ rule Extract_blastools_output:
     output:
         expand("Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
     run:
-        COMMANDS1=expand("""Rscript R\ scripts/Rscript3.r ./Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast Workspace/8_PROTEINS_FASTAS/ ;""",GENE=GENES,sample=SAMPLES)
+        COMMANDS1=expand("""Rscript R\ scripts/Rscript3.r Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast Workspace/8_PROTEINS_FASTAS/ ;""",GENE=GENES,sample=SAMPLES)
         for CMD in COMMANDS1:
             shell(CMD)
             
