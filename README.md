@@ -23,6 +23,9 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
 
 This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that. Steps 1-3 need only be done once for every computer. Each of the 3 pipelines is semi-autonomus, thus can be run without necesserely running the other 2. If for example you just want to run the Dataset Preparation pipeline, look bellow for its instalation guide and go through all the steps. If you then also want to run the Dataset Analysis,scroll further down and find its guide, you can skip steps 1,2 and 3 however, if you've gone through them once.
 
+<br/><br/>
+<br/><br/>
+<br/><br/>
 
 **Instalation of Dataset Initialization and set up**
 
