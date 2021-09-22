@@ -1,0 +1,1 @@
+Here each file with the name of a Gene/Protein will contain the Ensemble Transcript ID (Canonical Isoform prioritized) for that entry in the database.

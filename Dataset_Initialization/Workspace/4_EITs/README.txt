@@ -1,0 +1,2 @@
+Here each file with the name of a Gene/Protein_eit.txt will contain the Intron/Exon Table for that protein (canonical transcript) in the database.
+If a protein has a missing ID it will produce a missing sequence.
