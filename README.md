@@ -21,7 +21,7 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
    
 **Instalation of Pipelines and User Guide for _Dataset Preparation_ /  _Dataset Analysis_**
 
-This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that. Steps 1-3 need only be done once for every computer. If for example you just want to run the Dataset Preparation pipeline, look bellow for its instalation guide and go through all the steps. If you then also want to run the Dataset Analysis,scroll further down and find its guide, you can skip steps 1,2 and 3 however, if you've gone through them once.
+This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that. Steps 1-3 need only be done once for every computer. Each of the 3 pipelines is semi-autonomus, thus can be run without necesserely running the other 2. If for example you just want to run the Dataset Preparation pipeline, look bellow for its instalation guide and go through all the steps. If you then also want to run the Dataset Analysis,scroll further down and find its guide, you can skip steps 1,2 and 3 however, if you've gone through them once.
 
 **Instalation of Dataset Preparation and set up**
 
@@ -73,7 +73,8 @@ If you don't have any bam files at hand or simply want to test if the pipeline w
 
 
 
-If your bam files are aligned to a different species or reference genome, then things will get more complicated as other files need to be re-adjusted. if you want to target different proteins than the enamel presets, then you also need to make some adjustments. These are described in step number 7 & 8.
+If your bam files are aligned to a different species or reference genome, then you need to run the 'Dataset_Initiatialization' pipeline, to create the required files for the translation of your target proteins.
+
 
 To sum up:
 a) Bam files along with their bai index file should be in the Dataset_Construction/Workspace/1_OG_BAM_FILES/ 
