@@ -74,7 +74,9 @@ In this step we will set up the process for downloading and creating a 'referenc
 1) A txt file with the names of the proteins/genes you are interested in, which should bare the name 'Proteins.txt' and 
 2) A txt file with the name of the organism(s) and (optional) the version of the assembly you want, which should bare the name 'Organism.txt'
 
-You can find one example file of each of these 2 files in the Dataset_Initialization folder. If you look at the examples you will notice 2 things, the protein folder uses the Gene names as described in Ensembl and is limited to one protein/gene per line. The Organism file is also limited to one organism per line (it will run the whole process for each organism provided) but importantly uses the scientific name of the organism connected by an '\_' (e.g. instead of Human -> Homo\_sapiens ) AND if you want to use a different version of the genome, instead of the latest release which is the default, you can add it next to the organism seperate by a tab. To do that check out Ensembl for the name of the version you want e.g. for the African Elephant you would type Loxafr2 for the previous version. Alternatively if you want to use the latest version, you can just ignore this part and just have the name of the organism by itself.
+You can find one example file of each of these 2 files in the Dataset_Initialization folder. If you look at the examples you will notice 2 things, the protein folder uses the Gene names as described in Ensembl and is limited to one protein/gene per line.
+
+The Organism file is also limited to one organism per line (it will run the whole process for each organism provided) but importantly uses the scientific name of the organism connected by an '\_' (e.g. instead of Human -> Homo\_sapiens ) AND if you want to use a different version of the genome, instead of the latest release which is the default, you can add it next to the organism seperate by a tab. To do that check out Ensembl for the name of the version you want e.g. for the African Elephant you would type Loxafr2 for the previous version. Alternatively if you want to use the latest version, you can just ignore this part and just have the name of the organism by itself.
 
 **REMEMBER** the organsim and version you select, since if you later want to transalte BAM files into proteins, you need these bam files to be aligned to the same organism/version!
 
@@ -83,6 +85,8 @@ You can find one example file of each of these 2 files in the Dataset_Initializa
 
 **Step 6) Get the data**
 
+Now we just need to activate the conda enviroment, by typing ```conda activate Initiator ```
+If the above mentioned files were set up correctly you should be able to just run the pipeline by just typing ``` snakemake -jN ```` , where N is the number of cores you want to use. Remember that this wont work if you have not activated the conda enviroment first, which you would need to do every time you restart a session in your server!
 
 
 <br/><br/>
