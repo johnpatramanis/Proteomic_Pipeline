@@ -1,3 +1,3 @@
 Dataset	Ancient_Samples
-D1	anc1,anc2,anc3
-D2	anc2
+Homo_antecessor_Test	H_antecessor
+Homo_antecessor_Test	H_antecessor,Neanderthal_Sidron
