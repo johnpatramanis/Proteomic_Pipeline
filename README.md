@@ -67,7 +67,13 @@ Once this is done, remember to activate the enviroment we just created by typing
 
 **Step 5) Select the Proteins, Organism and Version (assembly)**
 
-In this step we will set up the process for downloading and creating a 'reference proteome'. 
+In this step we will set up the process for downloading and creating a 'reference proteome'. There are only 2 things we need for this step:
+1) A txt file with the names of the proteins/genes you are interested in, which should bare the name 'Proteins.txt' and 
+2) A txt file with the name of the organism(s) and (optional) the version of the assembly you want, which should bare the name 'Organism.txt'
+
+You can find one example file of each of these 2 files in the Dataset_Initialization folder
+
+
 
 
 **Step 6) Get the data**
