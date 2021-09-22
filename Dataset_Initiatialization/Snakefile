@@ -44,7 +44,8 @@ rule all:
         ["Workspace/5_Loc_Files/{}/{}/starts.txt".format(x,REFERENCE[x]) for x in ORGANISM],
         ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(x,REFERENCE[x]) for x in ORGANISM],
         expand("Workspace/4_EITs/{organism}/{sample}_ei.txt",sample=GENES,organism=ORGANISM),
-        expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=ORGANISM)
+        expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=ORGANISM),
+        expand("Workspace/3_FASTA_Seqs/Combined/{organism}.fa",organism=ORGANISM)
 
 
 #######################################################################################################################################################################
@@ -218,4 +219,23 @@ rule Get_Location_Info_from_Ensemble_Gene_ID:
                 
                 
                 limiter+=1
+
+
+
+rule Combine_FASTA_Sequences_into_Ref:
+    input:
+        expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=ORGANISM)
+    output:
+        expand("Workspace/3_FASTA_Seqs/Combined/{organism}.fa",organism=ORGANISM)
+    run:
+        
+        path='Workspace/3_FASTA_Seqs/Combined/'
+        if os.path.exists(path)==False:
+            os.makedirs(path)
+            
+        for ORG in ORGANISM:
+            for GENE in GENES:
+                shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined/{}.fa;'''.format(ORG,GENE,ORG))                
+                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined/{}.fa;'''.format(ORG,GENE,ORG))                
+                
                 
