@@ -19,9 +19,68 @@ Compiled scripts to enable phyloproteomic analysis suing Snakemake.
    
    
    
-**Instalation of Pipelines and User Guide for _Dataset Preparation_ /  _Dataset Analysis_**
+**Instalation of Pipelines and User Guide for _Dataset Initialization_ / _Dataset Preparation_ /  _Dataset Analysis_**
 
 This guide assumes that you are working on a Linux enviroment, preferably a server. It should potentially work on a personal computer and even a Macintosh enviroment but I would suggest not to do that. Steps 1-3 need only be done once for every computer. Each of the 3 pipelines is semi-autonomus, thus can be run without necesserely running the other 2. If for example you just want to run the Dataset Preparation pipeline, look bellow for its instalation guide and go through all the steps. If you then also want to run the Dataset Analysis,scroll further down and find its guide, you can skip steps 1,2 and 3 however, if you've gone through them once.
+
+
+**Instalation of Dataset Initialization and set up**
+
+**Step 1)** **Conda**
+
+This pipeline is reliant on conda to deploy all the required dependencies for it to function. First check if you have conda installed on your computer by typing 'conda' in the command line. If a bunch of options pop up then move to the next step. If nothing happens, then look here on how to install it: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
+If you just installed conda, make sure you close your session and re-open it to be able to use it from the command line!
+
+
+
+
+**Step 2) Mamba**
+
+This pipeline also requires snakemake to work. Snakemake suggest that you have Mamba installed with conda so we will also do that. With conda installed succesfully, you can simply type : ``` conda install -n base -c conda-forge mamba ```
+and conda will take care of the rest.
+
+
+**Step 3) Activation and Git clone**
+
+Now with both conda and mamba installed we will download the package itself into your computer. Before we do that first lets activate the conda base enviroment.
+
+``` conda activate base ```
+
+And now lets download the github repository, the core of the pipeline usig git clone. First move to a directory where you want to have this pipeline installed. Then simply type:
+
+``` git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git ```
+
+and move into the directory that we will work in:
+
+``` cd Proteomic_Pipeline/Dataset_Construction/ ```
+
+
+**Step 4) Enviroment Creation**   
+
+Now we are ready for one of the mos important steps: creating a functionng enviroment within conda that contains all the required dependencies for the pipeline to work!
+If you want to use the Dataset Construction pipeline for example, make sure you are in the **'Proteomic_Pipeline/Dataset_Construction/'** fodler and that there is a **'Initiator.yml'** file in there.
+If so simply type: ``` conda env create -f Translator.yml ```
+This may take a while to install everything...
+Once this is done, remember to activate the enviroment we just created by typing:
+``` conda activate Translator ```
+
+
+**Step 5) Select the Proteins, Organism and Version (assembly)**
+
+In this step we will set up the process for downloading and creating a 'reference proteome'. 
+
+
+**Step 6) Get the data**
+
+
+
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
+
+
+
 
 **Instalation of Dataset Preparation and set up**
 
