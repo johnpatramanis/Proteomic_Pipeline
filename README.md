@@ -32,6 +32,7 @@ This guide assumes that you are working on a Linux enviroment, preferably a serv
 **Step 1)** **Conda**
 
 This pipeline is reliant on conda to deploy all the required dependencies for it to function. First check if you have conda installed on your computer by typing 'conda' in the command line. If a bunch of options pop up then move to the next step. If nothing happens, then look here on how to install it: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
+It probably involves going to this page: https://www.anaconda.com/products/individual , copying the link of the download page and then using wget.
 If you just installed conda, make sure you close your session and re-open it to be able to use it from the command line!
 
 
