@@ -56,7 +56,7 @@ And now lets download the github repository, the core of the pipeline usig git c
 
 and move into the directory that we will work in:
 
-``` cd Proteomic_Pipeline/Dataset_Construction/ ```
+``` cd Proteomic_Pipeline/Dataset_Initialization/ ```
 
 
 **Step 4) Enviroment Creation**   
