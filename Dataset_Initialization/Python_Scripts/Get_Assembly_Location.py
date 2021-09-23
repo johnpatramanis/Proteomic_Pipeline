@@ -16,6 +16,7 @@ elif len(sys.argv)<=4:
     GENE=sys.argv[1]
     GENE_ID=''
     ORGANISM=sys.argv[2]
+    ASSEMBLY='CURRENT'
 
 
 START=''
