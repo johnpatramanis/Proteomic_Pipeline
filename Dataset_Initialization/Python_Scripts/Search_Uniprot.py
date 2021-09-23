@@ -71,9 +71,10 @@ if r.json!=[]:
             if (((MATCH_NAME)!=[]) and (MATCH_ORGANISM)):
 
             #### then Look up the Enemble gene_ID corresponding to it (if there is one)
-                for DATABASE in LS['dbReferences']:
-                    if DATABASE['type']=='Ensembl':
-                        GENE_IDs.append(DATABASE['properties']['gene ID'])
+                if 'dbReferences' in LS.keys():
+                    for DATABASE in LS['dbReferences']:
+                        if DATABASE['type']=='Ensembl':
+                            GENE_IDs.append(DATABASE['properties']['gene ID'])
             
                     
             
@@ -124,9 +125,11 @@ if r.json!=[]:
     
     if GENE_IDs!=[]:
         GENE_ID=most_common(GENE_IDs)
+        print(GENE_ID,'\n')
         OUTPUT_FILE.write(str(GENE_ID))
     else:
         OUTPUT_FILE.write('NO_ID_FOUND')
+        print('NO ID FOUND\n')
         MISSING_IDS.write('{}\n'.format(GENE))
 
 
