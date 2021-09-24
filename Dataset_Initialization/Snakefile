@@ -203,10 +203,6 @@ rule Get_Location_Info_from_Ensemble_Gene_ID:
             if os.path.exists(path)==False:
                 os.makedirs(path)
                 
-            #If any missing genes or genes that something went wrong with the assembly, they will be placed here
-            path='Workspace/5_Loc_Files/'+str(ORG)+'/MISSING'
-            if os.path.exists(path)==False:
-                os.makedirs(path)
             
             
 
