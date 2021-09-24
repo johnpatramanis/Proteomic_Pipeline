@@ -8,14 +8,35 @@
 
 import os
 import os.path
+import os.system
 
 
 
 ##### Load Input Files and usefull info  #####
+#####
+
+
+##############################################
+#Check if user provided organism and assembly
+ORGANISM_FILE='Organism.txt'
+if os.path.exists(ORGANISM_FILE)==True:
+    ORGANISM_FILE=open('Organism.txt','r')
+    LINE=ORGANISM_FILE.readline().strip().split('\t')
+    ORGANISM=LINE[0]
+    if len(LINE)>=2:
+        ASSEMBLY=LINE[1]
+    if len(LINE)==1:
+        ASSEMBLY='CURRENT'
+
+
+
+
+###########################
+#Load Samples for Translation
 
 
 SAMPLES=[]
-SAMPLE_FILE=open('Samples.txt','r')
+SAMPLE_FILE=open('Samples.txt','r') 
 for line in SAMPLE_FILE:
     SAMPLES.append(line.strip())
 print(SAMPLES)
@@ -24,10 +45,57 @@ print(SAMPLES)
 
 
 
+#################################
+###                        
+
+
 CHROMOSOMES=[]
 GENES=[]
 GENES_TO_REFERENCES={}
-GENE_LOCS=open("Gene_locs.txt","r")
+
+
+GENE_LOCS='Gene_locs.txt'
+
+##################################################
+##Check if Gene_locs exist, if yes just load them
+if os.path.exists(GENE_LOCS)==True:
+    GENE_LOCS=open("Gene_locs.txt","r")
+
+
+##If not possibilities
+
+
+##If it does not exist AND the user failed to provide a reference organism, raise error
+if (os.path.exists(GENE_LOCS)==False) and (os.path.exists('Organism.txt')==False):
+    raise NameError('No Gene_locs.txt file provided and no Organism.txt provided to create the Gene_locs.txt\n Please run the Dataset_Initialization pipeline with a target organism + protein set if you have not already./n If you already have done that, just create an Organism.txt file here with one selected organism for which that pipeline has run!')
+
+##If it does not exist AND the user has provided a reference organism, but has not run the first pipeline for it, raise error
+if (os.path.exists(GENE_LOCS)==False) and (os.path.exists('Organism.txt')==True) and (os.path.exists('../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}'.format(ORGANISM,ASSEMBLY))==False):
+    raise NameError('There was an error, either you have not run the Dataset_Initialization pipeline for this organism or there was a typo in the name/assembly.\n Here are your inputs: {} {} , check if they exists in Dataset_Initialization/Workspace/5_Loc_Files/'.format(ORGANISM,ASSEMBLY))
+
+##If not then copy all resources from Dataset_Initialization
+if (os.path.exists(GENE_LOCS)==False) and (os.path.exists('Organism.txt')==True):
+
+    # Copy over the appropriate Gene_locs file
+    os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/Gene_locs.txt ./'.format(ORGANISM,ASSEMBLY))
+    GENE_LOCS=open("Gene_locs.txt","r")
+    
+    # Copy over the appropriate starts file
+    os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/starts.txt ./'.format(ORGANISM,ASSEMBLY))
+    
+    # Clean up EIT folder and Copy over the appropriate exons/intron tables
+    os.system('rm EIT/*_ei.txt')
+    os.system('cp ../Dataset_Initialization/Workspace/4_EITs/{}/*_ei.txt ./EIT/'.format(ORGANISM))
+    
+    # Clean up FASTA folder and Copy over the appropriate fasta files
+    os.system('rm Genes/*.fa')
+    os.system('cp ../Dataset_Initialization/Workspace/3_FASTA_Seqs/Genes_{}/*.fa ./Genes/'.format(ORGANISM))
+
+
+
+
+#Finally
+#### Open Gene Locs and get the chromosomes corresponding to the proteins
 for line in GENE_LOCS:
     line=line.strip().split()
     CHROMOSOMES.append(line[1])
@@ -35,21 +103,25 @@ for line in GENE_LOCS:
     GENES_TO_REFERENCES[line[0]]=line[4]
     
 
+
+
 CHROMOSOMES=list(set(CHROMOSOMES))
 CHROMOSOMES.sort()
-# print(CHROMOSOMES)
-# print(GENES)
-# print(GENES_TO_REFERENCES)
-
-STARTS='./starts.txt'
-
-PROT_REF_FILES='./Genes_human/'
-
-EIT='./EIT/';
-
-GENE_LOCS='./Gene_locs.txt';
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+#######################################################################################################################################################################
 #######################################################################################################################################################################
 ## Starting Rule
 
