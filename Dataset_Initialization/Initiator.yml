@@ -67,4 +67,3 @@ dependencies:
   - yaml=0.2.5
   - yarl=1.6.3
   - zlib=1.2.11
-prefix: /home/rjt939/mambaforge/envs/Initiator
