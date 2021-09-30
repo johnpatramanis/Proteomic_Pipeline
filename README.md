@@ -42,7 +42,7 @@ If you just installed conda, make sure you close your session and re-open it to 
 
 This pipeline also requires snakemake to work. Snakemake suggest that you have Mamba installed with conda so we will also do that. With conda installed succesfully, you can simply type : ``` conda install -n base -c conda-forge mamba ```
 and conda will take care of the rest.
-
+Some people also suggest updating conda this way, after the installation: ```conda update conda -y ``` and then ``` conda update --all ```
 
 **Step 3) Activation and Git clone**
 
