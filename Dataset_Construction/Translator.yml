@@ -2,15 +2,15 @@ name: Translator
 channels:
   - r
   - biobuilds
-  - defaults
   - bioconda
   - conda-forge
+  - defaults
 dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
   - _r-mutex=1.0.1
   - aioeasywebdav=2.4.0
-  - aiohttp=3.7.4
+  - aiohttp=3.7.4.post0
   - amply=0.1.4
   - angsd=0.935
   - appdirs=1.4.4
@@ -25,7 +25,7 @@ dependencies:
   - backports.functools_lru_cache=1.6.4
   - bcrypt=3.2.0
   - binutils_impl_linux-64=2.35.1
-  - binutils_linux-64=2.35
+  - binutils_linux-64=2.35.1
   - bioconductor-biobase=2.46.0
   - bioconductor-biocgenerics=0.32.0
   - bioconductor-biocparallel=1.20.0
@@ -43,6 +43,7 @@ dependencies:
   - bioconductor-summarizedexperiment=1.16.0
   - bioconductor-xvector=0.26.0
   - bioconductor-zlibbioc=1.32.0
+  - blas=1.0
   - blast=2.2.31
   - blast-legacy=2.2.26
   - blinker=1.4
@@ -77,6 +78,7 @@ dependencies:
   - font-ttf-source-code-pro=2.038
   - font-ttf-ubuntu=0.83
   - fontconfig=2.13.1
+  - fonts-anaconda=1
   - fonts-conda-ecosystem=1
   - fonts-conda-forge=1
   - freetype=2.10.4
@@ -92,6 +94,9 @@ dependencies:
   - giflib=5.2.1
   - gitdb=4.0.7
   - gitpython=3.1.17
+  - glib=2.68.2
+  - glib-tools=2.68.2
+  - gobject-introspection=1.68.0
   - google-api-core=1.26.3
   - google-api-python-client=2.6.0
   - google-auth=1.30.1
@@ -116,7 +121,9 @@ dependencies:
   - idna=2.10
   - imagemagick=7.0.11_13
   - importlib-metadata=4.3.0
+  - importlib_metadata=4.3.0
   - iniconfig=1.1.1
+  - intel-openmp=2021.3.0
   - ipython_genutils=0.2.0
   - isodate=0.6.0
   - jbig=2.1
@@ -146,6 +153,7 @@ dependencies:
   - libgomp=9.3.0
   - libiconv=1.16
   - liblapack=3.9.0
+  - libltdl=2.4.6
   - libnghttp2=1.43.0
   - libopenblas=0.3.15
   - libpng=1.6.37
@@ -166,17 +174,23 @@ dependencies:
   - lz4-c=1.9.3
   - make=4.3
   - markupsafe=2.0.1
+  - mkl=2021.3.0
+  - mkl-service=2.4.0
+  - mkl_fft=1.3.0
+  - mkl_random=1.2.2
   - more-itertools=8.8.0
   - msrest=0.6.21
   - multidict=5.1.0
   - nbformat=5.1.3
   - ncurses=6.2
   - networkx=2.5.1
+  - ninja=1.10.2
   - numpy=1.20.3
+  - numpy-base=1.20.3
   - oauth2client=4.1.3
   - oauthlib=3.1.0
   - openjpeg=2.4.0
-  - openssl=1.1.1k
+  - openssl=1.1.1l
   - packaging=20.9
   - pandas=1.2.4
   - pango=1.48.5
@@ -216,6 +230,7 @@ dependencies:
   - r=3.6.0
   - r-base=3.6.3
   - r-bh=1.75.0_0
+  - r-biocmanager=1.30.4
   - r-bitops=1.0_7
   - r-boot=1.3_20
   - r-class=7.3_15
