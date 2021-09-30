@@ -8,7 +8,6 @@
 
 import os
 import os.path
-import os.system
 
 
 
@@ -54,11 +53,11 @@ GENES=[]
 GENES_TO_REFERENCES={}
 
 
-GENE_LOCS='Gene_locs.txt'
+GENE_LOCS_PATH='Gene_locs.txt'
 
 ##################################################
 ##Check if Gene_locs exist, if yes just load them
-if os.path.exists(GENE_LOCS)==True:
+if os.path.exists(GENE_LOCS_PATH)==True:
     GENE_LOCS=open("Gene_locs.txt","r")
 
 
@@ -66,15 +65,15 @@ if os.path.exists(GENE_LOCS)==True:
 
 
 ##If it does not exist AND the user failed to provide a reference organism, raise error
-if (os.path.exists(GENE_LOCS)==False) and (os.path.exists('Organism.txt')==False):
+if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==False):
     raise NameError('No Gene_locs.txt file provided and no Organism.txt provided to create the Gene_locs.txt\n Please run the Dataset_Initialization pipeline with a target organism + protein set if you have not already./n If you already have done that, just create an Organism.txt file here with one selected organism for which that pipeline has run!')
 
 ##If it does not exist AND the user has provided a reference organism, but has not run the first pipeline for it, raise error
-if (os.path.exists(GENE_LOCS)==False) and (os.path.exists('Organism.txt')==True) and (os.path.exists('../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}'.format(ORGANISM,ASSEMBLY))==False):
-    raise NameError('There was an error, either you have not run the Dataset_Initialization pipeline for this organism or there was a typo in the name/assembly.\n Here are your inputs: {} {} , check if they exists in Dataset_Initialization/Workspace/5_Loc_Files/'.format(ORGANISM,ASSEMBLY))
+if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==True) and ( os.path.exists(os.path.abspath(os.path.join(os.pardir,'Dataset_Initialization/Workspace/5_Loc_Files/{}/{}'.format(ORGANISM,ASSEMBLY))) ) == False ):   
+    raise NameError('There was an error, either you have not run the Dataset_Initialization pipeline for this organism or there was a typo in the name/assembly.\n Here are your inputs: {} {} , check if they exists in Dataset_Initialization/Workspace/5_Loc_Files/ \nRemember to swithc Conda enviroments when running each pipeline\n'.format(ORGANISM,ASSEMBLY))
 
 ##If not then copy all resources from Dataset_Initialization
-if (os.path.exists(GENE_LOCS)==False) and (os.path.exists('Organism.txt')==True):
+if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==True):
 
     # Copy over the appropriate Gene_locs file
     os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/Gene_locs.txt ./'.format(ORGANISM,ASSEMBLY))
