@@ -1,7 +1,10 @@
 args = commandArgs(trailingOnly=TRUE)
 #command to run:    Rscript Rscript1.r OutputDir REF_dataset 
 #command to run (from Dataset_Construction folder):    Rscript Rscripts/Rscript1.r /Workspace/2_DATASETS/New_Ref_Seq_3_21_1846.fa-1846 Workspace/1_OG_Dataset/New_Ref_Seq_3_21_1846.fa
-
+if (!requireNamespace("BiocManager", quietly = TRUE)){
+    install.packages("BiocManager")
+	BiocManager::install()
+	}
 library(ShortRead)
 
 
