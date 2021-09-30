@@ -2,6 +2,7 @@ name: Analyser
 channels:
   - bioconda
   - conda-forge
+  - defaults
 dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
@@ -212,6 +213,7 @@ dependencies:
   - r-ape=5.5
   - r-base=4.1.0
   - r-bh=1.75.0_0
+  - r-biocmanager=1.30.16
   - r-bitops=1.0_7
   - r-boot=1.3_28
   - r-class=7.3_19
