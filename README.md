@@ -87,7 +87,7 @@ The Organism file is also limited to one organism per line (it will run the whol
 **Step 6) Get the data**
 
 Now we just need to activate the conda enviroment, by typing ```conda activate Initiator ```
-If the above mentioned files were set up correctly you should be able to just run the pipeline by just typing ``` snakemake -jN ```` , where N is the number of cores you want to use. Remember that this wont work if you have not activated the conda enviroment first, which you would need to do every time you restart a session in your server!
+If the above mentioned files were set up correctly you should be able to just run the pipeline by just typing ``` snakemake -jN ``` , where N is the number of cores you want to use. Remember that this wont work if you have not activated the conda enviroment first, which you would need to do every time you restart a session in your server!
 
 
 <br/><br/>
