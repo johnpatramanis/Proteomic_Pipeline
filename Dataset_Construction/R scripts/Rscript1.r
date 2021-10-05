@@ -2,10 +2,6 @@ args = commandArgs(trailingOnly=TRUE)
 #command to run:    Rscript Rscript1.r 'sample_file' 'Gene_locs_file' 'output_location'
 #command to run (from Dataset_Construction folder):    Rscript R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/HG00614_FRMT_19.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/
 
-if (!requireNamespace("BiocManager", quietly = TRUE)){
-    install.packages("BiocManager")
-	BiocManager::install()
-	}
 library(ShortRead)
 
 f<-args[1]   #those are created from previous step, or from other pipelines
