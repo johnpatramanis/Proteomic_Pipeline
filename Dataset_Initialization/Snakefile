@@ -239,5 +239,3 @@ rule Combine_FASTA_Sequences_into_Ref:
             for GENE in GENES:
                 shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined/{}.fa;'''.format(ORG,GENE,ORG))                
                 shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined/{}.fa;'''.format(ORG,GENE,ORG))                
-                
-                
