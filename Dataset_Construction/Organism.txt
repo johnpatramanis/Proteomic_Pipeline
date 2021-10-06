@@ -1,1 +1,1 @@
-Homo_sapiens GRch37
+Homo_sapiens  GRCh37
