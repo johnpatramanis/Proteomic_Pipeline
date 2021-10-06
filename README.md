@@ -2,7 +2,7 @@
 
 **What is it?**
 
-Compiled scripts to enable phyloproteomic analysis suing Snakemake.
+Compiled scripts to enable phyloproteomic analysis using Snakemake.
 
 1) Dataset Construction
    Scripts to download proteomic data, transform DNA datasets to protein ones and properly format them.
