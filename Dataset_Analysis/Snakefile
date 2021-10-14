@@ -51,7 +51,8 @@ print(JOINED_NAMES)
 rule all:
     input:
         ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES],
-        [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ]
+        [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ],
+        [ 'Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done'.format(x) for x in JOINED_NAMES ]
 
 
 

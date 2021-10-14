@@ -56,7 +56,7 @@ Samples<-readLines("Samples.txt")
 
 
 
-CUTOFF=TRUE # Flag to use protein coverage cutoff
+CUTOFF=FALSE # Flag to use protein coverage cutoff
 
 if (CUTOFF==TRUE){ # This loop cycles through the genes. If any of the samples pass the provided cutoff coverage for that gene, it will be included in the analysis. If all samples don't have the desired cutoff, they are rejected!
     
@@ -190,7 +190,7 @@ f_dowle(CONC, "X")
 ############################################################################################################################################################################
 #### Masking of Samples Optional, should require a list to do so. If TRUE, runs
 
-MASKED=1
+MASKED=0
 MASKED_SAMPS=c()
 
 if (MASKED==TRUE){
@@ -241,7 +241,7 @@ if (MASKED==TRUE){
 ####Get missingess of each sample, add it to their label
 
 
-PRINT_MISSINGNESS=1
+PRINT_MISSINGNESS=0
 
 
 if (PRINT_MISSINGNESS==TRUE){
