@@ -122,28 +122,29 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
             
             fanonmissing<-fatabble[,(fatabble[grep(sam, names(fa)),]!="-" & fatabble[grep(sam, names(fa)),]!="X")]
             print(fanonmissing)
-            if(dim(fanonmissing)[2]>0){
-                ## total sites
-                TotalSites<-dim(fatabble)[2]
-                SitesAncient<-dim(fanonmissing)[2]
-                
-                
-                ##seg sites
-                ss<-apply(fatabble, 2, GetSegSites)
-                SegSites<-length(ss[ss>1])
-                ss<-apply(fanonmissing, 2, GetSegSites)
-                SegSitesAncient<-length(ss[ss>1])
-                
-                #singletons
-                ss<-apply(fatabble, 2, GetSingletons)
-                NonSingSites<-SegSites-length(ss[ss==1])
-                ss<-apply(fanonmissing, 2, GetSingletons)
-                NonSignAncient <-SegSitesAncient-length(ss[ss==1])
-                
-                #ancient unique
-                AncientUnique<-sum(apply(fanonmissing, 2, GetAncientUnique, grep(sam, names(fa)))==1)
-                tab<-rbind(tab, c(sam, genes[g], TotalSites, SitesAncient, SegSites, SegSitesAncient, NonSingSites, NonSignAncient, AncientUnique, f))
-                
+            if(is.null(dim(fanonmissing))!=TRUE){
+				if (dim(fanonmissing)[2]>0){
+					## total sites
+					TotalSites<-dim(fatabble)[2]
+					SitesAncient<-dim(fanonmissing)[2]
+					
+					
+					##seg sites
+					ss<-apply(fatabble, 2, GetSegSites)
+					SegSites<-length(ss[ss>1])
+					ss<-apply(fanonmissing, 2, GetSegSites)
+					SegSitesAncient<-length(ss[ss>1])
+					
+					#singletons
+					ss<-apply(fatabble, 2, GetSingletons)
+					NonSingSites<-SegSites-length(ss[ss==1])
+					ss<-apply(fanonmissing, 2, GetSingletons)
+					NonSignAncient <-SegSitesAncient-length(ss[ss==1])
+					
+					#ancient unique
+					AncientUnique<-sum(apply(fanonmissing, 2, GetAncientUnique, grep(sam, names(fa)))==1)
+					tab<-rbind(tab, c(sam, genes[g], TotalSites, SitesAncient, SegSites, SegSitesAncient, NonSingSites, NonSignAncient, AncientUnique, f))
+					}
                 
             }
             else{
