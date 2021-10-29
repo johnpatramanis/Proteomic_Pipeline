@@ -108,6 +108,7 @@ write(genes, file = "./Concatenated_Proteins.txt")
 ALL_NAMES=c()
 CONC=c()
 LENGTH=0
+
 for(g in 1:length(genes)){   
     
     setwd(file.path(mainDir,directory,genes[g]))
@@ -126,6 +127,8 @@ for(g in 1:length(genes)){
 #####################################################
 
     print(genes[g])
+	
+	
     if (length(CONC)!=0){ ##this runs after the first loop
     
         CONCHERE=data.table(as.matrix(fasta_here), keep.rownames = TRUE) ##new gene to add
@@ -162,6 +165,8 @@ for(g in 1:length(genes)){
         print("------")
     }
     
+	print(CONC[,1])
+	
 }
 
 ###Some formating fixes
