@@ -167,7 +167,7 @@ for(g in 1:length(genes)){
 ###Some formating fixes
 ALL_NAMES=ALL_NAMES[!duplicated(ALL_NAMES)] ##here are all the unique names
 CONC=data.table(CONC) 
-f_dowle(CONC, "X")
+f_dowle(CONC, "?")
 
 
 
