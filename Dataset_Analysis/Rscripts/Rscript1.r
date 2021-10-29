@@ -1,10 +1,6 @@
 args = commandArgs(trailingOnly=TRUE)
 #command to run:    Rscript Rscript1.r OutputDir REF_dataset 
 #command to run (from Dataset_Construction folder):    Rscript Rscripts/Rscript1.r /Workspace/2_DATASETS/New_Ref_Seq_3_21_1846.fa-1846 Workspace/1_OG_Dataset/New_Ref_Seq_3_21_1846.fa
-if (!requireNamespace("BiocManager", quietly = TRUE)){
-    install.packages("BiocManager")
-	BiocManager::install()
-	}
 library(ShortRead)
 
 
@@ -29,6 +25,18 @@ for(i in 1:length(genes)){
 	d<-file.path(mainDir,genes[i])
 	setwd(d)
 	curfa<-fa[grep(genes[i], names(fa))]  ### biostring with only one gene (all fasta seqs that have the gene name in their name), all sample sequences tied with their sample name
+	
+	
+	#Corrections of unusable characters
+	for (SMPL in 1:length(curfa)){
+	
+		SEQ_HERE=as.character(curfa[SMPL])
+		SEQ_HERE=gsub('X','?',SEQ_HERE)
+		curfa[SMPL]=SEQ_HERE
+	
+	
+		}
+	
 	
 
 	writeXStringSet(curfa, paste0(genes[i], "_o.fa")) 
