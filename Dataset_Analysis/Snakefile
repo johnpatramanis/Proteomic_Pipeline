@@ -139,8 +139,9 @@ rule Align_Gene_Datasets:
         [ 'Workspace/2_DATASETS/{}/Alignment_Done'.format(x) for x in JOINED_NAMES ]
     run:
         for X in JOINED_NAMES:
-            
-            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do muscle -in Workspace/2_DATASETS/{}/$line/$line"_o.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa"; done;""".format(X,X,X))
+              
+            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -INFILE=Workspace/2_DATASETS/{}/$line/$line"_o.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -PWMATRIX=BLOSUM -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X))
+            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do muscle -seqtype protein -in Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -refine; done;""".format(X,X,X))
             shell("""touch Workspace/2_DATASETS/{}/Alignment_Done;""".format(X))
             
             
@@ -205,7 +206,7 @@ rule Run_PhyML_Individual_Genes:
             cat Genes.txt |while read line;\
             do cd $line;\
             RAND=$(( $RANDOM %99999));\
-            phyml -i $line"_aln_e.phy" -d aa -b 100 -m JTT -c 4 -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 3 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check;\
+            phyml -i $line"_aln_e.phy" -d aa -b 1000 -m JTT -c 4 -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 3 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check;\
             cd ..;\
             done;""".format(X))
             shell("""touch Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done;""".format(X))
@@ -228,7 +229,7 @@ rule Run_PhyML_Concatenated_Genes:
             shell( """ RAND=$(( $RANDOM %999));\
             cd Workspace/2_DATASETS/{};\
             cd ./CONCATINATED;\
-            phyml -i CONCATINATED_aln_e.phy -d aa -b 100 -m JTT -c 10 -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 3 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check;\
+            phyml -i CONCATINATED_aln_e.phy -d aa -b 1000 -m JTT -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 4 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check;\
             cd ..; """.format(X))
             shell("""touch Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done;""".format(X))
 
