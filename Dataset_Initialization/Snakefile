@@ -45,7 +45,8 @@ rule all:
         ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(x,REFERENCE[x]) for x in ORGANISM],
         expand("Workspace/4_EITs/{organism}/{sample}_ei.txt",sample=GENES,organism=ORGANISM),
         expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=ORGANISM),
-        expand("Workspace/3_FASTA_Seqs/Combined/{organism}.fa",organism=ORGANISM)
+        expand("Workspace/3_FASTA_Seqs/Combined_Per_Species/{organism}.fa",organism=ORGANISM),
+        ["Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa".format(x) for x in GENES]
 
 
 #######################################################################################################################################################################
@@ -228,14 +229,25 @@ rule Combine_FASTA_Sequences_into_Ref:
     input:
         expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=ORGANISM)
     output:
-        expand("Workspace/3_FASTA_Seqs/Combined/{organism}.fa",organism=ORGANISM)
+        expand("Workspace/3_FASTA_Seqs/Combined_Per_Species/{organism}.fa",organism=ORGANISM),
+        ["Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa".format(x) for x in GENES]
     run:
         
-        path='Workspace/3_FASTA_Seqs/Combined/'
+        path='Workspace/3_FASTA_Seqs/Combined_Per_Species/'
         if os.path.exists(path)==False:
             os.makedirs(path)
             
+        path2='Workspace/3_FASTA_Seqs/Combined_Per_Protein/'
+        if os.path.exists(path2)==False:
+            os.makedirs(path2)
+            
         for ORG in ORGANISM:
             for GENE in GENES:
-                shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined/{}.fa;'''.format(ORG,GENE,ORG))                
-                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined/{}.fa;'''.format(ORG,GENE,ORG))                
+                shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
+                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
+                
+                shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(ORG,GENE,GENE))
+                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(GENE))                
+            
+            
+            

@@ -104,7 +104,7 @@ if r.json!=[]:
         MATCH_NAME=re.findall(r"(?=("+'|'.join(GENE_NAMES)+r"))", GENE)
         for L in MJ['organism']['names']:
             if L['type']=='scientific':
-                SEARCH_ORGANISM='_'.join(L['value'].split(' '))
+                SEARCH_ORGANISM='_'.join(L['value'].split(' ')[0:2])
         MATCH_ORGANISM=( ORGANISM==SEARCH_ORGANISM )
 
 
