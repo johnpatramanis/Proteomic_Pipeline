@@ -46,20 +46,20 @@ is.integer0 <- function(x){
 }
 
 GetNotInfoPos<-function(x){
-x<-x[x=="X" | x=="-"]
+x<-x[x=="X" | x=="-" | x=="?"]
 return(length(x))
 }
 
 GetSegSites<-function(x){
-return(length(unique(x[as.character(x)!="-" & as.character(x)!="X"])))
+return(length(unique(x[as.character(x)!="-" & as.character(x)!="X" & as.character(x)!="?"])))
 }
 
 
 GetSingletons<-function(x){
-if(length(unique(x[as.character(x)!="-" & as.character(x)!="X"]))==1){
+if(length(unique(x[as.character(x)!="-" & as.character(x)!="X" & as.character(x)!="?" ] ))==1){
     return(0)
-}else if(length(unique(x[as.character(x)!="-" & as.character(x)!="X"]))==2){
-    if((table(x[as.character(x)!="-" & as.character(x)!="X"])[1]==1) |(table(x[as.character(x)!="-" & as.character(x)!="X"])[2]==1)){
+}else if(length(unique(x[as.character(x)!="-" & as.character(x)!="X" & as.character(x)!="?" ]))==2){
+    if((table(x[as.character(x)!="-" & as.character(x)!="X" & as.character(x)!="?" ])[1]==1) |(table(x[as.character(x)!="-" & as.character(x)!="X" & as.character(x)!="?" ])[2]==1)){
         return(1)
     }else{
         return(0)
@@ -120,7 +120,7 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
             }
             
             
-            fanonmissing<-fatabble[,(fatabble[grep(sam, names(fa)),]!="-" & fatabble[grep(sam, names(fa)),]!="X")]
+            fanonmissing<-fatabble[,(fatabble[grep(sam, names(fa)),]!="-" & fatabble[grep(sam, names(fa)),]!="X" & fatabble[grep(sam, names(fa)),]!="?" )]
             print(fanonmissing)
             if(is.null(dim(fanonmissing))!=TRUE){
 				if (dim(fanonmissing)[2]>0){
