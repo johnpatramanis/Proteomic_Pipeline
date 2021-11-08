@@ -31,7 +31,7 @@ for(i in 1:length(genes)){
 	for (SMPL in 1:length(curfa)){
 	
 		SEQ_HERE=as.character(curfa[SMPL])
-		SEQ_HERE=gsub('X','-',SEQ_HERE)
+		SEQ_HERE=gsub('X','?',SEQ_HERE)
 		curfa[SMPL]=SEQ_HERE
 	
 	
