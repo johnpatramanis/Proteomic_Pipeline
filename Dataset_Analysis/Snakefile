@@ -140,8 +140,10 @@ rule Align_Gene_Datasets:
     run:
         for X in JOINED_NAMES:
               
-            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -INFILE=Workspace/2_DATASETS/{}/$line/$line"_o.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -PWMATRIX=BLOSUM -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X))
-            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do muscle -seqtype protein -in Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -refine; done;""".format(X,X,X))
+            # shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -INFILE=Workspace/2_DATASETS/{}/$line/$line"_o.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -PWMATRIX=BLOSUM -PWGAPOPEN=10 -ITERATION=TREE -NUMITER=1000 -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X))
+            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do mafft --ep 0 --op 0.5 --lop -0.5 --genafpair --maxiterate 20000  --bl 80 --fmodel Workspace/2_DATASETS/{}/$line/$line"_o.fa" >  Workspace/2_DATASETS/{}/$line/$line"_aln.fa"; done;""".format(X,X,X))
+            # shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do muscle -seqtype protein -in Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -refine; done;""".format(X,X,X))
+            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do trimal -in Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa"  -noallgaps; done;""".format(X,X,X))
             shell("""touch Workspace/2_DATASETS/{}/Alignment_Done;""".format(X))
             
             
