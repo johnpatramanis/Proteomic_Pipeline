@@ -231,7 +231,7 @@ rule Run_PhyML_Concatenated_Genes:
             shell( """ RAND=$(( $RANDOM %999));\
             cd Workspace/2_DATASETS/{};\
             cd ./CONCATINATED;\
-            phyml -i CONCATINATED_aln_e.phy -d aa -b 1000 -m JTT -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 4 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check;\
+            phyml -i CONCATINATED_aln_e.phy -d aa -b 1000 -m HIVb -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 4 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check;\
             cd ..; """.format(X))
             shell("""touch Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done;""".format(X))
 
@@ -267,7 +267,9 @@ rule Run_MrBayes_Concatenated_Genes:
             cd Workspace/2_DATASETS/{};\
             cd ./CONCATINATED;\
             rm CONCATINATED_o.nex.*;\
-            echo -e 'set autoclose=yes\nexecute CONCATINATED_o.nex\nprset aamodelpr = mixed\nmcmc nchains = 1 ngen = 1000000\nsumt relburnin = yes burninfrac = 0.25\nsump\nquit'>MrBatch.txt;\
+            echo -e 'set autoclose=yes\nexecute CONCATINATED_o.nex'>MrBatch.txt;\
+            cat ./Partition_Helper >> MrBatch.txt;\
+            echo -e 'prset aamodelpr = mixed\nmcmc nchains = 1 ngen = 1000000\nsumt relburnin = yes burninfrac = 0.25\nsump\nquit'>>MrBatch.txt;\
             mb < MrBatch.txt > log.txt;\
             cd ..; """.format(X))
             shell("""touch Workspace/2_DATASETS/{}/MrBayes_Concatenated_Genes_Done;""".format(X))

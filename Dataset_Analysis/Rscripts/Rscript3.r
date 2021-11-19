@@ -108,6 +108,8 @@ write(genes, file = "./Concatenated_Proteins.txt")
 ALL_NAMES=c()
 CONC=c()
 LENGTH=0
+PARTITIONS=c()
+
 
 for(g in 1:length(genes)){   
     
@@ -149,20 +151,28 @@ for(g in 1:length(genes)){
         colnames(CONC)[2:length(CONC)]=RND_COL_NAMES     ### change all column names with the random ones except the first which is "rn" for row names
         
         
-        LENGTH=LENGTH+length(CONCHERE)
-        print(length(CONC)) ##keep track of length and which gene we are on
-        print(LENGTH)
+		LENGTH_HERE=length(CONCHERE)-1
+        LENGTH=LENGTH+LENGTH_HERE
+        # print(length(CONC)) ##keep track of length and which gene we are on
+        print(paste0('Length of Concatenation: ',LENGTH,' Length of Protein : ',LENGTH_HERE))
         print("------")
+		
+		PARTITIONS=c(PARTITIONS,paste0('charset ',as.character(genes[g]),' = ',as.character((LENGTH-LENGTH_HERE+1)),'-',as.character(LENGTH),';'))
+		
+		
     }
 
     else{ #this runs in the first loop
         
         CONC=data.table(as.matrix(fasta_here), keep.rownames = TRUE) ##in this we will concatinate all genes
     
-        LENGTH=LENGTH+length(CONC)
-        print(length(CONC)) ##keep track of length and which gene we are on
-        print(LENGTH)
+        LENGTH=LENGTH+length(CONC)-1
+        # print(length(CONC)) ##keep track of length and which gene we are on
+        print(paste0('Length of Protein : ',LENGTH))
         print("------")
+		
+		PARTITIONS=c(PARTITIONS,paste0('charset ',as.character(genes[g]),' = ',as.character(1),'-',as.character(LENGTH),';'))
+		
     }
     
 	print(CONC[,1])
@@ -175,6 +185,10 @@ CONC=data.table(CONC)
 f_dowle(CONC, "?")
 
 
+
+#Finalise partitions to be used by MrBayes or any other partion-requiring software
+PARTITIONS=c(PARTITIONS,paste0('partition BY_PROTEIN = ',as.character(length(PARTITIONS)),': ',paste(genes,collapse=', '),';'))
+PARTITIONS=c(PARTITIONS,as.character('set partition=BY_PROTEIN;'))
 
 
 
@@ -205,9 +219,9 @@ if (MASKED==TRUE){
         MASKED_SAMPS=c("Gorilla-gorilla","HUMAN","Pan_troglodytes","Pongo_abelii")
         ANC_SAMPL=samp
         ANC_SAMPL=CONC[which(CONC[,1]==ANC_SAMPL)]
-        MISSING=which(ANC_SAMPL[,]=="-" | ANC_SAMPL[,]=="\\?" | ANC_SAMPL[,]=="X" )
+        MISSING=which(ANC_SAMPL[,]=="-" | ANC_SAMPL[,]=="\\?" | ANC_SAMPL[,]=="?" | ANC_SAMPL[,]=="X"  )
         
-        
+        ## Update here to make sure missing is !=0
         for (SMPL in 1:length(MASKED_SAMPS)){
             
             MASKED_SAMPLE=CONC[which(CONC[,1]==MASKED_SAMPS[SMPL])]
@@ -295,6 +309,10 @@ names(FINAL_SEQ)<-CONC$rn
 dir.create(file.path(mainDir, directory,'CONCATINATED'), showWarnings = FALSE)
 setwd(file.path(mainDir, directory,'CONCATINATED'))
 writeXStringSet(FINAL_SEQ, "CONCATINATED_o.fa")
+
+#write out partion help file
+write(paste(PARTITIONS,collapse='\n'), file = "Partition_Helper")
+
 
 
 #Finito

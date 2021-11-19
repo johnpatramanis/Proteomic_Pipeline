@@ -94,13 +94,133 @@ GetAncientUnique<-function(x, aid){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+print("Moving to I,L switching")
+#######################################################################################################################################################################################################################################
+#####Switch Animo Acids I and L
+
+
+
+
+#### Convert all gaps of ancient sample to '?', for better phylogenetic analysis
+CONVERT_GAPS_TO_MISSING=1
+
+
+for(g in 1:length(genes)){              #### for every gene
+    setwd(file.path(mainDir,directory, genes[g]))   ### go to the dir
+    
+    f<-paste0(genes[g], "_aln.fa")       ## grab the aligned fasta file
+    fa<-readAAStringSet(f)               ## get it as a biostring
+    
+    fatabble<-as.matrix(t(as.data.frame(strsplit(as.character(fa), ""))))  # transform it to a matrix
+    
+    
+    Jsites<-c() #find sites that have an I or an L for any of the ancient sites and keep them here
+    
+    
+    
+    
+    for (K in Samples){ # Cycle through samples
+        aid<-grep(K, names(fa))
+        
+		
+		
+		
+        if (is.integer0(K)==FALSE){ #if current sample does have this gene, 
+            Jsites<-c(Jsites,which(fatabble[aid,]=="I" | fatabble[aid,]=="L"))    # find which sites of sample have either an I or L, append them to Jsites
+            sam=K #keep that sample for later
+			}
+    
+	
+		if (CONVERT_GAPS_TO_MISSING==TRUE){
+			Gapsites<-which( fatabble[aid,]=="_" | fatabble[aid,]=="-" | fatabble[aid,]=="X" )
+			fatabble[aid,Gapsites]='?'
+			
+			}
+	
+	
+	
+	
+	}
+    
+    
+    
+    
+    
+    
+    fafaketabble=fatabble #dataset with only one ancient sample! To be used next
+    for (non_sam in Samples){ # Creation fo the above mentioned dataset
+        if (non_sam!=sam){
+            To_Remove=grep(non_sam,row.names(fafaketabble))
+    
+            if (is.integer0(To_Remove)==FALSE){
+                fafaketabble=fafaketabble[-To_Remove,]
+
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+
+    if(length(Jsites)>0){   #for every one of these sites
+    
+        for(s in 1:length(Jsites)){
+            cursite<-fatabble[,Jsites[s]] # OG curious sites
+            
+            fakecursite<-fafaketabble[,Jsites[s]] # curious sites, after removing all ancient samples but one (so we can assess the sites only using modern samples)
+            
+            optssite<-as.character(fakecursite[-grep(sam, names(cursite))])
+            
+            
+            if(length(table(optssite[optssite=="L" | optssite=="I"]))==1){
+                cursite[cursite=="L" | cursite=="I"]<-names(table(optssite[optssite=="L" | optssite=="I"]))
+            }else{
+                cursite[cursite=="L" | cursite=="I"]<-"L"
+            }
+            fatabble[,Jsites[s]]<-cursite
+            
+        }
+            
+            
+        newseq<-apply(fatabble, 1, paste, collapse="")
+        names(newseq)<-names(fa)
+        writeXStringSet(AAStringSet(newseq), gsub(".fa", "_e.fa", f))
+        }
+    
+    
+    else{
+        writeXStringSet(fa, gsub(".fa", "_e.fa", f))
+    }
+}
+
+
+
+##############################################################################################
+
+
 ###### GET INFO
 
 for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Singletons etc)
     tab<-NULL
     for(g in 1:length(genes)){
             setwd(file.path(mainDir,directory, genes[g]))
-            f<-paste0(genes[g], "_aln.fa")
+            f<-paste0(genes[g], "_aln_e.fa")
             
             fa<-readAAStringSet(f)
             print(fa)
@@ -160,110 +280,6 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
     write.table(tab, file=paste0("Alignments_info_","Sample_",sam,".txt"), col.names=T, row.names=F, quote=F, sep="\t")
 }
 #######################################################################################################################################################################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-print("Moving to I,L switching")
-#######################################################################################################################################################################################################################################
-#####Switch Animo Acids I and L
-
-
-
-
-#### should be changed per sample 
-
-for(g in 1:length(genes)){              #### for every gene
-    setwd(file.path(mainDir,directory, genes[g]))   ### go to the dir
-    
-    f<-paste0(genes[g], "_aln.fa")       ## grab the aligned fasta file
-    fa<-readAAStringSet(f)               ## get it as a biostring
-    
-    fatabble<-as.matrix(t(as.data.frame(strsplit(as.character(fa), ""))))  # transform it to a matrix
-    
-    
-    Jsites<-c() #find sites that have an I or an L for any of the ancient sites and keep them here
-    
-    
-    
-    
-    for (K in Samples){ # Cycle through samples
-        aid<-grep(K, names(fa))
-        
-        if (is.integer0(K)==FALSE){ #if current sample does have this gene, 
-            Jsites<-c(Jsites,which(fatabble[aid,]=="I" | fatabble[aid,]=="L"))    # find which sites of sample have either an I or L, append them to Jsites
-            sam=K #keep that sample for later
-        }
-    }
-    
-    
-    
-    
-    
-    
-    fafaketabble=fatabble #dataset with only one ancient sample! To be used next
-    for (non_sam in Samples){ # Creation fo the above mentioned dataset
-        if (non_sam!=sam){
-            To_Remove=grep(non_sam,row.names(fafaketabble))
-    
-            if (is.integer0(To_Remove)==FALSE){
-                fafaketabble=fafaketabble[-To_Remove,]
-
-            }
-        }
-    }
-    
-    
-    
-    
-    
-    
-
-    if(length(Jsites)>0){   #for every one of these sites
-    
-        for(s in 1:length(Jsites)){
-            cursite<-fatabble[,Jsites[s]] # OG curious sites
-            
-            fakecursite<-fafaketabble[,Jsites[s]] # curious sites, after removing all ancient samples but one (so we can assess the sites only using modern samples)
-            
-            optssite<-as.character(fakecursite[-grep(sam, names(cursite))])
-            
-            
-            if(length(table(optssite[optssite=="L" | optssite=="I"]))==1){
-                cursite[cursite=="L" | cursite=="I"]<-names(table(optssite[optssite=="L" | optssite=="I"]))
-            }else{
-                cursite[cursite=="L" | cursite=="I"]<-"L"
-            }
-            fatabble[,Jsites[s]]<-cursite
-            
-        }
-            
-            
-        newseq<-apply(fatabble, 1, paste, collapse="")
-        names(newseq)<-names(fa)
-        writeXStringSet(AAStringSet(newseq), gsub(".fa", "_e.fa", f))
-        }
-    
-    
-    else{
-        writeXStringSet(fa, gsub(".fa", "_e.fa", f))
-    }
-}
 
 
 
