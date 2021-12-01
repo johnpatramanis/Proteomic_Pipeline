@@ -4,7 +4,7 @@
 
 Compiled scripts in the form of pipelines to enable easier phyloproteomic analysis. Based on Snakemake and Conda.
 
-1)Dataset Initialization
+1) Dataset Initialization
    Scripts to set up pipeline number 2 but also enable the quick search and download of reference proteomes given a list of proteins.
 
 2) Dataset Construction
