@@ -1,6 +1,5 @@
 args = commandArgs(trailingOnly=TRUE)
-#command to run:    Rscript Rscript1.r OutputDir REF_dataset 
-#command to run (from Dataset_Construction folder):    Rscript Rscripts/Rscript1.r /Workspace/2_DATASETS/New_Ref_Seq_3_21_1846.fa-1846 Workspace/1_OG_Dataset/New_Ref_Seq_3_21_1846.fa
+#command to run (from Dataset_Analysis folder):    Rscript Rscripts/Rscript1.r /Workspace/2_DATASETS/FR_FULL_NEW_DATA_MODIFIED_AA.fa-Fontana_Ranuccio Workspace/1_OG_Dataset/FR_FULL_NEW_DATA_MODIFIED_AA.fa
 library(ShortRead)
 
 
@@ -12,6 +11,7 @@ fa<-readAAStringSet(args[2]) #GET it from 1_OG_DATASET
 mainDir<-getwd() #get current dir, assumes output dir is a subfodler!
 setwd(file.path(mainDir,directory))
 genes<-readLines("Genes.txt") #In the 2_DATASETS appropriate folder 
+samples<-readLines("Samples.txt") #In the 2_DATASETS appropriate folder 
 
 
 mainDir <- getwd()
@@ -27,6 +27,21 @@ for(i in 1:length(genes)){
 	curfa<-fa[grep(genes[i], names(fa))]  ### biostring with only one gene (all fasta seqs that have the gene name in their name), all sample sequences tied with their sample name
 	
 	
+	
+	#### Isolate Selected Ancient Samples from modern
+	AS=c()
+	for (S in samples){
+	
+		AS=c(AS,grep(S, names(curfa)))
+
+		}
+	
+	
+	
+	
+	
+	
+	
 	#Corrections of unusable characters
 	for (SMPL in 1:length(curfa)){
 	
@@ -38,6 +53,15 @@ for(i in 1:length(genes)){
 		}
 	
 	
+	
+	cursa<-curfa[AS]
+	curva<-curfa[-AS]
 
-	writeXStringSet(curfa, paste0(genes[i], "_o.fa")) 
+	
+	
+
+	writeXStringSet(curfa, paste0(genes[i], "_o.fa"))
+	writeXStringSet(cursa, paste0(genes[i], "_ancient.fa"))
+	writeXStringSet(curva, paste0(genes[i], "_no_ancient.fa"))
+	
 }

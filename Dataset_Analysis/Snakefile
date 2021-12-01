@@ -95,7 +95,7 @@ rule Create_Genes_Folders:
                 if isinstance(SAMPLES, list) is True:
                     print(SAMPLES)
                     for SAMPLE in SAMPLES:
-                        shell("""SAMPLE_NAME={}; REF='Workspace/1_OG_Dataset/{}'; grep ">"$SAMPLE_NAME $REF | rev | cut -f 1 -d "_" | rev |cut -f 1 -d ">" |cut -f 1 -d '/' > TMP;""".format(SAMPLE,DATASET))
+                        shell("""SAMPLE_NAME={}; REF='Workspace/1_OG_Dataset/{}'; grep ">"$SAMPLE_NAME $REF | rev | cut -f 1 -d "_" | rev |cut -f 1 -d ">" |cut -f 1 -d '/' >> TMP;""".format(SAMPLE,DATASET))
                         
                         
                 if isinstance(SAMPLES, list) is False:
@@ -139,11 +139,15 @@ rule Align_Gene_Datasets:
         [ 'Workspace/2_DATASETS/{}/Alignment_Done'.format(x) for x in JOINED_NAMES ]
     run:
         for X in JOINED_NAMES:
-              
+            
+            #### ADD Ancient sequence to alignment##   mafft-einsi --addprofile COL17A1_ancient.fa COL17A1_aln.fa > COL17A1_NEW.fa
+            #### ADD Ancient sequence to alignment##   mafft-einsi --seed COL17A1_aln.fa  COL17A1_ancient.fa > COL17A1_NEW.fa
+            #### ADD Ancient sequence to alignment##   
             # shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -INFILE=Workspace/2_DATASETS/{}/$line/$line"_o.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -PWMATRIX=BLOSUM -PWGAPOPEN=10 -ITERATION=TREE -NUMITER=1000 -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X))
-            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do mafft --ep 0 --op 0.5 --lop -0.5 --genafpair --maxiterate 20000  --bl 80 --fmodel Workspace/2_DATASETS/{}/$line/$line"_o.fa" >  Workspace/2_DATASETS/{}/$line/$line"_aln.fa"; done;""".format(X,X,X))
+            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do mafft --ep 0 --op 0.5 --lop -0.5 --genafpair --maxiterate 20000  --bl 80 --fmodel Workspace/2_DATASETS/{}/$line/$line"_no_ancient.fa" >  Workspace/2_DATASETS/{}/$line/$line"_aln.fa"; done;""".format(X,X,X))
+            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -PROFILE1=Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -PROFILE2=Workspace/2_DATASETS/{}/$line/$line"_ancient.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_re_aln.fa" -NUMITER=1000 -PWMATRIX=BLOSUM -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X,X))
             # shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do muscle -seqtype protein -in Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -refine; done;""".format(X,X,X))
-            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do trimal -in Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa"  -noallgaps; done;""".format(X,X,X))
+            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do trimal -in Workspace/2_DATASETS/{}/$line/$line"_re_aln.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa"  -noallgaps; done;""".format(X,X,X))
             shell("""touch Workspace/2_DATASETS/{}/Alignment_Done;""".format(X))
             
             
