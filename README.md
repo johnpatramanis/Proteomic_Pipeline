@@ -2,11 +2,15 @@
 
 **What is it?**
 
-Compiled scripts to enable phyloproteomic analysis using Snakemake.
+Compiled scripts in the form of pipelines to enable easier phyloproteomic analysis. Based on Snakemake and Conda.
 
-1) Dataset Construction
+1)Dataset Initialization
+   Scripts to set up pipeline number 2 but also enable the quick search and download of reference proteomes given a list of proteins.
+
+2) Dataset Construction
    Scripts to download proteomic data, transform DNA datasets to protein ones and properly format them.
-2) Analysis 
+   
+3) Analysis 
    Scripts to assemble a proteomic dataset, format and prepare it for a phylgenetic analysis- including the actual phylogenetic tree creation
    
 <br/><br/>
