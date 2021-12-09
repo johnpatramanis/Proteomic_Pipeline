@@ -134,7 +134,8 @@ for(g in 1:length(genes)){              #### for every gene
     
     for (K in Samples){ # Cycle through samples
         aid<-grep(K, names(fa))
-        
+		print(c(genes[g],K))
+
 		
 		
 		
@@ -145,7 +146,7 @@ for(g in 1:length(genes)){              #### for every gene
     
 	
 		if (CONVERT_GAPS_TO_MISSING==TRUE){
-			Gapsites<-which( fatabble[aid,]=="_" | fatabble[aid,]=="-" | fatabble[aid,]=="X" )
+			Gapsites<-which( fatabble[aid,]=="_" | fatabble[aid,]=="-" | fatabble[aid,]=="X" | fatabble[aid,]=="." )
 			fatabble[aid,Gapsites]='?'
 			
 			}
@@ -176,11 +177,11 @@ for(g in 1:length(genes)){              #### for every gene
     
     
     
+    print(fatabble[aid,Gapsites])
+	
+    if(length(Jsites)>0 ){   
     
-
-    if(length(Jsites)>0){   #for every one of these sites
-    
-        for(s in 1:length(Jsites)){
+        for(s in 1:length(Jsites)){ #for every one of these sites
             cursite<-fatabble[,Jsites[s]] # OG curious sites
             
             fakecursite<-fafaketabble[,Jsites[s]] # curious sites, after removing all ancient samples but one (so we can assess the sites only using modern samples)
@@ -197,7 +198,7 @@ for(g in 1:length(genes)){              #### for every gene
             
         }
             
-            
+           
         newseq<-apply(fatabble, 1, paste, collapse="")
         names(newseq)<-names(fa)
         writeXStringSet(AAStringSet(newseq), gsub(".fa", "_e.fa", f))
@@ -205,7 +206,9 @@ for(g in 1:length(genes)){              #### for every gene
     
     
     else{
-        writeXStringSet(fa, gsub(".fa", "_e.fa", f))
+		newseq<-apply(fatabble, 1, paste, collapse="")
+		names(newseq)<-names(fa)
+        writeXStringSet(AAStringSet(newseq), gsub(".fa", "_e.fa", f))
     }
 }
 
@@ -223,9 +226,9 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
             f<-paste0(genes[g], "_aln_e.fa")
             
             fa<-readAAStringSet(f)
-            print(fa)
+
             fatabble<-as.matrix(t(as.data.frame(strsplit(as.character(fa), ""))))
-            print(fatabble)
+
             
             # When you have multiple ancient samples, you should analyse them one by one. So lets remove the rest of them, if they exist for analysing this one
             for (non_sam in Samples){
@@ -241,7 +244,7 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
             
             
             fanonmissing<-fatabble[,(fatabble[grep(sam, names(fa)),]!="-" & fatabble[grep(sam, names(fa)),]!="X" & fatabble[grep(sam, names(fa)),]!="?" )]
-            print(fanonmissing)
+
             if(is.null(dim(fanonmissing))!=TRUE){
 				if (dim(fanonmissing)[2]>0){
 					## total sites
