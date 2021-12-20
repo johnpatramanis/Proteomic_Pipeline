@@ -269,5 +269,5 @@ If everything works out, you should get your resulting tree files in the appropr
    
   **Development To Do list: (Dataset Analysis)** - By Yiannis , for Yiannis
   1) Split up env per step? maybe no
-  2) Extend to BEAST software or BEAST alternatives that do MSC
-  3) Phylogenetic Network construction
+  2) Extend to star-BEAST alternatives that do MSC
+  3) replace grep command in Rscript2 -> fix names of dataset as they load and pick correctly the sample
