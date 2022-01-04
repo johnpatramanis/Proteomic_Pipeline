@@ -3,7 +3,10 @@
 **What is this?**
 
 Compiled scripts in the form of pipelines to enable easier phylo-proteomic analysis.
-All of the scripts are based on Snakemake and Conda. This tutorial is designed to help you install and use them for your own projects. I highly recomend reading through if you want to use them and especially using the example files that are included! The pipelines are split up and the subcomponents are designed to function independently but can also be used one after the other, as they intrinsically synergise.
+
+All of the scripts are based on Snakemake and Conda. This tutorial is designed to help you install and use them for your own projects. I highly recomend reading through if you want to use them and especially using the example files that are included! The pipelines are split up and the subcomponents are designed to function independently but can also be used one after the other, as they intrinsically synergise. Each pipeline is in its own folder, which contains the Snakemake script, a YAML file to create the conda environment, additional R or python scripts utilised by the pipeline as well as example data and files.
+
+These sub-pipelines are:
 
 1) Dataset Initialization
    Scripts to set up pipeline number 2 but also enable the quick search and download of reference proteomes given a list of proteins.
