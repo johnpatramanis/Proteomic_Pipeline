@@ -1,8 +1,9 @@
 **Proteomic_Pipeline - Under Construction!**
 
-**What is it?**
+**What is this?**
 
-Compiled scripts in the form of pipelines to enable easier phyloproteomic analysis. Based on Snakemake and Conda.
+Compiled scripts in the form of pipelines to enable easier phylo-proteomic analysis.
+All of the scripts are based on Snakemake and Conda. This tutorial is designed to help you install and use them for your own projects. I highly recomend reading through if you want to use them and especially using the example files that are included! The pipelines are split up and the subcomponents are designed to function independently but can also be used one after the other, as they intrinsically synergise.
 
 1) Dataset Initialization
    Scripts to set up pipeline number 2 but also enable the quick search and download of reference proteomes given a list of proteins.
