@@ -1,4 +1,4 @@
-**Proteomic_Pipeline - Under Construction!**
+**A Proteomic Pipeline for Phylogenetic Reconstruction by Yiannis P. - Work In Progress**
 
 **What is this?**
 
