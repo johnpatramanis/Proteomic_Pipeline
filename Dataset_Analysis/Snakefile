@@ -1,11 +1,4 @@
-#Run using snakemake -j1 --latency-wait 120 --use-conda
-
-
-#Dependancies to be used R, ShortRead, Snakemake, MUSCLE,
-#conda env export --from-history > environment.yaml
-#conda env create --name testenv --file environment.yaml
-
-
+#Run using snakemake -j32 -F
 import os
 import os.path
 
@@ -51,6 +44,7 @@ print(JOINED_NAMES)
 rule all:
     input:
         ['Workspace/2_DATASETS/{}/Samples.txt'.format(x) for x in JOINED_NAMES],
+        [ 'Workspace/2_DATASETS/{}/Info_and_Checking_Done'.format(x) for x in JOINED_NAMES ],
         [ 'Workspace/2_DATASETS/{}/PhyML_Individual_Genes_Done'.format(x) for x in JOINED_NAMES ],
         [ 'Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done'.format(x) for x in JOINED_NAMES ],
         [ 'Workspace/2_DATASETS/{}/MrBayes_Concatenated_Genes_Done'.format(x) for x in JOINED_NAMES ]
@@ -140,15 +134,23 @@ rule Align_Gene_Datasets:
     threads: 32
     run:
         for X in JOINED_NAMES:
+            GENES_CAT=open('Workspace/2_DATASETS/{}/Genes.txt'.format(X),'r')
+            for GENE_CAT in GENES_CAT:
+                GENE_CAT=GENE_CAT.strip()
+                shell("""mafft --ep 0 --op 0.5 --lop -0.5 --genafpair --maxiterate 20000 --thread {} --bl 80 --fmodel Workspace/2_DATASETS/{}/{}/{}_no_ancient.fa >  Workspace/2_DATASETS/{}/{}/{}_no_ancient_aln.fa;""".format(threads,X,GENE_CAT,GENE_CAT,X,GENE_CAT,GENE_CAT))
+                shell("""mafft-einsi  --addlong Workspace/2_DATASETS/{}/{}/{}_ancient.fa Workspace/2_DATASETS/{}/{}/{}_no_ancient_aln.fa  > Workspace/2_DATASETS/{}/{}/{}_re_aln.fa;""".format(X,GENE_CAT,GENE_CAT,X,GENE_CAT,GENE_CAT,X,GENE_CAT,GENE_CAT))
+                shell("""trimal -in Workspace/2_DATASETS/{}/{}/{}_re_aln.fa -out Workspace/2_DATASETS/{}/{}/{}_aln.fa  -noallgaps;""".format(X,GENE_CAT,GENE_CAT,X,GENE_CAT,GENE_CAT))
+            shell("""touch Workspace/2_DATASETS/{}/Alignment_Done;""".format(X))
             
+            
+            
+            #####Other ideas - not implemented
             #### ADD Ancient sequence to alignment##   mafft-einsi --addprofile COL17A1_ancient.fa COL17A1_aln.fa > COL17A1_NEW.fa
             #### ADD Ancient sequence to alignment##   mafft-einsi --seed COL17A1_aln.fa  COL17A1_ancient.fa > COL17A1_NEW.fa
             # shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -INFILE=Workspace/2_DATASETS/{}/$line/$line"_o.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -PWMATRIX=BLOSUM -PWGAPOPEN=10 -ITERATION=TREE -NUMITER=1000 -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X))
-            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do mafft --ep 0 --op 0.5 --lop -0.5 --genafpair --maxiterate 20000 --thread {} --bl 80 --fmodel Workspace/2_DATASETS/{}/$line/$line"_no_ancient.fa" >  Workspace/2_DATASETS/{}/$line/$line"_no_ancient_aln.fa"; done;""".format(X,threads,X,X))
             # shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -PROFILE1=Workspace/2_DATASETS/{}/$line/$line"_no_ancient_aln.fa" -PROFILE2=Workspace/2_DATASETS/{}/$line/$line"_ancient.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_re_aln.fa" -NUMITER=1000 -PWMATRIX=BLOSUM -PWGAPEXT=0.01 -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X,X))
-            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do mafft-einsi  --addlong Workspace/2_DATASETS/{}/$line/$line"_ancient.fa" Workspace/2_DATASETS/{}/$line/$line"_no_ancient_aln.fa"  > Workspace/2_DATASETS/{}/$line/$line"_re_aln.fa"; done;""".format(X,X,X,X))
-            shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do trimal -in Workspace/2_DATASETS/{}/$line/$line"_re_aln.fa" -out Workspace/2_DATASETS/{}/$line/$line"_aln.fa"  -noallgaps; done;""".format(X,X,X))
-            shell("""touch Workspace/2_DATASETS/{}/Alignment_Done;""".format(X))
+            
+            
             
             
 #Generate statistics for each sample in each dataset, swap L/M aminoacids based on reference samples           
@@ -237,7 +239,7 @@ rule Run_PhyML_Concatenated_Genes:
             shell( """ RAND=$(( $RANDOM %999));\
             cd Workspace/2_DATASETS/{};\
             cd ./CONCATINATED;\
-            mpirun -n {} phyml-mpi -i CONCATINATED_aln_e.phy -d aa -b 100 -m HIVb -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 4 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check < /dev/null;\
+            mpirun -n {} phyml-mpi -i CONCATINATED_aln_e.phy -d aa -b 1000 -m HIVb -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 4 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check < /dev/null;\
             cd ..; """.format(X,threads))
             shell("""touch Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done;""".format(X))
 
