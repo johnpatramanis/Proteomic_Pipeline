@@ -53,6 +53,9 @@ if r.json!=[]:
         SEQ_REGION=MJ['seq_region_name']
         CURRENT_ASSEMBLY=MJ['assembly_name']
         
+        print('\nAcquiring Positions of Genes for requested Assembly\n ')
+        print('\nCurrent assembly is: {} \n'.format(CURRENT_ASSEMBLY))
+        print('Your chosen assembly is: {} \n'.format(ASSEMBLY))
         
         #if user provided with alternative assembly
         if (ASSEMBLY!='CURRENT') and (CURRENT_ASSEMBLY!=ASSEMBLY):
@@ -64,8 +67,9 @@ if r.json!=[]:
             r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
             decoded = r.json()
             
+            
             #if request gave valid results
-            if decoded['mappings']!=[]:
+            if 'mappings' in decoded.keys():
                 NEW_MAP=decoded['mappings'][0]['mapped']
                 
                 START=NEW_MAP['start']
@@ -73,9 +77,10 @@ if r.json!=[]:
                 STRAND=NEW_MAP['strand']
                 SEQ_REGION=NEW_MAP['seq_region_name']
                 CURRENT_ASSEMBLY=NEW_MAP['assembly']
+            else:
+                print('Error in finding position of Gene: {} in requested assembly'.format(GENE))
             
-            
-print('\nGenerating Gene info for Gene: {}\nLocation: {}:{}-{}\tstrand:{}\nAssembly Name: {} '.format(GENE,SEQ_REGION,START,END,STRAND,CURRENT_ASSEMBLY))             
+print('\nGenerating Gene info for Gene: {}\nLocation: {}:{}-{}\tstrand:{}\nAssembly Name: {}\n Will default to current online assembly if possible.'.format(GENE,SEQ_REGION,START,END,STRAND,CURRENT_ASSEMBLY))             
             
 
 if STRAND==1:
