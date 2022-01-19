@@ -99,8 +99,10 @@ else:
 LOC_FILE=open('Workspace/5_Loc_Files/{}/{}/Gene_locs.txt'.format(ORGANISM,ASSEMBLY),'a')
 STARTS_FILE=open('Workspace/5_Loc_Files/{}/{}/starts.txt'.format(ORGANISM,ASSEMBLY),'a')
 
-#Append the 'Starts.txt' file for that organism/assembly
-STARTS_FILE.write('{}\t{}\t{}\n'.format(GENE,str(STARTS_START),STRAND))
-if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='')):
+
+
+if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID!='')):
     #Append the 'Gene_locs.txt' file for that organism/assembly, if Gene info is not missing
     LOC_FILE.write('{}\t{}\t{}\t{}\t{}.fa\n'.format(GENE,str(SEQ_REGION),str(START),str(END),GENE))
+    #Append the 'Starts.txt' file for that organism/assembly
+    STARTS_FILE.write('{}\t{}\t{}\n'.format(GENE,str(STARTS_START),STRAND))
