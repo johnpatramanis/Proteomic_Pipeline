@@ -94,6 +94,7 @@ if r.json!=[]:
 
         #check if the Gene we are looking for matches the Gene name of the search result OR any of its synonims
         GENE_NAMES=[]
+        print(MJ)
         GENE_NAMES.append(MJ['gene'][0]['name']['value'])
         if 'synonyms' in MJ['gene'][0].keys():
             GENE_NAMES.append(MJ['gene'][0]['synonyms'][0]['value'])

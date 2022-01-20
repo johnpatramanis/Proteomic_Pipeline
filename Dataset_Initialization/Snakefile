@@ -78,7 +78,7 @@ rule Get_Ensembl_Gene_IDs:
                 if limiter%50==0:
                     time.sleep(1)
                     
-                shell(""" python3 Python_Scripts/Search_Uniprot.py {} {}""".format(GENE,ORG))
+                shell(""" python3 Python_Scripts/Get_Gene_ID.py {} {}""".format(GENE,ORG))
                 
                 limiter+=1
 

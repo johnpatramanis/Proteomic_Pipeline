@@ -1,2 +1,2 @@
-Homo_sapiens	GRCh37
-Loxodonta_africana
+homo_sapiens	GRCh37
+loxodonta_africana
