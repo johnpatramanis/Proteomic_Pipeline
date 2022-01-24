@@ -28,7 +28,7 @@ for line in PROTEIN_FILE:
 
 ORGANISM_FILE=open('Organism.txt','r')
 for line in ORGANISM_FILE:
-    line=line.strip().split('\t')
+    line=line.strip().split()
     ORGANISM.append(line[0])
     if (len(line)==2):
         REFERENCE.append(line[1])
