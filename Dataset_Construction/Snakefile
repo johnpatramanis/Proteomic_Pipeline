@@ -152,16 +152,16 @@ rule format_name:
     threads:32
     shell: 
         """samtools view -H {input} --threads={threads} |\
-        sed -e 's/SN:1/SN:chr1/' | sed -e 's/SN:2/SN:chr2/' | \
-        sed -e 's/SN:3/SN:chr3/' | sed -e 's/SN:4/SN:chr4/' | \
-        sed -e 's/SN:5/SN:chr5/' | sed -e 's/SN:6/SN:chr6/' | \
-        sed -e 's/SN:7/SN:chr7/' | sed -e 's/SN:8/SN:chr8/' | \
-        sed -e 's/SN:9/SN:chr9/' | sed -e 's/SN:10/SN:chr10/' | \
-        sed -e 's/SN:11/SN:chr11/' | sed -e 's/SN:12/SN:chr12/' | \
-        sed -e 's/SN:13/SN:chr13/' | sed -e 's/SN:14/SN:chr14/' | \
-        sed -e 's/SN:15/SN:chr15/' | sed -e 's/SN:16/SN:chr16/' | \
-        sed -e 's/SN:17/SN:chr17/' | sed -e 's/SN:18/SN:chr18/' | \
-        sed -e 's/SN:19/SN:chr19/' | sed -e 's/SN:20/SN:chr20/' | \
+        sed -e 's/SN:chr1/SN:1/' | sed -e 's/SN:chr2/SN:2/' | \
+        sed -e 's/SN:chr3/SN:3/' | sed -e 's/SN:chr4/SN:4/' | \
+        sed -e 's/SN:chr5/SN:5/' | sed -e 's/SN:chr6/SN:6/' | \
+        sed -e 's/SN:chr7/SN:7/' | sed -e 's/SN:chr8/SN:8/' | \
+        sed -e 's/SN:chr9/SN:9/' | sed -e 's/SN:chr10/SN:10/' | \
+        sed -e 's/SN:chr11/SN:11/' | sed -e 's/SN:chr12/SN:12/' | \
+        sed -e 's/SN:chr13/SN:13/' | sed -e 's/SN:chr14/SN:14/' | \
+        sed -e 's/SN:chr15/SN:15/' | sed -e 's/SN:chr16/SN:16/' | \
+        sed -e 's/SN:chr17/SN:17/' | sed -e 's/SN:chr18/SN:18/' | \
+        sed -e 's/SN:chr19/SN:19/' | sed -e 's/SN:20/SN:chr20/' | \
         sed -e 's/SN:21/SN:chr21/' | sed -e 's/SN:22/SN:chr22/' | \
         sed -e 's/SN:X/SN:chrX/' | sed -e 's/SN:Y/SN:chrY/' | \
         sed -e 's/SN:MT/SN:chrM/' | samtools reheader - {input} > {output};"""
@@ -274,7 +274,7 @@ rule format_split_into_chromosomes:
                 
                 shell("""samtools index -b {} -@ {}""".format(S,threads)) #make sure its indexed
                 
-                shell("""samtools view -H {} --threads={} | sed -e 's/SN:{}/SN:chr{}/' | samtools reheader - {} > Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam;""".format(S,threads,CHR,CHR,S,SAMPLE_HERE,CHR)) #format it
+                shell("""samtools view -H {} --threads={} | sed -e 's/SN:chr{}/SN:{}/' | samtools reheader - {} > Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam;""".format(S,threads,CHR,CHR,S,SAMPLE_HERE,CHR)) #format it
                 
                 shell("""samtools index -b Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam -@ {};""".format(SAMPLE_HERE,CHR,threads)) #Re-index it
 
@@ -283,7 +283,7 @@ rule format_split_into_chromosomes:
                 for CHR in CHROMOSOMES:
                     print('Sample {} will now be split into Chromosome-level-Bams.\n Processing chromosome {}.'.format(SAMPLE_HERE,CHR))
                     
-                    shell("""samtools view -b Workspace/2_FORMATTED_BAM/{}_FRMT.bam chr{} > Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam --threads={}; """.format(SAMPLE_HERE,CHR,SAMPLE_HERE,CHR,threads))
+                    shell("""samtools view -b Workspace/2_FORMATTED_BAM/{}_FRMT.bam {} > Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam --threads={}; """.format(SAMPLE_HERE,CHR,SAMPLE_HERE,CHR,threads))
                     
                     shell("""samtools index -b Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam -@ {};  """.format(SAMPLE_HERE,CHR,threads))
 
@@ -306,7 +306,7 @@ rule from_bam_to_fasta_ANGSD:
     run:
         #2 lists, one of ancient samples and one of modern ones
         #COMMANDS1=expand() #for ancient samples
-        COMMANDS=expand("""angsd -nThreads {THRDS} -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r chr{CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",THRDS=threads,CHR=CHROMOSOMES,sample=SAMPLES)
+        COMMANDS=expand("""angsd -nThreads {THRDS} -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",THRDS=threads,CHR=CHROMOSOMES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
         #check to see if all files were made. EG if a sample lacks a Y chromosome angsd wont run for that one and wont make the file
