@@ -1,7 +1,7 @@
-#Run using snakemake -j1 --latency-wait 120 --use-conda
+#Run using "snakemake -j4"
 
 
-#Dependancies to be used - R / Rpackages: ShortRead / angsd / blast-legacy (v2.2.26) / blast (v2.2.31)
+#Dependancies to be used: Snakemake/python3
 #conda env export --from-history > environment.yaml
 #conda env create --name testenv --file environment.yaml
 
@@ -21,7 +21,9 @@ REFERENCE=[]
 
 PROTEIN_FILE=open('Proteins.txt','r')
 for line in PROTEIN_FILE:
-    GENES.append(line.strip())
+    line=line.strip()
+    line=line.replace("\\","-") #there are actually some genes with "/" in their name, which messes up the folder creation process
+    GENES.append(line)
 
 
 
@@ -64,7 +66,7 @@ rule Get_Ensembl_Gene_IDs:
     run:
 
         for ORG in ORGANISM:
-        
+            print(ORG)
             #Check if path for organism exists/create it
             path='Workspace/1_Gene_IDs/'+str(ORG)
             if os.path.exists(path)==False:
@@ -73,7 +75,7 @@ rule Get_Ensembl_Gene_IDs:
             #Get GeneID for every gene of list
             limiter=0
             for GENE in GENES:
-                
+                print(GENE)
                 #limiter, because requesting too many files in too short of a time, will cause IP to be blocked
                 if limiter%50==0:
                     time.sleep(1)
