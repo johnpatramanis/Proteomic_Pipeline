@@ -141,6 +141,19 @@ rule all:
 #######################################################################################################################################################################
 ## Data Pipeline ##
 
+## If bam file input is missing, search for a cram file alternative, convert that to a bam
+#samtools view -b -@ 32 -o NA12778.final.bam NA12778.final.cram
+rule Cram_to_bam:
+    input:
+        "Workspace/1_OG_BAM_FILES/{sample}.cram"
+    output:
+        "Workspace/1_OG_BAM_FILES/{sample}.bam"
+    threads:32
+    shell:"samtools view -b -@ 32 -o {output} {input}"
+
+
+
+
 
 #Make sure bam file has correct chromosome naming scheme
 
@@ -194,12 +207,13 @@ def my_inputs(samples,chromosomes):
         
         
         path='Workspace/1_OG_BAM_FILES/' + str(S) + '.bam'
+        path2='Workspace/1_OG_BAM_FILES/' + str(S) + '.cram'
         
-        if (os.path.isfile(path))==True:
+        if (os.path.isfile(path) or os.path.isfile(path2))==True:
             S='Workspace/2_FORMATTED_BAM/'+ str(S) +'_FRMT.bam'
             sample_list.append(S)
     
-        if (os.path.isfile(path))==False:
+        if (os.path.isfile(path) and os.path.isfile(path2))==False:
         
             Bam_List=[] #file paths for individual chromosomes 
             Check_List=[] #check if any chromosomes bams are missing
@@ -230,7 +244,7 @@ def my_inputs2(samples,chromosomes):
         
         path='Workspace/1_OG_BAM_FILES/' + str(S) + '.bam'
         
-        if (os.path.isfile(path))==True:
+        if (os.path.isfile(path) or os.path.isfile(path2))==True:
             S='Workspace/2_FORMATTED_BAM/'+ str(S) +'_FRMT.bam.bai'
             sample_list.append(S)
 

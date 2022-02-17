@@ -23,7 +23,7 @@ print(c(samp,gene))
 
 tab<-read.table(paste0(args[3], gene, "_ei.txt"), as.is=T, sep="\t") # Exon / Intron file
 
-if (nchar(fa)>=700) {
+if ((nchar(fa)>=700) & (dim(tab)[1]>1)) {
     
     if(info[info[,1]==gene,3]=="+"){ # If the gene of the fasta file is on the (+) strand
         starts<-info[info[,1]==gene,2] #grab first start position
