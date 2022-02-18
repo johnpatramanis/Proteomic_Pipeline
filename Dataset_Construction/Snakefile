@@ -148,21 +148,21 @@ rule Cram_to_bam:
         "Workspace/1_OG_BAM_FILES/{sample}.cram"
     output:
         "Workspace/1_OG_BAM_FILES/{sample}.bam"
-    threads:32
+    threads:4
     shell:"samtools view -b -@ 32 -o {output} {input}"
 
 
 
 
 
-#Make sure bam file has correct chromosome naming scheme
+# Make sure bam file has correct chromosome naming scheme
 
 rule format_name:
     input:
         "Workspace/1_OG_BAM_FILES/{sample}.bam"
     output:
         "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
-    threads:32
+    threads:4
     shell: 
         """samtools view -H {input} --threads={threads} |\
         sed -e 's/SN:chr1/SN:1/' | sed -e 's/SN:chr2/SN:2/' | \
@@ -181,12 +181,13 @@ rule format_name:
 
 
 
-#Re-Index it
+# Re-Index it
 rule format_index_name:
     input:
         "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
     output:
         "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai"
+    threads: 4
     shell:
         "samtools index -b {input} -@ {threads}"
 
@@ -198,7 +199,7 @@ rule format_index_name:
 
 
 
-#Input for spliting: Is it one bam files with all chromosomes or split up into smaller bam files (per chromosome)
+# Input for spliting: Is it one bam files with all chromosomes or split up into smaller bam files (per chromosome)
 def my_inputs(samples,chromosomes):
     
     sample_list=[]
@@ -271,7 +272,7 @@ rule format_split_into_chromosomes:
         expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
         expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
     
-    threads:32
+    threads:16
     
     run:
         
@@ -353,6 +354,8 @@ rule from_bam_to_fasta_ANGSD:
 
 
 
+
+
 #######################################################################################################################################################################
 ##Actual DNA to Proteins Translation ##
 
@@ -371,6 +374,20 @@ rule Isolate_Gene_from_fasta:
         for CMD in COMMANDS:
             shell(CMD)
 
+# rule Splice_Genes:
+    # input:
+        # "Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa"
+    # output:
+        # "Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa"
+    # shell:
+        # "Rscript ./R\ scripts/Rscript2.r {input} starts.txt ./EIT/ Workspace/6_SPLICED_GENE_FILES/"
+
+
+# rule run_all_samples_and_genes:
+    # input:
+        # expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+
+
 
 #Splice Gene segment from gene fasta, keep exones
 
@@ -384,6 +401,11 @@ rule Splice_Genes:
         COMMANDS=expand("""Rscript ./R\ scripts/Rscript2.r Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa starts.txt ./EIT/ Workspace/6_SPLICED_GENE_FILES/ ;""",GENE=GENES,sample=SAMPLES)
         for CMD in COMMANDS:
             shell(CMD)
+
+
+
+
+#Run spliced segments through blastools and translate them
 
 
 
@@ -404,6 +426,13 @@ rule Translate_through_blastools:
                 
 
 
+
+
+#Get the output of blastools make it into a fasta file
+
+
+
+
 rule Extract_blastools_output:
     input:
         expand("Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
@@ -413,8 +442,16 @@ rule Extract_blastools_output:
         COMMANDS1=expand("""Rscript R\ scripts/Rscript3.r Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast Workspace/8_PROTEINS_FASTAS/ ;""",GENE=GENES,sample=SAMPLES)
         for CMD in COMMANDS1:
             shell(CMD)
-            
-            
+
+
+
+
+
+######################################################################################################################################################################################################################################
+### Final data/folder organising 
+
+# Merge proteins from the same individual into one fasta file and all the same protein from every individual into their own fast file
+
 rule Assemble_protein_dataset:
     input:
         expand("Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
