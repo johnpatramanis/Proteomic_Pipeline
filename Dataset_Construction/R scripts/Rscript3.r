@@ -28,7 +28,7 @@ close(zz) #
 zz<-pipe(paste0("grep \"letters)\" ", blout)) #new pipe
 len<-scan(zz, what="", sep="\n")  #sequence
 close(zz)
-len<-as.numeric(strsplit(strsplit(len, "\\(")[[1]][2], " ")[[1]][1]) #length of sequence
+len<-as.numeric(gsub(",", "",strsplit(strsplit(len, "\\(")[[1]][2], " ")[[1]][1])) #length of sequence
 separator<-grep("Identities", a) #
 
 if(length(separator)>1){
