@@ -125,8 +125,8 @@ CHROMOSOMES.sort()
 
 
 
-#######################################################################################################################################################################
-#######################################################################################################################################################################
+##############################################################################################################################################################################################################################################################################################################################################
+##############################################################################################################################################################################################################################################################################################################################################
 ## Starting Rule
 
 rule all:
@@ -138,7 +138,21 @@ rule all:
 
 
 
-#######################################################################################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################################################################################################################################################################################################################################################################################################
 ## Data Pipeline ##
 
 ## If bam file input is missing, search for a cram file alternative, convert that to a bam
@@ -356,11 +370,18 @@ rule from_bam_to_fasta_ANGSD:
 
 
 
-#######################################################################################################################################################################
-##Actual DNA to Proteins Translation ##
 
-#Use custom R scripts
-#Isolate Gene segment from chromosome fasta
+
+
+
+
+
+
+#####################################################################################################################################################################################################################################
+## Actual DNA to Proteins Translation ##
+## Use custom R scripts
+
+# Isolate Gene segment from chromosome fasta
 
 
 rule Isolate_Gene_from_fasta:
@@ -374,74 +395,78 @@ rule Isolate_Gene_from_fasta:
         for CMD in COMMANDS:
             shell(CMD)
 
-# rule Splice_Genes:
-    # input:
-        # "Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa"
-    # output:
-        # "Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa"
-    # shell:
-        # "Rscript ./R\ scripts/Rscript2.r {input} starts.txt ./EIT/ Workspace/6_SPLICED_GENE_FILES/"
+
+# Splice Gene segment from gene fasta, keep exones
 
 
-# rule run_all_samples_and_genes:
-    # input:
-        # expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
-
-
-
-#Splice Gene segment from gene fasta, keep exones
-
-rule Splice_Genes:
+rule Splice_Gene:
     input:
-        expand("Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
+        "Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa"
     output:
-        expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
-
-    run:
-        COMMANDS=expand("""Rscript ./R\ scripts/Rscript2.r Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa starts.txt ./EIT/ Workspace/6_SPLICED_GENE_FILES/ ;""",GENE=GENES,sample=SAMPLES)
-        for CMD in COMMANDS:
-            shell(CMD)
+        "Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa"
+    shell:
+        "Rscript ./R\ scripts/Rscript2.r {input} starts.txt ./EIT/ Workspace/6_SPLICED_GENE_FILES/"
 
 
-
-
-#Run spliced segments through blastools and translate them
-
-
-
-rule Translate_through_blastools:
+rule Splice_All_Genes:
     input:
         expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+
+
+
+
+# Run spliced segments through blastools and translate them
+
+
+
+rule Translate_Through_blastools:
+    input:
+        SPLICED="Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",
+        PROT_TEMPLATE="Genes/{GENE}.fa"
     output:
-        expand("Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
-    run:
-        COMMANDS1=expand("""makeblastdb -dbtype nucl -in Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa;""",GENE=GENES,sample=SAMPLES)
-        
-        
-        for CMD in COMMANDS1:
-            shell(CMD)
-        for GENE in GENES:
-            for sample in SAMPLES:
-                shell("""blastall  -p tblastn -i ./Genes/{}  -d Workspace/6_SPLICED_GENE_FILES/{}_FRMT_{}_spliced.fa -o Workspace/7_BLASTED_GENES/{}_FRMT_{}_spliced.blast -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;""".format(GENES_TO_REFERENCES[GENE],sample,GENE,sample,GENE))
-                
+        "Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast"
+    shell:
+        """
+        makeblastdb -dbtype nucl -in {input.SPLICED};
+        blastall  -p tblastn -i {input.PROT_TEMPLATE}  -d {input.SPLICED} -o {output} -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;
+        """
+    
+    
+rule Translate_All_Through_Blastools:
+    input:
+        expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
 
 
 
 
-#Get the output of blastools make it into a fasta file
 
 
+# Get the output of blastools make it into a fasta file
 
 
-rule Extract_blastools_output:
+rule Extract_Blastools_output:
+    input:
+        "Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast"
+    output:
+        "Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa"
+    shell:
+        "Rscript R\ scripts/Rscript3.r {input} Workspace/8_PROTEINS_FASTAS/ ;"
+
+
+rule Extract_All_Blastools_output:
     input:
         expand("Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
-    output:
-        expand("Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
-    run:
-        COMMANDS1=expand("""Rscript R\ scripts/Rscript3.r Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast Workspace/8_PROTEINS_FASTAS/ ;""",GENE=GENES,sample=SAMPLES)
-        for CMD in COMMANDS1:
-            shell(CMD)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -467,5 +492,4 @@ rule Assemble_protein_dataset:
             shell(CMD)
         for CMD in COMMANDS2:
             shell(CMD)    
-        shell(""" cat Workspace/8_PROTEINS_FASTAS/*_translated.fa >>Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa; """)    
-        
+        shell(""" cat Workspace/8_PROTEINS_FASTAS/*_translated.fa >>Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa; """)
