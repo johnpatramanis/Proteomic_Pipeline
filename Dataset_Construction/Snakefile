@@ -163,7 +163,7 @@ rule Cram_to_bam:
     output:
         "Workspace/1_OG_BAM_FILES/{sample}.bam"
     threads:4
-    shell:"samtools view -b -@ 32 -o {output} {input}"
+    shell:"samtools view -b -@ {threads} -o {output} {input}"
 
 
 
@@ -258,6 +258,7 @@ def my_inputs2(samples,chromosomes):
         
         
         path='Workspace/1_OG_BAM_FILES/' + str(S) + '.bam'
+        path2='Workspace/1_OG_BAM_FILES/' + str(S) + '.cram'
         
         if (os.path.isfile(path) or os.path.isfile(path2))==True:
             S='Workspace/2_FORMATTED_BAM/'+ str(S) +'_FRMT.bam.bai'
@@ -336,7 +337,7 @@ rule from_bam_to_fasta_ANGSD:
         
         ###If user does not define any samples as ancient, using a txt file named 'Ancient_Samples.txt', treat all samples as modern
         if (os.path.isfile('Ancient_Samples.txt')==False):
-            COMMANDS=expand("""angsd -nThreads {THRDS} -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",THRDS=threads,CHR=CHROMOSOMES,sample=SAMPLES)
+            COMMANDS=expand("""angsd -nThreads {{threads}} -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=SAMPLES)
         
         #If there are samples defined as ancient, 2 lists, one of ancient samples and one of modern ones
         if (os.path.isfile('Ancient_Samples.txt')==True):
@@ -349,9 +350,9 @@ rule from_bam_to_fasta_ANGSD:
             COMMANDS=[]
             COMMANDS2=[]
             if [x for x in SAMPLES if x not in ANCIENT_SAMPLES]!=[]:
-                COMMANDS=expand("""angsd -nThreads {THRDS} -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",THRDS=threads,CHR=CHROMOSOMES,sample=[x for x in SAMPLES if x not in ANCIENT_SAMPLES])
+                COMMANDS=expand("""angsd -nThreads {{threads}} -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=[x for x in SAMPLES if x not in ANCIENT_SAMPLES])
             if [x for x in SAMPLES if x in ANCIENT_SAMPLES]!=[]:
-                COMMANDS2=expand("""angsd -nThreads {THRDS} -minQ 20 -minMapQ 30 -doFasta 1 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",THRDS=threads,CHR=CHROMOSOMES,sample=[x for x in SAMPLES if x in ANCIENT_SAMPLES])
+                COMMANDS2=expand("""angsd -nThreads {{threads}} -minQ 20 -minMapQ 30 -doFasta 1 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=[x for x in SAMPLES if x in ANCIENT_SAMPLES])
             COMMANDS=COMMANDS+COMMANDS2
             
         for CMD in COMMANDS:
