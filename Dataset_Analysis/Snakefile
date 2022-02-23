@@ -23,7 +23,7 @@ for line in DATASETS_FILE:
 
     else:
         DATASETS[Dataset]=[[x for x in AncSamples]]
-        
+
 
 print(DATASETS)
 
