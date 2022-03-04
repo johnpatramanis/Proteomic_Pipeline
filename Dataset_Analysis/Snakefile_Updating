@@ -100,11 +100,11 @@ rule all:
     input:
         expand('Workspace/2_DATASETS/{sample}/Samples.txt',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/Alignment_Done',sample=SAMPLES),
-        expand('Workspace/2_DATASETS/{sample}/Info_and_Checking_Done',sample=SAMPLES),
-        expand('Workspace/2_DATASETS/{sample}/Concatenation_Done',sample=SAMPLES),
-        expand('Workspace/2_DATASETS/{sample}/PhyML_Individual_Genes_Done',sample=SAMPLES)
-        # [ 'Workspace/2_DATASETS/{}/PhyML_Concatenated_Genes_Done'.format(x) for x in JOINED_NAMES ],
-        # [ 'Workspace/2_DATASETS/{}/MrBayes_Concatenated_Genes_Done'.format(x) for x in JOINED_NAMES ]
+        # expand('Workspace/2_DATASETS/{sample}/Info_and_Checking_Done',sample=SAMPLES),
+        # expand('Workspace/2_DATASETS/{sample}/PhyML_Individual_Genes_Done',sample=SAMPLES)
+        # expand('Workspace/2_DATASETS/{sample}/PhyML_Concatenated_Genes_Done',sample=SAMPLES),
+        # expand('Workspace/2_DATASETS/{sample}/MrBayes_Concatenated_Genes_Done',sample=SAMPLES),
+        # expand('Workspace/2_DATASETS/{sample}/Alignments_Collected',sample=SAMPLES)
 
 
 
@@ -437,3 +437,23 @@ rule Run_MrBayes_Concatenated_Genes:
             """)
             shell("""touch Workspace/2_DATASETS/{wildcards.sample}/MrBayes_Concatenated_Genes_Done;""")
             #### To unlink partitions # unlink statefreq=(all) revmat=(all) shape=(all) pinvar=(all);\n
+
+
+
+rule Gether_Alignments_In_One_Place:
+    input:
+        'Workspace/2_DATASETS/{sample}/Concatenation_Done',
+        'Workspace/2_DATASETS/{sample}/Alignment_Done'
+        
+    output:
+        'Workspace/2_DATASETS/{sample}/Alignments_Collected'
+    run:
+
+        COLLECTION_FOLDER='Workspace/2_DATASETS/{wildcards.sample}/COLLECTED_ALIGNMENTS'
+        if os.path.exists(COLLECTION_FOLDER)==False:
+            os.mkdir(COLLECTION_FOLDER)
+
+        GENES=GENES_OF_DATASET[wildcards.sample]
+        for GENE in GENES:
+            shell("cp Workspace/2_DATASETS/{wildcards.sample}/{GENE}/{GENE}_aln_e.fa Workspace/2_DATASETS/{sample}/Alignments_Collected/{GENE}_final_alignment.fa;")
+        shell("touch Workspace/2_DATASETS/{wildcards.sample}/Alignments_Collected")
