@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly=TRUE)
 #command to run:    Rscript Rscript1.r 'sample_file' 'Starts_file' 'EIT_folder_location' 'output_location'
-#command to run(from Dataset_Construction folder):    Rscript R\ scripts/Rscript3.r Workspace/8_BLASTED_GENES/DENISOVA_DENISOVA_ADNA_FRMT_AMELX_spliced.blast Workspace/PROTEINS_FASTAS/
+#command to run(from Dataset_Construction folder):    Rscript R\ scripts/Rscript3.r Workspace/8_BLASTED_GENES/DENISOVA_DENISOVA_ADNA_AMELX_spliced.blast Workspace/PROTEINS_FASTAS/
 
 library(ShortRead)
 
@@ -11,13 +11,15 @@ fas<-args[1]
 #Get gene and sample name
 
 name<-gsub(".blast", "", fas)
-name<-strsplit(basename(name), "_FRMT_")
-gene<-name[[1]][2]
-gene<-name[[1]][2]<-gsub("_spliced", "", gene)#gene name from file name
-samp<-name[[1]][1] # Sample name from file name
+name<-strsplit(basename(name), "_")
+
+gene<-name[[1]][length(name[[1]])-1]#gene name from file name
+# gene<-name[[1]][2]<-gsub("_spliced", "", gene)
+# samp<-paste(name[[1]][-(length(name[[1]]))],collapse='_')# Sample name from file name
+samp<-paste(head(name[[1]],-2),collapse='_')# Sample name from file name
 
 
-fout<-paste0(args[2],samp,'_FRMT_',gene, "_translated.fa")  #name of output fasta (protein)
+fout<-paste0(args[2],samp,'_',gene, "_translated.fa")  #name of output fasta (protein)
 h<-paste0(samp,'_',gene) # just the sample name
 
 #for each blast file
