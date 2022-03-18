@@ -37,7 +37,9 @@ print(ORGANISM,ASSEMBLY)
 SAMPLES=[]
 SAMPLE_FILE=open('Samples.txt','r') 
 for line in SAMPLE_FILE:
-    SAMPLES.append(line.strip())
+    line=line.strip().split('.')
+    line='.'.join(line[0:len(line)])
+    SAMPLES.append(line)
 print(SAMPLES)
 
 
@@ -88,6 +90,9 @@ if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==
     os.system('cp ../Dataset_Initialization/Workspace/4_EITs/{}/*_ei.txt ./EIT/'.format(ORGANISM))
     
     # Clean up FASTA folder and Copy over the appropriate fasta files
+    
+    if os.path.exists('Genes')==False:
+        os.makedirs('Genes')
     os.system('rm Genes/*.fa')
     os.system('cp ../Dataset_Initialization/Workspace/3_FASTA_Seqs/Genes_{}/*.fa ./Genes/'.format(ORGANISM))
 
@@ -112,7 +117,7 @@ for line in GENE_LOCS:
 CHROMOSOMES=list(set(CHROMOSOMES))
 CHROMOSOMES.sort()
 
-
+### CHR=[f"{i}" for i in CHROMOSOMES]
 
 
 
@@ -127,13 +132,29 @@ CHROMOSOMES.sort()
 
 ##############################################################################################################################################################################################################################################################################################################################################
 ##############################################################################################################################################################################################################################################################################################################################################
-## Starting Rule
+## One Rule to Rule them All
 
 rule all:
     input:
-        expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
-        expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
-        expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
+        BLAST_RESULTS=expand("Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES),
+        ALL_PRTOEINS_ALL_SAMPLES=expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
+        ALL_SAMPLES_PER_PROTEIN=expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
+        ALL_PROTEINS_PER_SAMPLE=expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -156,7 +177,7 @@ rule all:
 ## Data Pipeline ##
 
 ## If bam file input is missing, search for a cram file alternative, convert that to a bam
-#samtools view -b -@ 32 -o NA12778.final.bam NA12778.final.cram
+#
 rule Cram_to_bam:
     input:
         "Workspace/1_OG_BAM_FILES/{sample}.cram"
@@ -169,13 +190,13 @@ rule Cram_to_bam:
 
 
 
-# Make sure bam file has correct chromosome naming scheme
-
+## Make sure bam file has correct chromosome naming scheme
+#
 rule format_name:
     input:
         "Workspace/1_OG_BAM_FILES/{sample}.bam"
     output:
-        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
+        "Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam"
     threads:4
     shell: 
         """samtools view -H {input} --threads={threads} |\
@@ -195,12 +216,13 @@ rule format_name:
 
 
 
-# Re-Index it
+## Re-Index it
+#
 rule format_index_name:
     input:
-        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam"
+        "Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam"
     output:
-        "Workspace/2_FORMATTED_BAM/{sample}_FRMT.bam.bai"
+        "Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam.bai"
     threads: 4
     shell:
         "samtools index -b {input} -@ {threads}"
@@ -213,60 +235,99 @@ rule format_index_name:
 
 
 
-# Input for spliting: Is it one bam files with all chromosomes or split up into smaller bam files (per chromosome)
-def my_inputs(samples,chromosomes):
+
+
+
+
+
+
+##############################################################################################################################################################################################################################################################################################################################################
+## FUNCTIONS
+
+#### Which Chromosomes are pre-split avaialble and which are missing?
+
+def GET_PRE_SPLIT_CHROMOSOMES(Sample,CHROMOSOMES):
     
-    sample_list=[]
+    Sample=Sample.strip().split('/')[len(Sample.strip().split('/'))-1]
+
+    Bam_List=[]
     
-    for S in samples:
-        
-        
-        path='Workspace/1_OG_BAM_FILES/' + str(S) + '.bam'
-        path2='Workspace/1_OG_BAM_FILES/' + str(S) + '.cram'
-        
-        if (os.path.isfile(path) or os.path.isfile(path2))==True:
-            S='Workspace/2_FORMATTED_BAM/'+ str(S) +'_FRMT.bam'
-            sample_list.append(S)
-    
-        if (os.path.isfile(path) and os.path.isfile(path2))==False:
-        
-            Bam_List=[] #file paths for individual chromosomes 
-            Check_List=[] #check if any chromosomes bams are missing
+    for CHR in CHROMOSOMES:
+        FILE='Workspace/1_OG_BAM_FILES/{}{}.bam'.format(Sample,CHR)
+        if (os.path.isfile(FILE)):
+            Bam_List.append(FILE)
             
-            for CHR in chromosomes:
-                path1='Workspace/1_OG_BAM_FILES/' + str(S) +'_{}'.format(CHR) + '.bam' #possible naming scheme 1
+    return Bam_List
+
+
+##### SPLIT OR NOT SPLIT CHROMOSOMES IN BAM INPUT
+
+def SPLIT_OR_NOT_SPLIT_BAM(Sample,CHROMOSOMES):
+
+    Sample=Sample.strip().split('/')[len(Sample.strip().split('/'))-1]
+    Sample=Sample.replace('_FRMT', "")
+    
+    path='Workspace/1_OG_BAM_FILES/' + str(Sample) + '.bam'
+    path2='Workspace/1_OG_BAM_FILES/' + str(Sample) + '.cram'
+
+    
+    if ( (os.path.isfile(path)) or (os.path.isfile(path2)) )==True:
+
+        Bam_List=[]
+
+        
+        for CHR in CHROMOSOMES:
+            FILE='Workspace/3_SPLIT_CHR/'+ str(Sample) + '_FRMT_' + str(CHR)+'.SPLT'
+            Bam_List.append(FILE)
+
+
+    if ( ((os.path.isfile(path))==False) and ((os.path.isfile(path2))==False) ):
+        
+        Bam_List=[]
+        
+        for CHR in CHROMOSOMES:
+            FILE='Workspace/3_SPLIT_CHR/'+ str(Sample) + '_PRE_SPLIT_' + str(CHR)+'.PRSPLT' 
+            if (os.path.isfile('Workspace/1_OG_BAM_FILES/{}{}.bam'.format(Sample,CHR)))==True:  #If the sample is pre-split into chromosomes, check if the specific chromosome bam file exists
+                Bam_List.append(FILE)
                 
-                if (os.path.isfile(path1))==True:
-                    Bam_List.append(path1)
 
-                else:
-                    Check_List.append(CHR)
+    return Bam_List
 
-            sample_list.append(Bam_List)
-                
+
+
+
+def SPLIT_OR_NOT_SPLIT_BAI(Sample,CHROMOSOMES):
+    
+    Sample=Sample.strip().split('/')[len(Sample.strip().split('/'))-1]
+    Sample=Sample.replace('_FRMT', "")
+    
+    path='Workspace/1_OG_BAM_FILES/' + str(Sample) + '.bam'
+    path2='Workspace/1_OG_BAM_FILES/' + str(Sample) + '.cram'
 
     
-    return sample_list
+    if ( (os.path.isfile(path)) or (os.path.isfile(path2)) )==True:
+
+        Bam_List=[]
+        for CHR in CHROMOSOMES:
+            FILE='Workspace/3_SPLIT_CHR/'+ str(Sample) + '_FRMT_' + str(CHR)+'.SPLT.bai'
+            Bam_List.append(FILE)
 
 
-#Same for .bai files
-def my_inputs2(samples,chromosomes):
+    if ( ((os.path.isfile(path))==False) and ((os.path.isfile(path2))==False) ):
     
-    sample_list=[]
-    
-    for S in samples:
-        
-        
-        path='Workspace/1_OG_BAM_FILES/' + str(S) + '.bam'
-        path2='Workspace/1_OG_BAM_FILES/' + str(S) + '.cram'
-        
-        if (os.path.isfile(path) or os.path.isfile(path2))==True:
-            S='Workspace/2_FORMATTED_BAM/'+ str(S) +'_FRMT.bam.bai'
-            sample_list.append(S)
+        Bam_List=[]
+        for CHR in CHROMOSOMES:
+            FILE='Workspace/3_SPLIT_CHR/'+ str(Sample) + '_PRE_SPLIT_' + str(CHR)+'.PRSPLT.bai'
+            if (os.path.isfile('Workspace/1_OG_BAM_FILES/{}{}.bam'.format(Sample,CHR)))==True: #If the sample is pre-split into chromosomes, check if the specific chromosome bam file exists
+                Bam_List.append(FILE)
+         
+    return Bam_List
 
-    
-    return sample_list
 
+
+
+## FUNCTIONS
+##############################################################################################################################################################################################################################################################################################################################################
 
 
 
@@ -277,95 +338,163 @@ def my_inputs2(samples,chromosomes):
 
 
 
-#Split it into target chromosomes if one bam file, format each bam file if already split into chromosomes
+
+
+
+
+
+
+
+
+
+
+
+##############################################################################################################################################################################################################################################################################################################################################
+######## Split it into target chromosomes if one bam file, format each bam file if already split into chromosomes
+
+
+## Split BAM into Chromosomes
+#
 rule format_split_into_chromosomes:
     input:
-        BAM=my_inputs(SAMPLES,CHROMOSOMES),
-        BAI=my_inputs2(SAMPLES,CHROMOSOMES),
-        GENE_LOCS="Gene_locs.txt",
+        BAM="Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam",
+        BAI="Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam.bai",
+        GENE_LOCS="Gene_locs.txt"
     output:
-        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam", CHR=CHROMOSOMES,sample=SAMPLES),
-        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai", CHR=CHROMOSOMES,sample=SAMPLES)
-    
-    threads:16
-    
+        expand("Workspace/3_SPLIT_CHR/{{sample}}_FRMT_{CHR}.SPLT", CHR=CHROMOSOMES),
+        expand("Workspace/3_SPLIT_CHR/{{sample}}_FRMT_{CHR}.SPLT.bai", CHR=CHROMOSOMES)
+    threads:4
     run:
-        
-        for S in input.BAM:
-        
-            SAMPLE_HERE=S.split('/')[-1]
-            SAMPLE_HERE='_'.join(SAMPLE_HERE.split('_')[0:-1])            
-                    
-            if ('_FRMT' in S) == False:
+        for CHR in CHROMOSOMES:
+            shell("samtools view -b {input.BAM} {CHR} > Workspace/3_SPLIT_CHR/{wildcards.sample}_FRMT_{CHR}.SPLT --threads={threads};")
+            shell("samtools index -b Workspace/3_SPLIT_CHR/{wildcards.sample}_FRMT_{CHR}.SPLT -@ {threads};")
+
+
+
+
+## Pre-Split All Chromosomes Prep
+#
+rule format_pre_split_All_chromosomes:
+    input:
+        lambda wildcards: GET_PRE_SPLIT_CHROMOSOMES(wildcards.sample,CHROMOSOMES)
+    output:
+        BAM=expand("Workspace/3_SPLIT_CHR/{{sample}}_PRE_SPLIT_{CHR}.PRSPLT",CHR=CHROMOSOMES),
+        BAI=expand("Workspace/3_SPLIT_CHR/{{sample}}_PRE_SPLIT_{CHR}.PRSPLT.bai",CHR=CHROMOSOMES)
+    threads:4
+    run:
+        for CHR in CHROMOSOMES:
+            FILE='Workspace/1_OG_BAM_FILES/{}{}.bam'.format(wildcards.sample,CHR)
+            if (os.path.isfile(FILE)):
+                shell("samtools index -b Workspace/1_OG_BAM_FILES/{wildcards.sample}{CHR}.bam -@ {threads};")
+                shell("cp Workspace/1_OG_BAM_FILES/{wildcards.sample}{CHR}.bam Workspace/3_SPLIT_CHR/{wildcards.sample}_PRE_SPLIT_{CHR}.PRSPLT;")
+                shell("cp Workspace/1_OG_BAM_FILES/{wildcards.sample}{CHR}.bam.bai Workspace/3_SPLIT_CHR/{wildcards.sample}_PRE_SPLIT_{CHR}.PRSPLT.bai;")
+            else:
+                shell("touch Workspace/3_SPLIT_CHR/{wildcards.sample}_PRE_SPLIT_{CHR}.PRSPLT;")
+                shell("touch Workspace/3_SPLIT_CHR/{wildcards.sample}_PRE_SPLIT_{CHR}.PRSPLT.bai;")
+
+
+
+
+## Request All Individual Chromosome bam files
+#
+rule request_chromosome_files_and_prepare_them:
+    input:
+        BAM=lambda wildcards: SPLIT_OR_NOT_SPLIT_BAM(wildcards.sample,CHROMOSOMES),
+        BAI=lambda wildcards: SPLIT_OR_NOT_SPLIT_BAI(wildcards.sample,CHROMOSOMES),
+        GENE_LOCS="Gene_locs.txt"
+    output:
+        expand("Workspace/3_SPLIT_CHR/{{sample}}_{CHR}.bam",CHR=CHROMOSOMES),   
+        expand("Workspace/3_SPLIT_CHR/{{sample}}_{CHR}.bam.bai",CHR=CHROMOSOMES)
+    run:
+        for CHR in CHROMOSOMES:
+            
+            PRE_SPLIT="Workspace/3_SPLIT_CHR/{}_PRE_SPLIT_{}.PRSPLT".format(wildcards.sample,CHR)
+            SPLIT="Workspace/3_SPLIT_CHR/{}_FRMT_{}.SPLT".format(wildcards.sample,CHR)
+            
+            
+            if ((os.path.isfile(PRE_SPLIT))==True): #If Chromosome BAM Exists Pre Split
+                shell("mv Workspace/3_SPLIT_CHR/{wildcards.sample}_PRE_SPLIT_{CHR}.PRSPLT Workspace/3_SPLIT_CHR/{wildcards.sample}_{CHR}.bam")
+                shell("mv Workspace/3_SPLIT_CHR/{wildcards.sample}_PRE_SPLIT_{CHR}.PRSPLT.bai Workspace/3_SPLIT_CHR/{wildcards.sample}_{CHR}.bam.bai")
                 
-                CHR=S.split('/')[-1]
-                CHR=(CHR.split('.')[0]).split('_')[-1]
-                print('Sample {} is already split into Chromosome-level-Bams.\n Processing Bam file {} which should correspond to chromosome {}.'.format(SAMPLE_HERE,S,CHR))
+            if ((os.path.isfile(SPLIT))==True): #If Chromosome BAM was Created from Main BAM file
+                shell("mv Workspace/3_SPLIT_CHR/{wildcards.sample}_FRMT_{CHR}.SPLT Workspace/3_SPLIT_CHR/{wildcards.sample}_{CHR}.bam")
+                shell("mv Workspace/3_SPLIT_CHR/{wildcards.sample}_FRMT_{CHR}.SPLT.bai Workspace/3_SPLIT_CHR/{wildcards.sample}_{CHR}.bam.bai")
                 
-                shell("""samtools index -b {} -@ {}""".format(S,threads)) #make sure its indexed
-                
-                shell("""samtools view -H {} --threads={} | sed -e 's/SN:chr{}/SN:{}/' | samtools reheader - {} > Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam;""".format(S,threads,CHR,CHR,S,SAMPLE_HERE,CHR)) #format it
-                
-                shell("""samtools index -b Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam -@ {};""".format(SAMPLE_HERE,CHR,threads)) #Re-index it
-
-
-            if ('_FRMT' in S) == True:
-                for CHR in CHROMOSOMES:
-                    print('Sample {} will now be split into Chromosome-level-Bams.\n Processing chromosome {}.'.format(SAMPLE_HERE,CHR))
-                    
-                    shell("""samtools view -b Workspace/2_FORMATTED_BAM/{}_FRMT.bam {} > Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam --threads={}; """.format(SAMPLE_HERE,CHR,SAMPLE_HERE,CHR,threads))
-                    
-                    shell("""samtools index -b Workspace/3_SPLIT_CHR/{}_FRMT_{}.bam -@ {};  """.format(SAMPLE_HERE,CHR,threads))
+            if ((os.path.isfile(PRE_SPLIT))==False & (os.path.isfile(SPLIT))==False): #If Chromosome BAM is just missing / not created
+                shell("touch Workspace/3_SPLIT_CHR/{wildcards.sample}_{CHR}.bam")
+                shell("touch Workspace/3_SPLIT_CHR/{wildcards.sample}_{CHR}.bam.bai")
 
 
 
 
-
-
-
-#Use ANGSD to transform to fasta
+## Chromosome Bam files to Fasta, different handlng of ancient and modern ones
+#
 rule from_bam_to_fasta_ANGSD:
     input:
-        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam",CHR=CHROMOSOMES,sample=SAMPLES),
-        expand("Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam.bai",CHR=CHROMOSOMES,sample=SAMPLES)
+        BAM="Workspace/3_SPLIT_CHR/{sample}_{CHR}.bam",
+        BAI="Workspace/3_SPLIT_CHR/{sample}_{CHR}.bam.bai"
     output:
-        expand("Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
-    
-    threads: 32
-
+        "Workspace/4_FASTA_FILES/{sample}_{CHR}.fa.gz"
+    threads: 6
     run:
+        #### If user does not define any samples as ancient, using a txt file named 'Ancient_Samples.txt', treat all samples as modern!
+        if (os.path.isfile('Ancient_Samples.txt')==False): 
+            shell("angsd -nThreads {threads} -minQ 30 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i {input.BAM} -r {wildcards.CHR} -out Workspace/4_FASTA_FILES/{wildcards.sample}_{wildcards.CHR};") ############################# <<<<<< TEST THIS FIRST, what about the output name?
         
-        ###If user does not define any samples as ancient, using a txt file named 'Ancient_Samples.txt', treat all samples as modern
-        if (os.path.isfile('Ancient_Samples.txt')==False):
-            COMMANDS=expand("""angsd -nThreads {{threads}} -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=SAMPLES)
-        
-        #If there are samples defined as ancient, 2 lists, one of ancient samples and one of modern ones
+        #### If user has defined some ancient samples, check if current sample is within list
         if (os.path.isfile('Ancient_Samples.txt')==True):
             
-            #Make a list with all the ancient samples
+            #####Open Ancient Samples file since it exists, load Ancient samples
             ANCIENT_SAMPLES=[]
             ANCIENT_SAMPLE_FILE=open('Ancient_Samples.txt','r') 
             for line in ANCIENT_SAMPLE_FILE:
                 ANCIENT_SAMPLES.append(line.strip())
-            COMMANDS=[]
-            COMMANDS2=[]
-            if [x for x in SAMPLES if x not in ANCIENT_SAMPLES]!=[]:
-                COMMANDS=expand("""angsd -nThreads {{threads}} -minQ 20 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=[x for x in SAMPLES if x not in ANCIENT_SAMPLES])
-            if [x for x in SAMPLES if x in ANCIENT_SAMPLES]!=[]:
-                COMMANDS2=expand("""angsd -nThreads {{threads}} -minQ 20 -minMapQ 30 -doFasta 1 -doCounts 1 -basesPerLine 60 -i Workspace/3_SPLIT_CHR/{sample}_FRMT_{CHR}.bam -r {CHR} -out Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR};""",CHR=CHROMOSOMES,sample=[x for x in SAMPLES if x in ANCIENT_SAMPLES])
-            COMMANDS=COMMANDS+COMMANDS2
             
-        for CMD in COMMANDS:
-            shell(CMD)
-        #check to see if all files were made. EG if a sample lacks a Y chromosome angsd wont run for that one and wont make the file
-        #, thus we make a dummy file in its place so that the pipeline does nto crash!
-        for sample in SAMPLES:
-            for CHR in CHROMOSOMES:
-                path='./Workspace/4_FASTA_FILES/{}_FRMT_{}.fa.gz'.format(sample,CHR)
+            ### If current sample is ancient DNA
+            if wildcards.sample in ANCIENT_SAMPLES:
+                shell("angsd -nThreads {threads} -minQ 30 -minMapQ 30 -doFasta 1 -doCounts 1 -basesPerLine 60 -i {input.BAM} -r {wildcards.CHR} -out Workspace/4_FASTA_FILES/{wildcards.sample}_{wildcards.CHR};") 
+            
+            ### If current sample is modern  
+            if wildcards.sample not in ANCIENT_SAMPLES:
+                shell("angsd -nThreads {threads} -minQ 30 -minMapQ 30 -doFasta 2 -doCounts 1 -basesPerLine 60 -i {input.BAM} -r {wildcards.CHR} -out Workspace/4_FASTA_FILES/{wildcards.sample}_{wildcards.CHR};")
+        
+        ##### Regardless of modern or not, check the generated fasta file, if its missing, place a dummy file in its palce
+        path='./Workspace/4_FASTA_FILES/{}_{}.fa.gz'.format(wildcards.sample,wildcards.CHR)
+        if (os.path.exists(path)==False) or (os.path.getsize(path)<100):
+            shell('cp ./Workspace/1_OG_BAM_FILES/dummy.fa ./Workspace/4_FASTA_FILES/{}_{}.fa'.format(wildcards.sample,wildcards.CHR))
+            shell('gzip ./Workspace/4_FASTA_FILES/{}_{}.fa'.format(wildcards.sample,wildcards.CHR))
+        
 
-                if os.path.exists(path)==False:
-                    shell('cp ./Workspace/1_OG_BAM_FILES/dummy.fa ./Workspace/4_FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
-                    shell('gzip ./Workspace/4_FASTA_FILES/{}_FRMT_{}.fa'.format(sample,CHR))
+
+
+
+
+## Request all fasta files
+#
+rule from_All_bam_to_fasta_ANGSD:
+    input:
+        BAM_OUT=expand("Workspace/3_SPLIT_CHR/{sample}_{CHR}.bam",sample=SAMPLES,CHR=CHROMOSOMES),
+        BAI_OUT=expand("Workspace/3_SPLIT_CHR/{sample}_{CHR}.bam.bai",sample=SAMPLES,CHR=CHROMOSOMES)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -382,50 +511,53 @@ rule from_bam_to_fasta_ANGSD:
 ## Actual DNA to Proteins Translation ##
 ## Use custom R scripts
 
-# Isolate Gene segment from chromosome fasta
-
+## Isolate Gene segment from chromosome fasta
+#
 
 rule Isolate_Gene_from_fasta:
     input:
-        expand("Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
+        expand("Workspace/4_FASTA_FILES/{{sample}}_{CHR}.fa.gz",CHR=CHROMOSOMES)
     output:
-        expand("Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa",GENE=GENES,sample=SAMPLES)
-
+        expand("Workspace/5_GENE_FASTA_FILES/{{sample}}_{GENE}.fa",GENE=GENES)
     run:
-        COMMANDS=expand("""Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{sample}_FRMT_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/;""",CHR=CHROMOSOMES,sample=SAMPLES)
-        for CMD in COMMANDS:
-            shell(CMD)
+        for CHR in CHROMOSOMES:
+            shell("Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{wildcards.sample}_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/;")
 
 
-# Splice Gene segment from gene fasta, keep exones
+rule Isolate_ALL_Gene_from_fasta:
+    input:
+        expand("Workspace/4_FASTA_FILES/{sample}_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
 
+
+
+## Splice Gene segment from gene fasta, keep exones
+#
 
 rule Splice_Gene:
     input:
-        "Workspace/5_GENE_FASTA_FILES/{sample}_FRMT_{GENE}.fa"
+        "Workspace/5_GENE_FASTA_FILES/{sample}_{GENE}.fa"
     output:
-        "Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa"
+        "Workspace/6_SPLICED_GENE_FILES/{sample}_{GENE}_spliced.fa"
     shell:
         "Rscript ./R\ scripts/Rscript2.r {input} starts.txt ./EIT/ Workspace/6_SPLICED_GENE_FILES/"
 
 
 rule Splice_All_Genes:
     input:
-        expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/6_SPLICED_GENE_FILES/{sample}_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
 
 
 
 
-# Run spliced segments through blastools and translate them
-
-
+## Run spliced segments through blastools and translate them
+#
 
 rule Translate_Through_blastools:
     input:
-        SPLICED="Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",
+        SPLICED="Workspace/6_SPLICED_GENE_FILES/{sample}_{GENE}_spliced.fa",
         PROT_TEMPLATE="Genes/{GENE}.fa"
     output:
-        "Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast"
+        "Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast"
     shell:
         """
         makeblastdb -dbtype nucl -in {input.SPLICED};
@@ -435,28 +567,46 @@ rule Translate_Through_blastools:
     
 rule Translate_All_Through_Blastools:
     input:
-        expand("Workspace/6_SPLICED_GENE_FILES/{sample}_FRMT_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/6_SPLICED_GENE_FILES/{sample}_{GENE}_spliced.fa",GENE=GENES,sample=SAMPLES)
 
 
 
 
 
 
-# Get the output of blastools make it into a fasta file
-
+## Get the output of blastools make it into a fasta file
+#
 
 rule Extract_Blastools_output:
     input:
-        "Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast"
+        "Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast"
     output:
-        "Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa"
+        "Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa"
     shell:
         "Rscript R\ scripts/Rscript3.r {input} Workspace/8_PROTEINS_FASTAS/ ;"
 
 
 rule Extract_All_Blastools_output:
     input:
-        expand("Workspace/7_BLASTED_GENES/{sample}_FRMT_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -476,18 +626,20 @@ rule Extract_All_Blastools_output:
 ######################################################################################################################################################################################################################################
 ### Final data/folder organising 
 
-# Merge proteins from the same individual into one fasta file and all the same protein from every individual into their own fast file
 
+
+## Merge proteins from the same individual into one fasta file and all the same protein from every individual into their own fast file
+#
 rule Assemble_protein_dataset:
     input:
-        expand("Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
+        expand("Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
     output:
         expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
         expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
         expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
     run:
         COMMANDS1=expand("""touch Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/*_{GENE}_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; """,GENE=GENES)
-        COMMANDS2=expand("""touch Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/{sample}_FRMT_*_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; """,sample=SAMPLES)
+        COMMANDS2=expand("""touch Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/{sample}_*_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; """,sample=SAMPLES)
         
         for CMD in COMMANDS1:
             shell(CMD)
