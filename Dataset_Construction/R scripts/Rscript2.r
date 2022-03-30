@@ -73,9 +73,19 @@ if ((nchar(fa)>=700) & (dim(tab)[1]>1)) {
 	
 	
     seqs<-NULL
-    #now we use those starts / ends pairs to isolate the exons only from the sequence
-    for(i in 1:length(starts)){
+
+    ### Check if last ending is within bounds of Fasta file, if not make them
+    if (ends[length(starts)]>length(fa)){
+		ends[length(starts)]<-length(fa)
+	}
+	
+	
+	#### now we use those starts / ends pairs to isolate the exons only from the sequence
+	for(i in 1:length(starts)){
+		print(i)
+		if ( starts[i]<length(fa) && ends[i]<=length(fa)){
         seqs<-paste(sep="", seqs, as.character(fa[starts[i]:ends[i]]))
+		}
     }
     seqs<-gsub(" ", "", seqs)
     
@@ -86,6 +96,9 @@ if ((nchar(fa)>=700) & (dim(tab)[1]>1)) {
     writeFasta(newseq, paste0(args[4],samp, "_", gene, "_spliced.fa"))
     
     } else{
+	if (length(fa)<=1){
+		fa='AAAAAAAAAAAAAAAAAAAA'
+	}
     ids<-paste0(samp, "_", gene, "_spliced")
     newseq<-ShortRead(sread=DNAStringSet(as.character(fa)), id=BStringSet(ids))
     writeFasta(newseq, paste0(args[4],samp, "_", gene, "_spliced.fa"))

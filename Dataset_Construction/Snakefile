@@ -30,20 +30,46 @@ if os.path.exists(ORGANISM_FILE)==True:
 print(ORGANISM,ASSEMBLY)
 
 
+
+
+
 ###########################
 #Load Samples for Translation
 
 
 SAMPLES=[]
-SAMPLE_FILE=open('Samples.txt','r') 
-for line in SAMPLE_FILE:
-    line=line.strip().split('.')
-    line='.'.join(line[0:len(line)])
-    SAMPLES.append(line)
+
+if os.path.exists('Samples.txt')==True:
+    SAMPLE_FILE=open('Samples.txt','r') 
+    for line in SAMPLE_FILE:
+        line=line.strip().split('.')
+        line='.'.join(line[0:len(line)])
+        SAMPLES.append(line)
+
+
+
+
+
+###########################
+#Are there samples from VCF? If yes load them
+VCF_SAMPLE_FILE='VCF_Samples.txt'
+VCF_SAMPLES={}
+
+if os.path.exists(VCF_SAMPLE_FILE)==True:
+    
+    VCF_SAMPLE_FILE=open(VCF_SAMPLE_FILE,'r')
+    for line in VCF_SAMPLE_FILE:
+        line=line.strip().split()
+        if len(line)<3:
+            print(F'ERROR: sample {line} has less than 3 entries. Please use this format: Sample_Name Sample_VCF_file Sample_Reference')
+        else:
+            VCF_SAMPLES[line[0]]=[ 'Workspace/0_VCF_FILES/'+line[1] , 'Reference/'+line[2] ]
+            SAMPLES.append(line[0])
+
+
+SAMPLES=list(set(SAMPLES))
+print(VCF_SAMPLES)
 print(SAMPLES)
-
-
-
 
 
 #################################
@@ -240,7 +266,7 @@ rule format_index_name:
 
 
 
-
+##############################################################################################################################################################################################################################################################################################################################################
 ##############################################################################################################################################################################################################################################################################################################################################
 ## FUNCTIONS
 
@@ -294,7 +320,7 @@ def SPLIT_OR_NOT_SPLIT_BAM(Sample,CHROMOSOMES):
     return Bam_List
 
 
-
+##### SPLIT OR NOT SPLIT CHROMOSOMES IN BAM INPUT
 
 def SPLIT_OR_NOT_SPLIT_BAI(Sample,CHROMOSOMES):
     
@@ -326,13 +352,144 @@ def SPLIT_OR_NOT_SPLIT_BAI(Sample,CHROMOSOMES):
 
 
 
+##### VCF or BAM/CRAM as input (for rule)
+
+def VCF_or_BAM(Sample,VCF_SAMPLES,CHROMOSOMES,GENES):
+    
+    if ((Sample in VCF_SAMPLES.keys())==True):
+        REQUESTED_FASTA_TYPE= [ 'Workspace/0_VCF_FILES/{}_{}.VCFA'.format(Sample,GENE) for GENE in GENES ]
+
+    elif((Sample not in VCF_SAMPLES.keys())==True):
+        REQUESTED_FASTA_TYPE= [ 'Workspace/4_FASTA_FILES/{}_{}.fa.gz'.format(Sample,CHR) for CHR in CHROMOSOMES]
+
+
+    return REQUESTED_FASTA_TYPE
+
+
+
+##### What is the name of the VCF file and the reference genome to be used
+
+def Get_VCF_file_and_Reference_Genome_for_Sample(Sample,VCF_SAMPLES):
+    VCF_INFO=VCF_SAMPLES[Sample]
+    VCF_INFO[0]=VCF_INFO[0].replace('.vcf.gz','.mod') ## Modified VCF
+    VCF_INFO[1]=VCF_INFO[1].replace('.fa','.mod') ## Modified REF
+
+    return VCF_INFO
+
+
+
+
+
+
+
+
+
 ## FUNCTIONS
+##############################################################################################################################################################################################################################################################################################################################################
 ##############################################################################################################################################################################################################################################################################################################################################
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################################################################################################################################################################################################################################################################################################
+######## Alternative Path if VCF file available along with Reference FASTA file
+
+
+rule Convert_Ref:
+    input:
+        REF='Reference/{REF}.fa',
+        
+    output:
+        REF_OUT='Reference/{REF}.mod',
+
+    threads:2
+    run:
+        shell("""
+        cat {input.REF} |\
+        sed -e 's/>chr1/>1/' | sed -e 's/>chr2/>2/' | \
+        sed -e 's/>chr3/>3/' | sed -e 's/>chr4/>4/' | \
+        sed -e 's/>chr5/>5/' | sed -e 's/>chr6/>6/' | \
+        sed -e 's/>chr7/>7/' | sed -e 's/>chr8/>8/' | \
+        sed -e 's/>chr9/>9/' | sed -e 's/>chr10/>10/' | \
+        sed -e 's/>chr11/>11/' | sed -e 's/>chr12/>12/' | \
+        sed -e 's/>chr13/>13/' | sed -e 's/>chr14/>14/' | \
+        sed -e 's/>chr15/>15/' | sed -e 's/>chr16/>16/' | \
+        sed -e 's/>chr17/>17/' | sed -e 's/>chr18/>18/' | \
+        sed -e 's/>chr19/>19/' | sed -e 's/>chr20/>20/' | \
+        sed -e 's/>chr21/>21/' | sed -e 's/>chr22/>22/' | \
+        sed -e 's/>chrX/>X/' | sed -e 's/>chrY/>Y/' | \
+        sed -e 's/>chrM/>MT/' > {output.REF_OUT}
+        """)
+
+
+rule Convert_VCF_and_Index:
+    input:
+        VCF='Workspace/0_VCF_FILES/{GVCF}.vcf.gz'
+        
+    output:
+        VCF_OUT='Workspace/0_VCF_FILES/{GVCF}.mod',
+        VCF_OUT_INDX='Workspace/0_VCF_FILES/{GVCF}.mod.csi',
+
+    threads:4
+    run:
+        shell("""
+        bcftools view {input.VCF} |\
+        sed -e 's/chr1/1/' | sed -e 's/chr2/2/' | \
+        sed -e 's/chr3/3/' | sed -e 's/chr4/4/' | \
+        sed -e 's/chr5/5/' | sed -e 's/chr6/6/' | \
+        sed -e 's/chr7/7/' | sed -e 's/chr8/8/' | \
+        sed -e 's/chr9/9/' | sed -e 's/chr10/10/' | \
+        sed -e 's/chr11/11/' | sed -e 's/chr12/12/' | \
+        sed -e 's/chr13/13/' | sed -e 's/chr14/14/' | \
+        sed -e 's/chr15/15/' | sed -e 's/chr16/16/' | \
+        sed -e 's/chr17/17/' | sed -e 's/chr18/18/' | \
+        sed -e 's/chr19/19/' | sed -e 's/chr20/20/' | \
+        sed -e 's/chr21/21/' | sed -e 's/chr22/22/' | \
+        sed -e 's/chrX/X/' | sed -e 's/chrY/Y/' | \
+        sed -e 's/chrM/MT/' > Workspace/0_VCF_FILES/{wildcards.GVCF}.TEMP
+        """)
+        shell("""bgzip -c Workspace/0_VCF_FILES/{wildcards.GVCF}.TEMP > {output.VCF_OUT}""")
+        shell("""tabix -C -p vcf {output.VCF_OUT} """)
+
+
+
+
+rule Output_FASTA_FROM_VCF:
+    input:
+        lambda wildcards: Get_VCF_file_and_Reference_Genome_for_Sample(wildcards.sample,VCF_SAMPLES)
+    output:
+        'Workspace/0_VCF_FILES/{sample}_{GENE}.VCFA'
+    threads:4
+    run:
+        GENE_LOC_FILE=open('Gene_locs.txt')
+        LOC='1:11870-12870'  #### if Gene is not matched grab 1K bases from Chr1
+        for line in GENE_LOC_FILE:
+            line=line.strip().split()
+            if line[0]==wildcards.GENE:
+                LOC='{}:{}-{}'.format(line[1],line[2],line[3])
+        shell("samtools faidx {input[1]} {LOC} | bcftools consensus {input[0]} -s {wildcards.sample} > {output}")
 
 
 
@@ -491,22 +648,6 @@ rule from_All_bam_to_fasta_ANGSD:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #####################################################################################################################################################################################################################################
 ## Actual DNA to Proteins Translation ##
 ## Use custom R scripts
@@ -516,17 +657,26 @@ rule from_All_bam_to_fasta_ANGSD:
 
 rule Isolate_Gene_from_fasta:
     input:
-        expand("Workspace/4_FASTA_FILES/{{sample}}_{CHR}.fa.gz",CHR=CHROMOSOMES)
+        lambda wildcards: VCF_or_BAM(wildcards.sample,VCF_SAMPLES,CHROMOSOMES,GENES)
     output:
         expand("Workspace/5_GENE_FASTA_FILES/{{sample}}_{GENE}.fa",GENE=GENES)
     run:
-        for CHR in CHROMOSOMES:
-            shell("Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{wildcards.sample}_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/;")
+        #### Check first file of input, get file extention ending
+        X=input[0].split('.')
+        X=X[len(X)-1]
+        
+        #### If input is Chromosome Fasta
+        if ( (X=='gz') ):
+            for CHR in CHROMOSOMES:
+                shell("Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{wildcards.sample}_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/;")
+
+        #### If input is Fasta file from VCF, just rename it to .fa in appropriate folder
+        if ( X=='VCFA' ):
+            for GENE in GENES:
+                shell("cp Workspace/0_VCF_FILES/{wildcards.sample}_{GENE}.VCFA  Workspace/5_GENE_FASTA_FILES/{wildcards.sample}_{GENE}.fa")
 
 
-rule Isolate_ALL_Gene_from_fasta:
-    input:
-        expand("Workspace/4_FASTA_FILES/{sample}_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES)
+
 
 
 
@@ -563,7 +713,7 @@ rule Translate_Through_blastools:
         makeblastdb -dbtype nucl -in {input.SPLICED};
         blastall  -p tblastn -i {input.PROT_TEMPLATE}  -d {input.SPLICED} -o {output} -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;
         """
-    
+
     
 rule Translate_All_Through_Blastools:
     input:
