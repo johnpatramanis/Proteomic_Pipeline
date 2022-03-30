@@ -2,5 +2,6 @@ name: Initiator
 channels:
   - defaults
 dependencies:
-  - snakemake==6.15.5
+  - pip:
+    - snakemake==6.15.5
 prefix: /projects/racimolab/people/rjt939/anaconda3/envs/Initiator
