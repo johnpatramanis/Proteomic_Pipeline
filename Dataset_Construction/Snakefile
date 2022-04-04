@@ -1,9 +1,10 @@
-#Run using snakemake -j1 --latency-wait 120 --use-conda
+###Run using snakemake -j1 --latency-wait 120 --use-conda
+###
 
-
-#Dependancies to be used - R / Rpackages: ShortRead / angsd / blast-legacy (v2.2.26) / blast (v2.2.31)
-#conda env export --from-history > environment.yaml
-#conda env create --name testenv --file environment.yaml
+## Dependancies to be used - R / Rpackages: ShortRead / angsd / blast-legacy (v2.2.26) / blast (v2.2.31)
+## mamba install -c conda-forge -c bioconda openssl=1.1 bioconductor-shortread angsd blast-legacy blast samtools bcftools biopython
+## conda env export --from-history > environment.yaml
+## conda env create --name testenv --file environment.yaml
 
 
 import os
