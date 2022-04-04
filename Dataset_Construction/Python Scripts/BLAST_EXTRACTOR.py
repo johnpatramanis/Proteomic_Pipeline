@@ -2,7 +2,6 @@ import sys
 from Bio.Blast import NCBIXML
 
 INPUTS=list(sys.argv)
-# BLAST='NEW_BLAST_OUTPUT\Pongo_pygmaeus-A944_Napoleon_AMELX_spliced.blast' 
 BLAST=INPUTS[1]
 print(BLAST)
 OUTPUT_DIR=INPUTS[2]
@@ -66,7 +65,7 @@ if blast_record!='NULL':
             
             
         CHUNK_HERE=list(C[0])
-        print(start,end,len(CHUNK_HERE))
+        print('Found Chunk Matching Protein Template positions: ',start,end,' of length ',len(CHUNK_HERE))
         
         counter=0
         for AA in range(start-1,end):
@@ -76,7 +75,7 @@ if blast_record!='NULL':
 
 
     SEQUENCE=''.join(SEQUENCE)
-    print(SEQUENCE,len(SEQUENCE))
+    print('Final Matching Protein: ',SEQUENCE)
 
     
 
@@ -84,7 +83,7 @@ if blast_record!='NULL':
 if blast_record=='NULL':
     SEQUENCE=['-' for x in range(100)]
     SEQUENCE=''.join(SEQUENCE)
-    print(SEQUENCE,len(SEQUENCE))
+    print(SEQUENCE)
 
 
 
