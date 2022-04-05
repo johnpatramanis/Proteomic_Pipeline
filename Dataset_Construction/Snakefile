@@ -1,10 +1,9 @@
-###Run using snakemake -j1 --latency-wait 120 --use-conda
-###
+#Run using snakemake -j1 --latency-wait 120 --use-conda
 
-## Dependancies to be used - R / Rpackages: ShortRead / angsd / blast-legacy (v2.2.26) / blast (v2.2.31)
-## conda install -c conda-forge -c bioconda  openssl=1.1 bioconductor-shortread angsd blast-legacy blast samtools bcftools biopython snakemake
-## conda env export --from-history > environment.yaml
-## conda env create --name testenv --file environment.yaml
+#### conda install -c conda-forge -c bioconda  openssl=1.1 bioconductor-shortread angsd blast samtools bcftools biopython snakemake
+#Dependancies to be used - R / Rpackages: snakemake / ShortRead / angsd  / blast  or blast-legacy (v2.2.26) + blast-plus /samtools / bcftools / biopython
+#conda env export --from-history > environment.yaml
+#conda env create --name testenv --file environment.yaml
 
 
 import os
@@ -163,7 +162,9 @@ CHROMOSOMES.sort()
 
 rule all:
     input:
+        FASTA=expand("Workspace/5_GENE_FASTA_FILES/{sample}_{GENE}.fa",GENE=GENES,sample=SAMPLES),
         BLAST_RESULTS=expand("Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES),
+        FINAL_FASTA_RESULTS=expand( "Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES),
         ALL_PRTOEINS_ALL_SAMPLES=expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
         ALL_SAMPLES_PER_PROTEIN=expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
         ALL_PROTEINS_PER_SAMPLE=expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
@@ -709,10 +710,11 @@ rule Translate_Through_blastools:
         PROT_TEMPLATE="Genes/{GENE}.fa"
     output:
         "Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast"
+    threads:4
     shell:
         """
         makeblastdb -dbtype nucl -in {input.SPLICED};
-        blastall  -p tblastn -i {input.PROT_TEMPLATE}  -d {input.SPLICED} -o {output} -F F -E 32767 -G 32767 -n T -m 0 -M PAM70;
+        tblastn -query {input.PROT_TEMPLATE}  -db {input.SPLICED} -use_sw_tback -max_intron_length=10 -numthreads {threads} -out {output} -outfmt 5;
         """
 
     
@@ -727,14 +729,13 @@ rule Translate_All_Through_Blastools:
 
 ## Get the output of blastools make it into a fasta file
 #
-
-rule Extract_Blastools_output:
+rule Old_Extract_Blastools_output:
     input:
         "Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast"
     output:
         "Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa"
     shell:
-        "Rscript R\ scripts/Rscript3.r {input} Workspace/8_PROTEINS_FASTAS/ ;"
+        """python3 Python\ Scripts/BLAST_EXTRACTOR.py {input} Workspace/8_PROTEINS_FASTAS/ ;"""
 
 
 rule Extract_All_Blastools_output:
