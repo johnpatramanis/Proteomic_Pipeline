@@ -264,16 +264,8 @@ If everything works out, you should get your resulting tree files in the appropr
    
    
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
-   0) How to contact datbases help: https://www.ebi.ac.uk/proteins/api/doc/#proteins_search_anchor / http://rest.ensembl.org/
-   1) Combine all downloaded data into a folder
-   5) Isoforms???
+   1) Isoforms???
  
-**Development To Do list: (Dataset Construction)** 
-   1) IMPORTANT FIX reading of template fasta files-> organism name and Protein name should be switched in time!
-   2) ANGSD can output only the exact region of interest
-   3) Different use for ancient / modern samples
-   4) Make 'FRMT' files temporary?
-   5) Pre bam file input? - Prbly no for now!
    
   **Development To Do list: (Dataset Analysis)** - By Yiannis , for Yiannis
   1) Split up env per step? maybe no
