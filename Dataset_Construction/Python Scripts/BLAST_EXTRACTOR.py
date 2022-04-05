@@ -40,7 +40,7 @@ if blast_record!='NULL':
         for hsp in alignment.hsps:
 
             CHUNK_HERE=[hsp.sbjct,hsp.query_start,hsp.query_end]
-            if hsp.expect<=0.01:
+            if hsp.expect<=0.1:
                 CHUNKS.append(CHUNK_HERE)
             print(dir(hsp))
 
@@ -69,13 +69,14 @@ if blast_record!='NULL':
         
         counter=0
         for AA in range(start-1,end):
-            SEQUENCE[AA]=CHUNK_HERE[counter]
+            if (SEQUENCE[AA]=='-'):
+                SEQUENCE[AA]=CHUNK_HERE[counter]
             counter+=1
 
 
 
     SEQUENCE=''.join(SEQUENCE)
-    print('Final Matching Protein: ',SEQUENCE)
+    print('Final Matching Protein: ',SEQUENCE, 'of length: ',len(''.join([x for x in SEQUENCE if x!='X' and x!='-'])))
 
     
 
@@ -88,9 +89,9 @@ if blast_record=='NULL':
 
 
 
-# OUTPUT=OUTPUT_DIR+NAME
-OUTPUT='Ouput_Fasta.fa'
-
+OUTPUT=OUTPUT_DIR+NAME+'.fa'
+OUTPUT=OUTPUT.replace('_spliced.fa', '_translated.fa')
+print(OUTPUT)
 
 OUTPUT=open(OUTPUT,'w')
 OUTPUT.write('>{}\n'.format(NAME))
