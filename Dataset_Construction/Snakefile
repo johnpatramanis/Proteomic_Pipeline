@@ -710,11 +710,10 @@ rule Translate_Through_blastools:
         PROT_TEMPLATE="Genes/{GENE}.fa"
     output:
         "Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast"
-    threads:4
     shell:
         """
         makeblastdb -dbtype nucl -in {input.SPLICED};
-        tblastn -query {input.PROT_TEMPLATE}  -db {input.SPLICED} -use_sw_tback -max_intron_length=10 -numthreads {threads} -out {output} -outfmt 5;
+        tblastn -query {input.PROT_TEMPLATE}  -db {input.SPLICED} -out {output} -outfmt 5;
         """
 
     
