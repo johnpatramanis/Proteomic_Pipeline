@@ -5,6 +5,7 @@ args = commandArgs(trailingOnly=TRUE)
 
 
 library(ShortRead)
+library("stringr")
 
 directory<-args[1] #The directory location for the new folders to be created 
 mainDir<-getwd() #get current dir, assumes output dir is a subfodler!
@@ -155,8 +156,8 @@ for(g in 1:length(genes)){              #### for every gene
 	
 	
 	}
-    
-    
+	
+	
     
     
     
@@ -177,7 +178,6 @@ for(g in 1:length(genes)){              #### for every gene
     
     
     
-    print(fatabble[aid,Gapsites])
 	
     if(length(Jsites)>0 ){   
     
@@ -210,7 +210,82 @@ for(g in 1:length(genes)){              #### for every gene
 		names(newseq)<-names(fa)
         writeXStringSet(AAStringSet(newseq), gsub(".fa", "_e.fa", f))
     }
-}
+
+
+    
+	
+	#################################################################################################################################################################################################################################### 
+	#### MASKING OF SAMPLES BASED ON MISSINGESS OF ONE ANCIENT SAMPLE (OPTIONAL)	
+	
+	#TURN OFF OR ON
+	MASKED=file.exists(file.path(mainDir,"MASKED"))
+
+		
+	#actual masking
+	if (MASKED==TRUE){
+	
+			MASKED_SAMPS <- read.table(file.path(mainDir,"MASKED"), fill = TRUE, stringsAsFactors = FALSE)
+			
+			
+			NAMES=names(newseq)
+			#which samples to be masked
+			MASKED_SAMPS=c("ERZ324534","Gorilla_gorilla","Pan_paniscus","Pongo_abelii")
+			
+			
+			
+			
+			#Get names of samples (eg Gorilla_gorilla_ALB -> Gorilla_gorilla
+			for (J in 1:length(NAMES)){
+				STR=str_split(NAMES[J],"_")
+				print(STR)
+				# NAMES[J]=paste(head(STR[[1]],-1),collapse="_")
+				NAMES[J]=paste(STR[[1]][1:(length(STR[[1]]))-1],collapse="_")
+				print(NAMES[J])
+			}
+			
+			
+
+
+			samp=Samples[1]
+			
+			
+			
+			ANC_SAMPL=samp
+			ANC_SAMPL=fatabble[which(NAMES==ANC_SAMPL),]
+			print(ANC_SAMPL)
+			MISSING=which(ANC_SAMPL=="-" | ANC_SAMPL=="\\?" | ANC_SAMPL=="?" | ANC_SAMPL=="X"  )
+			NEW_NAMES<-names(fa)
+			
+			## Update here to make sure missing is !=0
+			for (SMPL in 1:length(MASKED_SAMPS)){
+				
+				if(MASKED_SAMPS[SMPL] %in% NAMES){### check if sample to be masked exists in this protein, otherwise skip it
+				
+				MASKED_SAMPLE=fatabble[which(NAMES==MASKED_SAMPS[SMPL]),]
+				
+				MASKED_SAMPLE_NAME=paste0("MASKED_",NAMES[which(NAMES==MASKED_SAMPS[SMPL])],"_AS_ANCIENT_",genes[g])
+
+				MASKED_SAMPLE[MISSING]="?"
+				fatabble=rbind(fatabble,MASKED_SAMPLE)
+				NEW_NAMES=c(NEW_NAMES,MASKED_SAMPLE_NAME)
+				}
+				}
+			
+			newseq<-apply(fatabble, 1, paste, collapse="")
+			names(newseq)<-NEW_NAMES
+			writeXStringSet(AAStringSet(newseq), gsub(".fa", "_e.fa", f))
+			
+		}
+		
+	}
+
+#####################################################################################################################################################################################################################################	
+	
+
+
+
+
+
 
 
 
@@ -218,8 +293,12 @@ for(g in 1:length(genes)){              #### for every gene
 
 
 ###### GET INFO
+print('Calculating Statistics for Ancient Samples')
+
+
 
 for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Singletons etc)
+	print(paste0("Calculating Stats for Sample ",sam))
     tab<-NULL
     for(g in 1:length(genes)){
             setwd(file.path(mainDir,directory, genes[g]))
@@ -243,7 +322,8 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
             }
             
             
-            fanonmissing<-fatabble[,(fatabble[grep(sam, names(fa)),]!="-" & fatabble[grep(sam, names(fa)),]!="X" & fatabble[grep(sam, names(fa)),]!="?" )]
+			###### This is bad codding , grep(sam, names(fa)) should be replaced but labels need to be fixed as they are loaded!
+            fanonmissing<-fatabble[,( (fatabble[grep(sam, names(fa)),]!="-") & (fatabble[grep(sam, names(fa)),]!="X") & (fatabble[grep(sam, names(fa)),]!="?") )]
 
             if(is.null(dim(fanonmissing))!=TRUE){
 				if (dim(fanonmissing)[2]>0){

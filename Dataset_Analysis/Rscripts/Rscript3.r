@@ -160,9 +160,7 @@ for(g in 1:length(genes)){
 		PARTITIONS=c(PARTITIONS,paste0('charset ',as.character(genes[g]),' = ',as.character((LENGTH-LENGTH_HERE+1)),'-',as.character(LENGTH),';'))
 		
 		
-    }
-
-    else{ #this runs in the first loop
+    }else{ #this runs in the first loop
         
         CONC=data.table(as.matrix(fasta_here), keep.rownames = TRUE) ##in this we will concatinate all genes
     
@@ -171,8 +169,7 @@ for(g in 1:length(genes)){
         print(paste0('Length of Protein : ',LENGTH))
         print("------")
 		
-		PARTITIONS=c(PARTITIONS,paste0('charset ',as.character(genes[g]),' = ',as.character(1),'-',as.character(LENGTH),';'))
-		
+		PARTITIONS=c(PARTITIONS,paste0('charset ',as.character(genes[g]),' = ',as.character(1),'-',as.character(LENGTH),';'))	
     }
     
 	print(CONC[,1])
@@ -209,40 +206,40 @@ PARTITIONS=c(PARTITIONS,as.character('set partition=BY_PROTEIN;'))
 ############################################################################################################################################################################
 #### Masking of Samples Optional, should require a list to do so. If TRUE, runs
 
-MASKED=0
-MASKED_SAMPS=c()
+# MASKED=0
+# MASKED_SAMPS=c()
 
-if (MASKED==TRUE){
+# if (MASKED==TRUE){
     
-    for (samp in Samples){
+    # for (samp in Samples){
     
-        MASKED_SAMPS=c("Gorilla-gorilla","HUMAN","Pan_troglodytes","Pongo_abelii")
-        ANC_SAMPL=samp
-        ANC_SAMPL=CONC[which(CONC[,1]==ANC_SAMPL)]
-        MISSING=which(ANC_SAMPL[,]=="-" | ANC_SAMPL[,]=="\\?" | ANC_SAMPL[,]=="?" | ANC_SAMPL[,]=="X"  )
+        # MASKED_SAMPS=c("Gorilla-gorilla","HUMAN","Pan_troglodytes","Pongo_abelii")
+        # ANC_SAMPL=samp
+        # ANC_SAMPL=CONC[which(CONC[,1]==ANC_SAMPL)]
+        # MISSING=which(ANC_SAMPL[,]=="-" | ANC_SAMPL[,]=="\\?" | ANC_SAMPL[,]=="?" | ANC_SAMPL[,]=="X"  )
         
-        ## Update here to make sure missing is !=0
-        for (SMPL in 1:length(MASKED_SAMPS)){
+        ### Update here to make sure missing is !=0
+        # for (SMPL in 1:length(MASKED_SAMPS)){
             
-            MASKED_SAMPLE=CONC[which(CONC[,1]==MASKED_SAMPS[SMPL])]
+            # MASKED_SAMPLE=CONC[which(CONC[,1]==MASKED_SAMPS[SMPL])]
             
-            if ( dim(MASKED_SAMPLE)[1]>=2 ){
-                MASKED_SAMPLE=MASKED_SAMPLE[1,]
+            # if ( dim(MASKED_SAMPLE)[1]>=2 ){
+                # MASKED_SAMPLE=MASKED_SAMPLE[1,]
                 
                 
-            }
+            # }
             
             
-            MASKED_SAMPLE[,1]=paste0("MASKED_AS_",samp,'_',as.character(MASKED_SAMPLE[,1]))
-            print(MASKED_SAMPLE[,1])
-            MASKED_SAMPLE[,MISSING]="-"
-            CONC=rbind(CONC,MASKED_SAMPLE)
+            # MASKED_SAMPLE[,1]=paste0("MASKED_AS_",samp,'_',as.character(MASKED_SAMPLE[,1]))
+            # print(MASKED_SAMPLE[,1])
+            # MASKED_SAMPLE[,MISSING]="-"
+            # CONC=rbind(CONC,MASKED_SAMPLE)
             
-        }
+        # }
         
-    }
+    # }
     
-}
+# }
 
 
 
