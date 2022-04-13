@@ -728,7 +728,7 @@ rule Translate_All_Through_Blastools:
 
 ## Get the output of blastools make it into a fasta file
 #
-rule Old_Extract_Blastools_output:
+rule Extract_Blastools_output:
     input:
         "Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast"
     output:
