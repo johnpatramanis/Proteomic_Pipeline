@@ -6,7 +6,8 @@ BLAST=INPUTS[1]
 print(BLAST)
 OUTPUT_DIR=INPUTS[2]
 
-NAME=BLAST.strip().split('.')[0]
+NAME=BLAST.strip().split('.')
+NAME='.'.join(NAME[:len(NAME)-1])
 NAME=NAME.strip().split('/')
 NAME=NAME[len(NAME)-1]
 
