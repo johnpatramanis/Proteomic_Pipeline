@@ -94,6 +94,7 @@ OUTPUT=OUTPUT_DIR+NAME+'.fa'
 OUTPUT=OUTPUT.replace('_spliced.fa', '_translated.fa')
 print(OUTPUT)
 
+NAME=NAME.replace('_spliced','')
 OUTPUT=open(OUTPUT,'w')
 OUTPUT.write('>{}\n'.format(NAME))
 OUTPUT.write(SEQUENCE)
