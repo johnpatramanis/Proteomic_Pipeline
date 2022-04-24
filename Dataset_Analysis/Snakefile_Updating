@@ -114,10 +114,10 @@ rule all:
         # expand('Workspace/2_DATASETS/{sample}/Samples.txt',sample=SAMPLES),
         # expand('Workspace/2_DATASETS/{sample}/Alignment_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/Info_and_Checking_Done',sample=SAMPLES),
-        # expand('Workspace/2_DATASETS/{sample}/PhyML_Individual_Genes_Done',sample=SAMPLES),
-        # expand('Workspace/2_DATASETS/{sample}/PhyML_Concatenated_Genes_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/PhyML_Individual_Genes_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/PhyML_Concatenated_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/MrBayes_Concatenated_Genes_Done',sample=SAMPLES),
-        # expand('Workspace/2_DATASETS/{sample}/Collected_Alignments/Alignments_Collected',sample=SAMPLES)
+        expand('Workspace/2_DATASETS/{sample}/Collected_Alignments/Alignments_Collected',sample=SAMPLES)
 
 
 
