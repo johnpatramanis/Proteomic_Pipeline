@@ -64,8 +64,11 @@ and move into the directory that we will work in:
 
 ``` cd Proteomic_Pipeline/Dataset_Initialization/ ```
 
+<br/><br/>
+<br/><br/>
+<br/><br/>
 
-**Installation of Pipeline 1**
+**Installation of Dataset Initialization and usage**
 
 
 **Step 3) Enviroment Creation**   
