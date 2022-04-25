@@ -32,32 +32,25 @@ These sub-pipelines are:
 **Instalation of Pipelines and User Guide for _Dataset Initialization_ / _Dataset Preparation_ /  _Dataset Analysis_**
 
 This guide assumes that you are working on a Linux enviroment, preferably a server.
-<br />It should work on a Linux personal computer and even on a Macintosh enviroment, but this is not recomended.
-<br />For steps 1-3, you only need to run the once for every personal-computer/server/server-user. Each of the 3 pipelines is semi-autonomus, thus can be run without necesserely running the other 2 pipelines. If for example you just want to run the Dataset Preparation pipeline, look bellow for its instalation guide and go through all the steps. If you then also want to run the Dataset Analysis, scroll further down and find its guide.You can skip steps 1,2 and 3 however, if you've gone through them at least once.
+<br />It should work on a Linux personal computer, but this is generally not recomended.
+<br />For steps 1-3, you only need to run the once for every personal-computer/server/server-user. Each of the 3 pipelines is semi-autonomus, thus can be run without necesserely running the other 2 pipelines. If for example you just want to run the Dataset Construction pipeline, look bellow for its instalation guide and go through all the steps. If you then also want to run the Dataset Analysis, scroll further down and find its guide.You can skip steps 1,2 and 3 however, if you've gone through them at least once.
 
 <br/><br/>
 <br/><br/>
 <br/><br/>
 
-**Instalation of Dataset Initialization and set up**
+**Download and set up of entire Pipeline**
 
 **Step 1)** **Conda**
 
-This pipeline is reliant on conda to deploy all the required dependencies for it to function. First check if you have conda installed on your computer by typing 'conda' in the command line. If a bunch of options pop up then move to the next step. If nothing happens, then look here on how to install it: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
+This pipeline is reliant on conda to deploy all the required dependencies for it to function. First you can check if you have conda installed on your computer by typing 'conda' in the command line. If a bunch of options pop up then move to the next step. If nothing happens, then look here on how to install it: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 It probably involves going to this page: https://www.anaconda.com/products/individual , copying the link of the download page and then using wget.
 If you just installed conda, make sure you close your session and re-open it to be able to use it from the command line!
 
 
 
 
-**Step 2) Mamba**
-
-This pipeline also requires snakemake to work. Snakemake suggest that you have Mamba installed with conda so we will also do that. With conda installed succesfully, you can simply type : ``` conda install -n base -c conda-forge mamba ```
-and conda will take care of the rest.
-
-Some people also suggest updating conda this way, after the installation: ```conda update conda -y ``` and then ``` conda update --all ```
-
-**Step 3) Activation and Git clone**
+**Step 2) Activation and Git clone**
 
 Now with both conda and mamba installed we will download the package itself into your computer. Before we do that first lets activate the conda base enviroment.
 
@@ -72,7 +65,10 @@ and move into the directory that we will work in:
 ``` cd Proteomic_Pipeline/Dataset_Initialization/ ```
 
 
-**Step 4) Enviroment Creation**   
+**Installation of Pipeline 1**
+
+
+**Step 3) Enviroment Creation**   
 
 Now we are ready for one of the mos important steps: creating a functionng enviroment within conda that contains all the required dependencies for the pipeline to work!
 If you want to use the Dataset Construction pipeline for example, make sure you are in the **'Proteomic_Pipeline/Dataset_Construction/'** fodler and that there is a **'Initiator.yml'** file in there.
@@ -82,7 +78,7 @@ Once this is done, remember to activate the enviroment we just created by typing
 ``` conda activate Initiator ```
 
 
-**Step 5) Select the Proteins, Organism and Version (assembly)**
+**Step 4) Select the Proteins, Organism and Version (assembly)**
 
 In this step we will set up the process for downloading and creating a 'reference proteome'. There are only 2 things we need for this step:
 1) A txt file with the names of the proteins/genes you are interested in, which should bare the name 'Proteins.txt' and 
@@ -97,7 +93,7 @@ The Organism file is also limited to one organism per line (it will run the whol
 
 
 
-**Step 6) Get the data**
+**Step 5) Get the data**
 
 Now we just need to activate the conda enviroment, by typing ```conda activate Initiator ```
 If the above mentioned files were set up correctly you should be able to just run the pipeline by just typing ``` snakemake -jN ``` , where N is the number of cores you want to use. Remember that this wont work if you have not activated the conda enviroment first, which you would need to do every time you restart a session in your server!
@@ -113,20 +109,6 @@ If the above mentioned files were set up correctly you should be able to just ru
 
 **Instalation of Dataset Preparation and set up**
 
-**Step 1)** **Conda**
-
-This pipeline is reliant on conda to deploy all the required dependencies for it to function. First check if you have conda installed on your computer by typing 'conda' in the command line. If a bunch of options pop up then move to the next step. If nothing happens, then look here on how to install it: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
-If you just installed conda, make sure you close your session and re-open it to be able to use it from the command line!
-
-
-
-
-**Step 2) Mamba**
-
-This pipeline also requires snakemake to work. Snakemake suggest that you have Mamba installed with conda so we will also do that. With conda installed succesfully, you can simply type : ``` conda install -n base -c conda-forge mamba ```
-and conda will take care of the rest.
-
-Some people also suggest updating conda this way, after the installation: ```conda update conda -y ``` and then ``` conda update --all ```
 
 
 **Step 3) Activation and Git clone**
@@ -189,37 +171,6 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
 
 **Instalation of Dataset Analysis (Phylogenetic Reconstruction)**
 
-If you have already gone through the previous pipeline (Dataset Analysis) you can skip steps 1-3 and go straight to step 4!
-
-**Step 1)** **Conda**
-
-This pipeline is reliant on conda to deploy all the required dependencies for it to function. First check if you have conda installed on your computer by typing 'conda' in the command line. If a bunch of options pop up then move to the next step. If nothing happens, then look here on how to install it: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
-If you just installed conda, make sure you close your session and re-open it to be able to use it from the command line!
-
-
-
-
-**Step 2) Mamba**
-
-This pipeline also requires snakemake to work. Snakemake suggest that you have Mamba installed with conda so we will also do that. With conda installed succesfully, you can simply type : ``` conda install -n base -c conda-forge mamba ```
-and conda will take care of the rest.
-
-Some people also suggest updating conda this way, after the installation: ```conda update conda -y ``` and then ``` conda update --all ```
-
-
-**Step 3) Activation and Git clone**
-
-Now with both conda and mamba installed we will download the package itself into your computer. Before we do that first lets activate the conda base enviroment.
-
-``` conda activate base ```
-
-And now lets download the github repository, the core of the pipeline usig git clone. First move to a directory where you want to have this pipeline installed. Then simply type:
-
-``` git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git ```
-
-and move into the directory that we will work in:
-
-``` cd Proteomic_Pipeline/Dataset_Analysis/ ```
 
 
 **Step 4) Enviroment Creation**   
