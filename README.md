@@ -67,6 +67,10 @@ and move into the directory that we will work in:
 <br/><br/>
 <br/><br/>
 <br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
+
 
 **Installation of Dataset Initialization and usage**
 
@@ -114,22 +118,7 @@ If the above mentioned files were set up correctly you should be able to just ru
 
 
 
-**Step 3) Activation and Git clone**
-
-Now with both conda and mamba installed we will download the package itself into your computer. Before we do that first lets activate the conda base enviroment.
-
-``` conda activate base ```
-
-And now lets download the github repository, the core of the pipeline usig git clone. First move to a directory where you want to have this pipeline installed. Then simply type:
-
-``` git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git ```
-
-and move into the directory that we will work in:
-
-``` cd Proteomic_Pipeline/Dataset_Construction/ ```
-
-
-**Step 4) Enviroment Creation**   
+**Step 3) Enviroment Creation**   
 
 Now we are ready for one of the mos important steps: creating a functionng enviroment within conda that contains all the required dependencies for the pipeline to work!
 If you want to use the Dataset Construction pipeline for example, make sure you are in the **'Proteomic_Pipeline/Dataset_Construction/'** fodler and that there is a **'Translator.yml'** file in there.
@@ -139,7 +128,7 @@ Once this is done, remember to activate the enviroment we just created by typing
 ``` conda activate Translator ```
 
 
-**Step 5) Prepare your Data for translation**
+**Step 4) Prepare your Data for translation**
 
 If everything worked until now, then we are almost set! Now we just need to get some DNA data to translate them over to proteins. If you are using a species that is already aligned to the Human genome (ch37) then all you need to do is place your bam files in the '/Dataset_Construction/Workspace/1_OG_BAM_FILES' folder and then in the '/Dataset_Construction/' folder edit the 'samples.txt' file to contain each sample name per line. If your bam file is named 'SAMPLE.bam' then simply write the name 'SAMPLE' in the sample.txt file. Make sure each bam file is indexed as well (its accompanied by a bam.bai file). If not use samtools index -b command to do so in the 1_OG_BAM_FILES folder.
 
@@ -157,7 +146,7 @@ b) The 'Samples.txt' file should have the name of each bam file (without the .ba
 c) You are located in the main directory ( ..../Dataset_Construction/ ) at the end of this step
 
 
-**Step 6) Execute the translation**
+**Step 5) Execute the translation**
 
 With your sample files set up, all you need to do now is initiate the process.
 Type ```snakemake -j1 ``` to begin. The command -j1 controls how many cores will be used by the pipeline, e.g. -j8 uses 8 cores, -j16 uses 16 etc
@@ -176,7 +165,7 @@ If everything works out, you should get your resulting proteins in the 'Dataset_
 
 
 
-**Step 4) Enviroment Creation**   
+**Step 3) Enviroment Creation**   
 
 Now we are ready for one of the mos important steps: creating a functionng enviroment within conda that contains all the required dependencies for the pipeline to work!
 If you want to use the Dataset Analysis pipeline for example, make sure you are in the **'Proteomic_Pipeline/Dataset_Analysis/'** fodler and that there is a **'Analyser.yml'** file in there.
@@ -186,7 +175,7 @@ Once this is done, remember to activate the enviroment we just created by typing
 ``` conda activate Analyser ```
 
 
-**Step 5) Set up your Dataset for the Analysis**
+**Step 4) Set up your Dataset for the Analysis**
 
 Once you have activated the conda enviroment, your computer should now have a couple of more tools installed and available to use: e.g. MUSCLE (aligner for fasta files), PhyML (Phylogenetic tree construction) and a number of R packages. These will be used by the pipeline automatically, but you can also use them on your onw if you want.
 
@@ -195,7 +184,7 @@ There is practicaly only one thing you need to set up for this pipeline: your da
 Finally in the Proteomic_Pipeline/Dataset_Analysis/ folder there should be a 'Datasets.txt' file. Open that file to edit it. In the first column you should put the full name of your dataset file (the one we just moved in the Workspace) and in the second one the name of the target sample (the ancient one you want to assign phylogeneticaly). If your dataset contains multiple ancient samples, I highly suggest 'analysing' them at the same time, by writing all of their names in the second column, seperated only by commas. Each row should have 2 items: name of the dataset file and the name of the sample(s). If you want to process multiple datasets, just add more rows!
 
 
-**Step 6) Run the Phylogenies!**
+**Step 5) Run the Phylogenies!**
 
 With your dataset files all set up, all you need to do now is initiate the process.
 Type ```snakemake -j1 ``` to begin. The command -j1 controls how many cores will be used by the pipeline, e.g. -j8 uses 8 cores, -j16 uses 16 etc.
