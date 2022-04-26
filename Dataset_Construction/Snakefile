@@ -1,7 +1,7 @@
 #Run using snakemake -j1 --latency-wait 120 --use-conda
 
 #### conda install -c conda-forge -c bioconda  openssl=1.1 bioconductor-shortread angsd blast samtools bcftools biopython snakemake
-#Dependancies to be used - R / Rpackages: snakemake / ShortRead / angsd  / blast  or blast-legacy (v2.2.26) + blast-plus /samtools / bcftools / biopython
+#Dependancies to be used - R / Rpackages: snakemake / ShortRead / angsd  / blast  /samtools / bcftools / biopython
 #conda env export --from-history > environment.yaml
 #conda env create --name testenv --file environment.yaml
 
@@ -713,7 +713,7 @@ rule Translate_Through_blastools:
     shell:
         """
         makeblastdb -dbtype nucl -in {input.SPLICED};
-        tblastn -query {input.PROT_TEMPLATE}  -db {input.SPLICED} -out {output} -outfmt 5;
+        tblastn -query {input.PROT_TEMPLATE}  -db {input.SPLICED} -out {output} -seg no -best_hit_overhang 0.1  -outfmt 5;
         """
 
     

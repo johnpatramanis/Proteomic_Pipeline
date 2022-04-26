@@ -41,7 +41,7 @@ if blast_record!='NULL':
         for hsp in alignment.hsps:
 
             CHUNK_HERE=[hsp.sbjct,hsp.query_start,hsp.query_end]
-            if hsp.expect<=0.1:
+            if hsp.expect<=0.0001:
                 CHUNKS.append(CHUNK_HERE)
             print(dir(hsp))
 
@@ -85,6 +85,7 @@ if blast_record!='NULL':
 if blast_record=='NULL':
     SEQUENCE=['-' for x in range(100)]
     SEQUENCE=''.join(SEQUENCE)
+    SEQUENCE.replace('*','-')
     print(SEQUENCE)
 
 
