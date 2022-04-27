@@ -1,0 +1,3 @@
+Gorilla_beringei_beringei-Imfura        Great_Apes_Partial_hg19_rehead_sorted.vcf.gz    hg19.fa
+Gorilla_beringei_beringei-Kaboko        Great_Apes_Partial_hg19_rehead_sorted.vcf.gz    hg19.fa
+Gorilla_beringei_beringei-Maisha        Great_Apes_Partial_hg19_rehead_sorted.vcf.gz    hg19.fa
