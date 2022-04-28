@@ -491,7 +491,7 @@ rule Output_FASTA_FROM_VCF:
             line=line.strip().split()
             if line[0]==wildcards.GENE:
                 LOC='{}:{}-{}'.format(line[1],line[2],line[3])
-        shell("samtools faidx {input[1]} {LOC} | bcftools consensus {input[0]} -s {wildcards.sample} > {output}")
+        shell("samtools faidx {input[1]} {LOC} | bcftools consensus {input[0]}  --missing ? -s {wildcards.sample} > {output}")
 
 
 
@@ -713,9 +713,9 @@ rule Translate_Through_blastools:
     shell:
         """
         makeblastdb -dbtype nucl -in {input.SPLICED};
-        tblastn -query {input.PROT_TEMPLATE}  -db {input.SPLICED} -out {output} -seg no -best_hit_overhang 0.1  -outfmt 5;
+        tblastn -query {input.PROT_TEMPLATE}  -db {input.SPLICED} -out {output} -seg no -ungapped -comp_based_stats F  -outfmt 5;
         """
-
+        ##  -soft_masking false -gapextend 32767 -gapopen 32767 -matrix PAM70 
     
 rule Translate_All_Through_Blastools:
     input:
