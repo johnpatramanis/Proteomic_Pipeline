@@ -39,13 +39,23 @@ if blast_record!='NULL':
         
         
         for hsp in alignment.hsps:
-
-            CHUNK_HERE=[hsp.sbjct,hsp.query_start,hsp.query_end]
-            if hsp.expect<=0.0001:
-                CHUNKS.append(CHUNK_HERE)
+            
+            
             print(dir(hsp))
+            # for DIR in dir(hsp):
+                # print(hsp.DIR)
+            
+            
+            CHUNK_HERE=[hsp.sbjct,hsp.query_start,hsp.query_end]
+            PERC_IDENT=(float(hsp.identities)/float(hsp.align_length))
+            if ((hsp.expect<=0.00001) and (hsp.bits>=50) and (hsp.score>=50) and (PERC_IDENT>=0.75)) :
+                CHUNKS.append(CHUNK_HERE)
+            
 
             print("e value:", hsp.expect)
+            print("bit Score:", hsp.bits)
+            print("Percentage Identity:", PERC_IDENT)
+            print("Length:", hsp.align_length)
             print(hsp.query_start)
             print(hsp.query_end)
             print(hsp.query)
@@ -77,6 +87,7 @@ if blast_record!='NULL':
 
 
     SEQUENCE=''.join(SEQUENCE)
+    SEQUENCE=SEQUENCE.replace('*','-')
     print('Final Matching Protein: ',SEQUENCE, 'of length: ',len(''.join([x for x in SEQUENCE if x!='X' and x!='-'])))
 
     
@@ -85,7 +96,6 @@ if blast_record!='NULL':
 if blast_record=='NULL':
     SEQUENCE=['-' for x in range(100)]
     SEQUENCE=''.join(SEQUENCE)
-    SEQUENCE.replace('*','-')
     print(SEQUENCE)
 
 
