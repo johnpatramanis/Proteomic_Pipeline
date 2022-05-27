@@ -80,7 +80,7 @@ rule Get_Ensembl_Gene_IDs_ALL:
         #### Get GeneID for every gene of list
         GENE=wildcards.Gene
         print(GENE)
-        shell("""python3 Python_Scripts/Get_Gene_ID.py {} {}""".format(GENE,ORG))
+        shell("""python3 Python_Scripts/Get_Gene_ID.py {} {}""".format(GENE,ORG)) ##### Modify to identify Isoforms 
 
 
 #### Use GEN ID to get Transcript ID
@@ -116,7 +116,7 @@ rule Get_Ensembl_Transcript_IDs:
         
             with open('Workspace/1_Gene_IDs/{}/{}'.format(ORG,GENE)) as f:
                 GENE_ID = f.readline().strip()
-            shell('''python3 Python_Scripts/Search_Ensembl.py {} {} {}'''.format(GENE,GENE_ID,ORG))
+            shell('''python3 Python_Scripts/Search_Ensembl.py {} {} {}'''.format(GENE,GENE_ID,ORG)) ##### Modify to detect if Isoform is wanted and then pick the right Isoform, produce the right Transcript ID
 
         #for missing GeneIDs make dummy in its place
         if GENE in MISSING_GENES:
@@ -154,7 +154,7 @@ rule Get_FASTA_Sequence_from_Transcript_ID:
         if os.path.exists(path)==False:
             os.makedirs(path)
         
-        #for each gene grab the transcript ID and use a script to get the AA fasta seq for it
+        #for each gene grab the transcript ID and use a script to get the AA fasta seq for it, ##### check some isoforms don't have a protein sequence! - maybe add them to 'missing' proteins
         GENE=wildcards.Gene
             
         TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
