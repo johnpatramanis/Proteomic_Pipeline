@@ -1,4 +1,4 @@
-#Run using "snakemake -j4"
+#Run using "snakemake -j4 --resources FTP=7"
 
 
 #Dependancies to be used: Snakemake/python3
@@ -12,8 +12,8 @@ import os.path
 
 
 ##### Load Input Files and usefull info  #####
-
-FTP=50
+FTP=7
+SLEEPER=1
 
 GENES=[]
 ORGANISM=[]
@@ -121,7 +121,7 @@ rule Get_Ensembl_Transcript_IDs:
         #for missing GeneIDs make dummy in its place
         if GENE in MISSING_GENES:
             shell('''touch Workspace/2_Transcript_IDs/{}/{} '''.format(ORG,GENE))
-
+        time.sleep(SLEEPER)
 
 rule Get_Ensembl_Transcript_IDs_ALL:
     input:
@@ -161,7 +161,7 @@ rule Get_FASTA_Sequence_from_Transcript_ID:
         TRNSCRPT_ID=TRNSCRPT_FILE.readline().strip()
         
         shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG))
-
+        time.sleep(SLEEPER)
 
 
 
@@ -179,6 +179,8 @@ rule Get_ALL_FASTA_Sequence_from_Transcript_ID:
 
 
 #### Use TRANSCRIPT ID to create Intron - Exon Table
+
+
 
 
 
@@ -205,7 +207,7 @@ rule Get_Exon_Intron_Table_from_Transcript_ID:
         TRNSCRPT_ID=TRNSCRPT_FILE.readline().strip()
         
         shell('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG))
-
+        time.sleep(SLEEPER)
 
 
 
@@ -250,7 +252,7 @@ rule Get_Location_Info_from_Ensemble_Gene_ID_ALL:
                 
                 GENE_ID = f.readline().strip()
                 shell('''python3 Python_Scripts/Get_Assembly_Location.py {} {} {} {}'''.format(GENE,GENE_ID,ORG,REF))
-
+        time.sleep(SLEEPER)
 
 
 
