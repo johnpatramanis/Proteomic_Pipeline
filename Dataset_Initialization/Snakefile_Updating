@@ -52,10 +52,14 @@ rule all:
         ["Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa".format(x) for x in GENES]
 
 
+
+
+
+
 #######################################################################################################################################################################
 ## Data Pipeline ##
 
-####Search using Gene/Protein name, find best matching Gene -> get its Ensembl Gene ID
+#### Search using Gene/Protein name, find best matching Gene -> get its Ensembl Gene ID
 
 rule Get_Ensembl_Gene_IDs_ALL:
     input:
@@ -79,6 +83,7 @@ rule Get_Ensembl_Gene_IDs_ALL:
         shell("""python3 Python_Scripts/Get_Gene_ID.py {} {}""".format(GENE,ORG))
 
 
+#### Use GEN ID to get Transcript ID
 
 
 rule Get_Ensembl_Transcript_IDs:
@@ -105,7 +110,6 @@ rule Get_Ensembl_Transcript_IDs:
             os.makedirs(path)
         
         
-        limiter=0
         GENE=wildcards.Gene
         #Get transcript ID for every GeneID
         if GENE in FOUND_GENES:
@@ -129,6 +133,7 @@ rule Get_Ensembl_Transcript_IDs_ALL:
 
 
 
+#### Use TRANSCRIPT ID to get Fasta sequence of protein
 
 
 
@@ -136,123 +141,143 @@ rule Get_Ensembl_Transcript_IDs_ALL:
            
 rule Get_FASTA_Sequence_from_Transcript_ID:
     input:
-        expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=set(ORGANISM))
+        "Workspace/2_Transcript_IDs/{Organism}/{Gene}"
     output:
-        expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=set(ORGANISM))
+        "Workspace/3_FASTA_Seqs/Genes_{Organism}/{Gene}.fa"
     resources:
         FTP=1
     run:
-        for ORG in ORGANISM:
+        ORG=wildcards.Organism  
         
-            #Check if path for organism exists/create it
-            path='Workspace/3_FASTA_Seqs/Genes_'+str(ORG)
-            if os.path.exists(path)==False:
-                os.makedirs(path)
+        #Check if path for organism exists/create it
+        path='Workspace/3_FASTA_Seqs/Genes_'+str(ORG)
+        if os.path.exists(path)==False:
+            os.makedirs(path)
+        
+        #for each gene grab the transcript ID and use a script to get the AA fasta seq for it
+        GENE=wildcards.Gene
             
-            limiter=0
-            #for each gene grab the transcript ID and use a script to get the AA fasta seq for it
-            for GENE in GENES:
-                
-                if limiter % 50 == 0:
-                    time.sleep(1)
-                
-                TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
-                TRNSCRPT_ID=TRNSCRPT_FILE.readline().strip()
-                
-                shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG))
-                limiter+=1
+        TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
+        TRNSCRPT_ID=TRNSCRPT_FILE.readline().strip()
         
-        
-rule Get_Exon_Intron_Table_from_Transcript_ID:
+        shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG))
+
+
+
+
+
+
+
+rule Get_ALL_FASTA_Sequence_from_Transcript_ID:
     input:
         expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=set(ORGANISM))
+    resources:
+        FTP=1
+
+
+
+
+
+#### Use TRANSCRIPT ID to create Intron - Exon Table
+
+
+
+
+
+
+rule Get_Exon_Intron_Table_from_Transcript_ID:
+    input:
+        "Workspace/2_Transcript_IDs/{Organism}/{Gene}"
     output:
-        expand("Workspace/4_EITs/{organism}/{sample}_ei.txt",sample=GENES,organism=set(ORGANISM))
+        "Workspace/4_EITs/{Organism}/{Gene}_ei.txt"
     resources:
         FTP=1
     run:
-        for ORG in ORGANISM:
-            #Check if path for organism exists/create it
-            path='Workspace/4_EITs/'+str(ORG)
-            if os.path.exists(path)==False:
-                os.makedirs(path)
+        ORG=wildcards.Organism
+        #Check if path for organism exists/create it
+        path='Workspace/4_EITs/'+str(ORG)
+        if os.path.exists(path)==False:
+            os.makedirs(path)
+        
+        GENE=wildcards.Gene
+            
+        TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
+        TRNSCRPT_ID=TRNSCRPT_FILE.readline().strip()
+        
+        shell('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG))
 
-            limiter=0
-            for GENE in GENES:
-    
-                if limiter % 50 == 0:
-                    time.sleep(1)
-                
-                TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
-                TRNSCRPT_ID=TRNSCRPT_FILE.readline().strip()
-                
-                shell('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG))
-                limiter+=1
-                
 
-# rule Get_Location_Info_from_Ensemble_Gene_ID:
-    # input:
-        # "Workspace/2_Transcript_IDs/{Organism}/{Gene}"
-    # output:
-        # "Workspace/5_Loc_Files/{Organism}/{Reference}/starts.txt",
-        # "Workspace/5_Loc_Files/{Organism}/{Reference}/Gene_locs.txt"
-    # run:
-        # path='Workspace/5_Loc_Files/'+wildcards.Organism+'/'+wildcards.Reference
-        # if os.path.exists(path)==False:
-            # os.makedirs(path)
+
+
+
+
+rule Get_ALL_Exon_Intron_Table_from_Transcript_ID:
+    input:
+        expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=set(ORGANISM))
+    resources:
+        FTP=1
+
+
+
+
+
+
+
+
+#### Use TRANSCRIPT ID to get location info of the gene/protein
 
 
 
 
 rule Get_Location_Info_from_Ensemble_Gene_ID_ALL:
     input:
-        expand("Workspace/2_Transcript_IDs/{Organism}/{Gene}",Gene=GENES,Organism=set(ORGANISM))
-
+        expand("Workspace/2_Transcript_IDs/{{Organism}}/{Gene}",Gene=GENES)
     output:
-        ["Workspace/5_Loc_Files/{}/{}/starts.txt".format(ORGANISM[x],REFERENCE[x]) for x in range(0,len(ORGANISM))],
-        ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(ORGANISM[x],REFERENCE[x]) for x in range(0,len(ORGANISM))]
+        "Workspace/5_Loc_Files/{Organism}/{Reference}/starts.txt",
+        "Workspace/5_Loc_Files/{Organism}/{Reference}/Gene_locs.txt"
     resources:
         FTP=1
     run:
-        for ORG in range(0,len(ORGANISM)):
-        
-            ########Check if path for organism exists/create it
-            path='Workspace/5_Loc_Files/'+str(ORGANISM[ORG])+'/'+str(REFERENCE[ORG])
-            if os.path.exists(path)==False:
-                os.makedirs(path)
-                
-            
-            
+        ORG=wildcards.Organism
+        REF=wildcards.Reference
 
-            limiter=0
-            for GENE in GENES:
+        ########Check if path for organism exists/create it
+        path='Workspace/5_Loc_Files/'+str(ORG)+'/'+str(REF)
+        if os.path.exists(path)==False:
+            os.makedirs(path)
+        for GENE in GENES:
+            with open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE)) as f:
                 
-                if limiter % 50 == 0:
-                    time.sleep(1)
-                
-
-                with open('Workspace/2_Transcript_IDs/{}/{}'.format(ORGANISM[ORG],GENE)) as f:
-                    GENE_ID = f.readline().strip()
-                
-                shell('''python3 Python_Scripts/Get_Assembly_Location.py {} {} {} {}'''.format(GENE,GENE_ID,ORGANISM[ORG],REFERENCE[ORG]))
-                
-                
-                
-                limiter+=1
+                GENE_ID = f.readline().strip()
+                shell('''python3 Python_Scripts/Get_Assembly_Location.py {} {} {} {}'''.format(GENE,GENE_ID,ORG,REF))
 
 
+
+
+
+
+rule Get_ALL_Location_Info_from_Ensemble_Gene_ID_ALL:
+    input:
+        expand("Workspace/2_Transcript_IDs/{Organism}/{Gene}",Gene=GENES,Organism=set(ORGANISM))
+    resources:
+        FTP=1
+
+
+
+
+
+#### Combine all Fasta sequences  into a reference dataset
 
 
 
 
 rule Combine_FASTA_Sequences_into_Ref:
     input:
-        expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=set(ORGANISM))
+        expand("Workspace/3_FASTA_Seqs/Genes_{Organism}/{Gene}.fa",Gene=GENES,Organism=set(ORGANISM))
     output:
-        expand("Workspace/3_FASTA_Seqs/Combined_Per_Species/{organism}.fa",organism=set(ORGANISM)),
-        ["Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa".format(x) for x in GENES]
+        expand("Workspace/3_FASTA_Seqs/Combined_Per_Species/{Organism}.fa",Organism=set(ORGANISM)),
+        expand("Workspace/3_FASTA_Seqs/Combined_Per_Protein/{Gene}.fa",Gene=GENES)
     run:
-        
         path='Workspace/3_FASTA_Seqs/Combined_Per_Species/'
         if os.path.exists(path)==False:
             os.makedirs(path)
@@ -261,13 +286,10 @@ rule Combine_FASTA_Sequences_into_Ref:
         if os.path.exists(path2)==False:
             os.makedirs(path2)
             
-        for ORG in ORGANISM:
+        for ORG in list(set(ORGANISM)):
             for GENE in GENES:
                 shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
                 shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
                 
                 shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(ORG,GENE,GENE))
                 shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(GENE))                
-            
-            
-            
