@@ -293,5 +293,9 @@ rule Combine_FASTA_Sequences_into_Ref:
                 shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
                 shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
                 
+                
                 shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(ORG,GENE,GENE))
-                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(GENE))                
+                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(GENE))
+
+                shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/All_Sequences.fa;'''.format(ORG,GENE))
+                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/All_Sequences.fa;'''.format(ORG,GENE,ORG))                
