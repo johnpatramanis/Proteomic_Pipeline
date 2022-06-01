@@ -1,4 +1,4 @@
-**A Proteomic Pipeline for Phylogenetic Reconstruction by Yiannis P. - Work In Progress**
+#A Proteomic Pipeline for Phylogenetic Reconstruction by Yiannis P. - Work In Progress
 
 **What is this?**
 
@@ -25,7 +25,7 @@ These sub-pipelines are:
 <br/><br/>
 
    
-**TUTORIAL on how to build the Paleo Proteomic Hominid Reference Dataset and use it to reconstruct the phylogeny of H. antecessor:**
+#TUTORIAL on how to build the Paleo Proteomic Hominid Reference Dataset and use it to reconstruct the phylogeny of H. antecessor:
    
 **INTRODUCTION**
 
