@@ -25,16 +25,50 @@ These sub-pipelines are:
 <br/><br/>
 
    
+**TUTORIAL on how to build the Paleo Proteomic Hominid Reference Dataset and use it to reconstruct the phylogeny of H. antecessor:**
    
-   
-   
-   
-**Instalation of Pipelines and User Guide for _Dataset Initialization_ / _Dataset Preparation_ /  _Dataset Analysis_**
+**INTRODUCTION**
 
-This guide assumes that you are working on a Linux enviroment, preferably a server.
-<br />It should work on a Linux personal computer, but this is generally not recomended.
-<br />For steps 1-3, you only need to run the once for every personal-computer/server/server-user. Each of the 3 pipelines is semi-autonomus, thus can be run without necesserely running the other 2 pipelines. If for example you just want to run the Dataset Construction pipeline, look bellow for its instalation guide and go through all the steps. If you then also want to run the Dataset Analysis, scroll further down and find its guide.You can skip steps 1,2 and 3 however, if you've gone through them at least once.
+This tutorial aims to introduce the functionality of the pipelines by easily recreating the paleoproteomic-based phylogeny of H.antecessor from Frido et al. It is written with a non-bioinformatics background audience in mind and tries to go step by step, explaining as much as possible for each step. 
 
+**STEP 0 ( Installation )**
+
+The first step is the installation of the pipelines. The pipelines require a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. First navigate to a location on your computer where you want to install them and have sufficient space. Then, download the pipelines from github using the simple command:
+
+git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git
+
+ALTERNATIVE TO GIT CLONE HERE
+
+If your computer does not already have conda installed, you can get it from here:
+
+You can check if conda is installed and properly set up on your computer by simply typing 
+‘conda’ on your command line, 
+Screenshot of typing that
+
+If the result matches the above screenshot, Conda is set and we can move on.
+
+To install all 3 pipelines enter the ‘Proteomic Pipeline’ folder using
+
+cd Proteomic_Pieline 
+
+and then one by one, type the commands below:
+
+conda env create -f ./Dataset_Initialization/Initiator.yml
+conda env create -f ./Dataset_Construction/Translator.yml
+conda env create -f ./Dataset_Analysis/Analyser.yml
+
+Finally since our goal here is to reconstruct the phylogeny of H.antecessor , we will download the protein sequences from the publication itself
+
+wget H.antecessor_Data_Location
+Some shell commands to isolate and format the sequences in a fasta file labeled H_antecessor.fa
+
+If all 3 pipelines were installed without an error and the data was successfully downloaded, then congratulations , we can now start our phylogenetic reconstruction!
+
+   
+   
+   
+   
+   
 <br/><br/>
 <br/><br/>
 <br/><br/>
