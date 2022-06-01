@@ -206,8 +206,8 @@ If everything works out, you should get your resulting tree files in the appropr
    
 ```python
 
+<style>p{color:green;}necessary code</style>
 <style>p{color:red;}necessary code</style>
-<span style="color:green">exploratory code</span> 
 ```
    
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
