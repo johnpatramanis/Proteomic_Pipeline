@@ -208,10 +208,10 @@ If everything works out, you should get your resulting tree files in the appropr
 
 
 ```html
-   Necesary code
+   Necesary coding
 ```
 ```js
-   Alternative code
+   Alternative coding
 ```
 
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
