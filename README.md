@@ -41,7 +41,7 @@ git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git
 
 If your computer does not have git installed then you can use
 ```bash
-wget [https://github.com/jaymody/dotfiles/archive/master.zip](https://github.com/johnpatramanis/Proteomic_Pipeline/archive/refs/heads/main.zip)
+wget https://github.com/johnpatramanis/Proteomic_Pipeline/archive/refs/heads/main.zip
 unzip main.zip
 ```
 
