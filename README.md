@@ -35,9 +35,15 @@ This tutorial aims to introduce the functionality of the pipelines by easily rec
 
 The first step is the installation of the pipelines. The pipelines require a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. First navigate to a location on your computer where you want to install them and have sufficient space. Then, download the pipelines from github using the simple command:
 
+'''bash
 git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git
+'''
 
-ALTERNATIVE TO GIT CLONE HERE
+If your computer does not have git installed then you can use
+'''bash
+wget [https://github.com/jaymody/dotfiles/archive/master.zip](https://github.com/johnpatramanis/Proteomic_Pipeline/archive/refs/heads/main.zip)
+unzip main.zip
+'''
 
 If your computer does not already have conda installed, you can get it from here:
 
