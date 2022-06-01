@@ -207,11 +207,8 @@ If everything works out, you should get your resulting tree files in the appropr
 
 
 
-```html
+```bash
    Necesary coding
-```
-```js
-   Alternate Coding
 ```
 
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
