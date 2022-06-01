@@ -10,17 +10,17 @@ They take the form of Snakemake scripts coupled with Conda enviroments and below
 All of the scripts are based on Snakemake and Conda. I highly recomend reading through the tutorial if you want to use them. The pipelines are split up and the subcomponents are designed to function semi-independently but can also be used one after the other, as they intrinsically synergise. Each pipelinehas its own folder, which contains the Snakemake script, a YAML (.yml) file to create the conda environment, additional R and/or python scripts utilised by the pipeline as well as some example files.
 
 
-The 3 pipelines are:
+**The 3 pipelines are:**
 
-1) Dataset Initialization:
+**1) Dataset Initialization:**
 
 Scripts to set up a reference protein dataset using reference proteomes. The pipeline also sets up pipeline number 2 with the resources necesary to use it.
 
-2) Dataset Construction:
+**2) Dataset Construction:**
 
    Scripts to translate DNA datasets into protein ones and properly format them.
    
-3) Dataset Analysis:
+**3) Dataset Analysis:**
 
    Scripts to assemble a proteomic dataset, format and prepare it for a phylgenetic analysis- including the actual phylogenetic tree creation
    
