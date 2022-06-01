@@ -1,7 +1,3 @@
-- ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) `#f03c15`
-- ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) `#c5f015`
-- ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) `#1589F0`
-
 **A Proteomic Pipeline for Phylogenetic Reconstruction by Yiannis P. - Work In Progress**
 
 **What is this?**
@@ -208,12 +204,23 @@ If everything works out, you should get your resulting tree files in the appropr
 <br/><br/>
 <br/><br/>
    
-```python
 
-<style>p{color:#f03c15;}necessary code</style>
-<style>p{color:#c5f015;}necessary code</style>
+
+```json
+   // code for coloring
 ```
-   
+```html
+   // code for coloring
+```
+```js
+   // code for coloring
+```
+```css
+   // code for coloring
+```
+// etc.
+
+
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
    1) Isoforms???
  
