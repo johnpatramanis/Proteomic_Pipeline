@@ -204,13 +204,10 @@ If everything works out, you should get your resulting tree files in the appropr
 <br/><br/>
 <br/><br/>
    
-```c
-#include <stdio.h>
+```python
 
-int main(void) {
-    printf("Hello World!\n");
-    return 0;
-}
+<span style="color:black">necessary code</span> 
+<span style="color:green">exploratory code</span> 
 ```
    
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
