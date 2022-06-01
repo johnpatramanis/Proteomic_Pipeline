@@ -206,20 +206,13 @@ If everything works out, you should get your resulting tree files in the appropr
    
 
 
-```json
-   // code for coloring
-```
+
 ```html
    // code for coloring
 ```
 ```js
    // code for coloring
 ```
-```css
-   // code for coloring
-```
-// etc.
-
 
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
    1) Isoforms???
