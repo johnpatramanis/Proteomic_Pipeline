@@ -59,9 +59,9 @@ Screenshot of typing that
 
 If the result matches the above screenshot, Conda is set and we can move on.
 
-To install all 3 pipelines enter the ‘Proteomic Pipeline’ folder using
+To install all 3 pipelines enter the `‘Proteomic Pipeline’` folder using
 
-cd Proteomic_Pieline 
+```cd Proteomic_Pieline``` 
 
 and then one by one, type the commands below:
 
