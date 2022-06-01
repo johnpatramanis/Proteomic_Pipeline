@@ -1,6 +1,6 @@
 # A Proteomic Pipeline for Phylogenetic Reconstruction by Yiannis P. - Work In Progress
 
-**What is this?**
+## What is this?
 
 Compiled scripts in the form of pipelines to enable easier and reproducable phylo-proteomic analyses.
 
