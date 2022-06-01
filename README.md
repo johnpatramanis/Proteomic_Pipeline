@@ -25,7 +25,7 @@ These sub-pipelines are:
 <br/><br/>
 
    
-# TUTORIAL on how to build the Paleo Proteomic Hominid Reference Dataset and use it to reconstruct the phylogeny of H. antecessor:
+# Tutorial on how to build the 'Paleo Proteomic Hominid Reference Dataset' and how to use it to reconstruct the phylogeny of H. antecessor:
    
 ## INTRODUCTION
 
