@@ -39,7 +39,8 @@ The first step is the installation of the pipelines. The pipelines require a Lin
 git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git
 ```
 
-If your computer does not have git installed then you can use
+If your computer does not have git installed then the above command will fail. You can instead use:
+
 ```bash
 wget https://github.com/johnpatramanis/Proteomic_Pipeline/archive/refs/heads/main.zip
 unzip main.zip
