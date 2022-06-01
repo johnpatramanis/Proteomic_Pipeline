@@ -211,7 +211,7 @@ If everything works out, you should get your resulting tree files in the appropr
    Necesary coding
 ```
 ```js
-   Alternative coding
+   Alternate coding
 ```
 
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
