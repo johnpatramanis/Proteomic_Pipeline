@@ -208,7 +208,7 @@ If everything works out, you should get your resulting tree files in the appropr
 
 
 ```bash
-   Necesary coding
+   ls |cut -d '.' -f 1 
 ```
 
 **Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
