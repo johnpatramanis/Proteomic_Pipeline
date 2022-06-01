@@ -65,10 +65,11 @@ To install all 3 pipelines enter the `‘Proteomic Pipeline’` folder using
 
 and then one by one, type the commands below:
 
+```bash
 conda env create -f ./Dataset_Initialization/Initiator.yml
 conda env create -f ./Dataset_Construction/Translator.yml
 conda env create -f ./Dataset_Analysis/Analyser.yml
-
+```
 Finally since our goal here is to reconstruct the phylogeny of H.antecessor , we will download the protein sequences from the publication itself
 
 wget H.antecessor_Data_Location
