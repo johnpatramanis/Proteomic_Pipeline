@@ -74,13 +74,14 @@ conda env create -f ./Dataset_Construction/Translator.yml
 ```bash
 conda env create -f ./Dataset_Analysis/Analyser.yml
 ```
-Finally since our goal here is to reconstruct the phylogeny of H.antecessor , we will download the protein sequences from the publication itself
+Finally since our goal here is to reconstruct the phylogeny of H.antecessor , we will download the protein sequences from the publication itself and then apply some shell magick to remove the Erectus sample that is also included and modify the labels to suit the pipeline.
 
 ```bash
 wget https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-020-2153-8/MediaObjects/41586_2020_2153_MOESM4_ESM.txt -O PaleoProteome.fa
 END_LINE=$(grep -o -i -n -m 1 Dmanisi_H_ere  PaleoProteome.fa | cut -d ':' -f 1)
 END_LINE=$(expr $END_LINE - 1)
 head -n $END_LINE PaleoProteome.fa > H_antecessor.fa
+sed -i 's/\(>Atapuerca_H_antecessor_.\+\)GN.\+/\1/' H_antecessor.fa
 ```
 
 If all 3 pipelines were installed without an error and the data was successfully downloaded, then congratulations , we can now start our phylogenetic reconstruction!
