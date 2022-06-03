@@ -102,7 +102,7 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 
 
-STEP 1 ( Reference Dataset Initialisation )
+## STEP 1 ( Reference Dataset Initialisation )
 
 The only sequences we have on our hands right now are the proteins of H.antecessor. To recreate its phylogeny, we first need to set up a reference dataset with which we can compare our sample. To do that, we can use Pipeline 1, and create the ‘skeleton’ of the reference dataset, using the reference proteomes of different species that we expect to be somewhat related to H.antecessor. So let’s get ready to do that.
 
