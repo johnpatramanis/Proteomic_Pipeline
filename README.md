@@ -36,6 +36,9 @@ Scripts to set up a reference protein dataset using reference proteomes. The pip
 
 This tutorial aims to introduce the functionality of the pipelines by easily recreating the paleoproteomic-based phylogeny of H.antecessor from Frido et al. It is written with a non-bioinformatics background audience in mind and tries to go step by step, explaining as much as possible for each step. 
 
+<br/><br/>
+<br/><br/>
+
 ## STEP 0 - Installation
 
 The first step is the installation of the pipelines. The pipelines require a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. First navigate to a location on your computer where you want to install them and have sufficient space. Then, download the pipelines from github using the simple command:
@@ -155,7 +158,10 @@ We can save this simple reference dataset we have created using shell commands:
 ```bash
 cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa >> Reference_Proteomes.fa
 ```  
+
    
+<br/><br/>
+<br/><br/>
    
    
    
