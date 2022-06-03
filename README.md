@@ -88,7 +88,73 @@ sed -i 's/\(>Atapuerca_H_antecessor_.\+\)GN.\+/\1/' H_antecessor.fa
 
 If all 3 pipelines were installed without an error and the data was successfully downloaded, then congratulations , we can now start our phylogenetic reconstruction!
 
-   
+
+
+<br/><br/>
+<br/><br/>
+
+
+
+
+
+
+
+
+
+
+STEP 1 ( Reference Dataset Initialisation )
+
+The only sequences we have on our hands right now are the proteins of H.antecessor. To recreate its phylogeny, we first need to set up a reference dataset with which we can compare our sample. To do that, we can use Pipeline 1, and create the ‘skeleton’ of the reference dataset, using the reference proteomes of different species that we expect to be somewhat related to H.antecessor. So let’s get ready to do that.
+
+```bash
+cd ./Dataset_Initialization
+conda activate Initiator
+```
+
+With the above commands we are now inside the folder of Pipeline 1 and have ‘activated’ the pipeline’s environment. This environment has now also unlocked new software on our command line, which the pipeline will use. You can test this out by typing:
+```bash
+‘snakemake’
+```
+
+You can read more about conda environments here if you are interested: LINK
+For now, all you need to know is, activating the right environment is needed to use each of the pipelines.
+
+To use this pipeline we just need two things:
+1 txt file, named ```‘Proteins.txt’``` with the proteins we are interested in and
+1 txt file, named ```‘Organism.txt’``` with the scientific names of the species we are interested in.
+For this tutorial these files are already prepared and ready to use.
+(OPTIONAL COMMANDS)
+You can take a look at them using
+
+```bash
+less Proteins.txt
+less Organism.txt
+```
+
+and you may want to edit them and add some proteins or species using
+nano Proteins.txt
+nano Organism.txt
+For this example the proteins we are interested in are the ones recovered for the H.antecessor and the species we are interested in are thought to be at least somewhat related to H.antecessor. Now, to execute the pipeline simply type:
+
+```bash
+snakemake -j4 --resources FTP=7
+```
+
+Depending on the computing power of your computer, you can increase the number of cores being used, by typing -j8 or  -j16 if you want to utilize 8 or 16 cores instead of 4. 
+Once the pipeline finishes running you can check the results by diving into the ‘Workspace’ folder. There are many output files that we will use later on, but the most important ones for now are located in:
+```Workspace/3_FASTA_Seqs/All_Sequences.fa```
+
+where all your proteins for all your species are stored.
+Different subsets of this fasta file can be found here: 
+
+```/Dataset_Initialization/Workspace/3_FASTA_Seqs/Combined_Per_Species/```
+```/Dataset_Initialization/Workspace/3_FASTA_Seqs/Combined_Per_Protein/```
+
+We can save this simple reference dataset we have created using shell commands:
+
+```bash
+cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa >> Reference_Proteomes.fa
+```  
    
    
    
