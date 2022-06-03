@@ -123,9 +123,9 @@ To use this pipeline we just need two things:
 1 txt file, named ```‘Proteins.txt’``` with the proteins we are interested in and
 1 txt file, named ```‘Organism.txt’``` with the scientific names of the species we are interested in.
 For this tutorial these files are already prepared and ready to use.
-(OPTIONAL COMMANDS)
 You can take a look at them using
 
+(OPTIONAL COMMANDS)
 ```bash
 less Proteins.txt
 less Organism.txt
