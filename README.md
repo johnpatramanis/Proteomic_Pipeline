@@ -77,7 +77,7 @@ conda env create -f ./Dataset_Analysis/Analyser.yml
 Finally since our goal here is to reconstruct the phylogeny of H.antecessor , we will download the protein sequences from the publication itself
 
 ```bash
-wget https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-020-2153-8/MediaObjects/41586_2020_2153_MOESM4_ESM.txt > PaleoProteome.fa
+wget https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-020-2153-8/MediaObjects/41586_2020_2153_MOESM4_ESM.txt -O PaleoProteome.fa
 Some shell commands to isolate and format the sequences in a fasta file labeled H_antecessor.fa
 ```
 
