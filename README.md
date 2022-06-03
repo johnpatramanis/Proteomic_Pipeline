@@ -78,7 +78,7 @@ Finally since our goal here is to reconstruct the phylogeny of H.antecessor , we
 
 ```bash
 wget https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-020-2153-8/MediaObjects/41586_2020_2153_MOESM4_ESM.txt -O PaleoProteome.fa
-END_LINE=$(grep -o -i -n -m 1 *erectus* PaleoProteome.fa | cut -d ':' -f 1)
+END_LINE=$(grep -o -i -n -m 1 Dmanisi_H_ere  PaleoProteome.fa | cut -d ':' -f 1)
 head -n $END_LINE > H_antecessor.fa
 ```
 
