@@ -159,9 +159,98 @@ We can save this simple reference dataset we have created using shell commands:
 cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa >> Reference_Proteomes.fa
 ```  
 
-   
+<br/><br/>
+<br/><br/>   
 <br/><br/>
 <br/><br/>
+
+## STEP 2 ( Dataset Enhancement)
+
+We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data from the translation of available genomic data. To do this we can use the 2nd pipeline. First we need to download some data to translate. For this example we will build the same reference genome presented in the publication of this workflow “ INSERT NAME OF PUBLICATION HERE “ . We will use the following datasets:
+
+https://www.biorxiv.org/content/10.1101/2021.02.06.430068v2.full 
+
+https://www.nature.com/articles/nature12228 
+
+https://pubmed.ncbi.nlm.nih.gov/28982794/
+
+WARNING ABOUT DATA SIZE!!
+
+```bash
+COMMANDS TO WGET DATASETS in the right folder
+COMMAND TO WGET GRCH37 or HG18
+```
+
+```bash
+cd ./Dataset_Construction/
+```
+
+
+Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly, the data are mapped on to. Considering the data we downloaded correspond to different reference genomes ( All of them are mapped onto the human reference genome, but different versions of it) we have to run the pipeline multiple times separately for each reference (2 times). 
+
+As we just mentioned, translation requires a couple of resources. First we need the location (chromosome/scaffold,position & strand) of the gene that produces the protein. Most genes require splicing, so we also need the exon and intron information . Finally, a reference amino acid sequence of the protein is also necessary. Given that we have run Pipeline 1 for the proteins of interest and the organisms and reference versions of interest (Homo sapiens GRCh37 & GRCh38), all of this data has been downloaded and is available to us.
+
+We’ll start with the 2 first datasets, which are both mapped on to GRCh38. First we need a txt file named ‘Organism.txt’, where the organism and reference version for the translation are given. For GRCh38 one is already in place and we can take a look at it with
+
+```bash
+less Organism.txt
+(Screenshot of file)
+```
+
+Then we need a list of the samples we want to translate from, in the form of a txt file named ‘Samples.txt’. Since all of them are BAM files inside the folder ‘Dataset_Construction/Workspace/1_OG_BAM_FILES/’ we can use:
+
+```bash
+ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.bam | cut -d ‘.’  -f 1 > Samples.txt
+```
+
+Notice that for the list the file extension should not be mentioned, just the name of the bam file.
+We can take a look at how the file looks with:
+
+less Samples.txt
+(Screenshot of file)
+
+With these two files set up, we don’t need anything else. If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those.
+All we need to do now, is switch to the appropriate conda environment and execute the pipeline:
+
+conda deactivate
+conda activate Translator
+snakemake -j4
+
+This will take some time! Again, in the example above we use 4 cores, but if your computer is more powerful, you can try increasing the number of cores (e.g. -j32 ) to increase efficiency and decrease waiting time. Once this dataset finishes, we can take a look at the results by:
+
+less Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa
+
+and we can store the result somewhere as
+
+cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Great_Apes_and_Modern_Humans.fa
+
+Next we want to translate a different dataset, namely Prufer et al 2017. This dataset consists of multiple ancient individuals mapped onto GRCh37 and carefully had their genotypes called. In order to translate them, first we need to switch our reference genome by editing the Organism.txt file
+
+echo ‘Homo_sapiens	GRCh37’ > Organism.txt
+
+Then, since our data are now VCF files, we need a slightly different method of translating them. 
+WE have downloaded earlier the VCF files and placed them into Workspace/0_VCF_FILES/
+In order to prepare them for the translation, we can use a custom python script.
+python3 Workspace/0_VCF_FILES/VCF_sample_list_generator.py -V (comma sep list of VCF) -R GRCh37.fa
+mv Workspace/0_VCF_FILES/VCF_Samples.txt ./
+
+If we take a look at this new VCF_Samples.txt file, we can see the format required for the samples: A file with 3 space separated columns, one with the name of the sample inside the vcf, one with the name of the vcf file and one with the reference fasta file that corresponds to the sample.
+
+less VCF_Samples.txt 
+
+We also need to delete the previous Samples.txt file, otherwise the pipeline will attempt to retranslate those as well
+
+rm Samples.txt
+
+We are now set for the new translation and we can execute it again, by typing
+
+snakemake -j4
+And once this is also finished, we can combine the resulting translations into one dataset, along with the H.antecessor and exit the pipeline folder and environment.
+
+cat Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa >> Translated.fa
+cat Great_Apes_and_Modern_Humans.fa >> Translated.fa
+conda deactivate
+cd ..
    
    
    
