@@ -278,9 +278,66 @@ cd ..
 ```   
    
    
+   
+   
+   
+   
+   
+   
 <br/><br/>
 <br/><br/>
 <br/><br/>
+
+
+
+
+
+
+
+
+
+## STEP 3 ( Phylogenetic Reconstruction )
+
+We now have the paleo-proteomic data ( ```H_antecessor.fa```) , the reference proteomes ( ```Reference_Proteomes.fa```) and the translated sequences ( ```Translated.fa``` ), which we can all merge together into the dataset we want to run a phylogenetic analysis.
+
+```bash
+cat H_antecessor.fa >>  Reference_Data.fa
+cat Dataset_Initialization/Reference_Proteomes.fa  >>  Reference_Data.fa
+cat Dataset_Construction/Translated.fa >> Reference_Data.fa
+```
+
+
+This ```Reference_Data.fa``` is the fasta file we will use for the phylogenetic reconstruction. We can take a look at how our fasta file looks like, by using
+
+
+```bash
+less Reference_Data.fa
+```
+
+Notice that each sequence follows the same pattern of Sample-name_Protein-name . This is very important as this will allow the next pipeline to understand which sequences correspond to which sample and which protein. All of the sequences we have generated and collected follow this pattern. If any additional sequences should be added, they must also follow this format if they are to be utilized properly. 
+
+Now let's move onto the final pipeline and run the phylogeny.
+
+```bash
+cp Reference_Data.fa Dataset_Analysis/Workspace/1_OG_Dataset/
+cd Dataset_Analysis
+conda activate Analyser
+```
+
+All we need to do now is let the pipeline know which datasets we want to run and which samples in those datasets are paleo proteomic data, in order to handle them accordingly.
+
+
+```bash
+echo ‘Reference_Data.fa	H_antecessor’ > Datasets.txt
+```
+
+(OPTIONAL - MASKING MODERN SAMPLES AS ANCIENT)
+
+Now all we have to do is run the pipeline and wait.
+
+```bash
+snakemake -j4
+```
 
 
 <br/><br/>
