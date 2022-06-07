@@ -98,9 +98,8 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 <br/><br/>
 <br/><br/>
-
-
-
+<br/><br/>
+<br/><br/>
 
 
 
@@ -285,14 +284,10 @@ cd ..
    
    
    
-   
-   
 <br/><br/>
 <br/><br/>
 <br/><br/>
-
-
-
+<br/><br/>
 
 
 
