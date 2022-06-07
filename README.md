@@ -116,15 +116,15 @@ conda activate Initiator
 
 With the above commands we are now inside the folder of Pipeline 1 and have ‘activated’ the pipeline’s environment. This environment has now also unlocked new software on our command line, which the pipeline will use. You can test this out by typing:
 ```bash
-‘snakemake’
+snakemake
 ```
 
 You can read more about conda environments here if you are interested: LINK
 For now, all you need to know is, activating the right environment is needed to use each of the pipelines.
 
 To use this pipeline we just need two things:
-1 txt file, named ```‘Proteins.txt’``` with the proteins we are interested in and
-1 txt file, named ```‘Organism.txt’``` with the scientific names of the species we are interested in.
+1 txt file, named ```Proteins.txt``` with the proteins we are interested in and
+1 txt file, named ```Organism.txt``` with the scientific names of the species we are interested in.
 For this tutorial these files are already prepared and ready to use.
 You can take a look at them using
 
@@ -134,17 +134,21 @@ less Proteins.txt
 less Organism.txt
 ```
 
-and you may want to edit them and add some proteins or species using
+and you may want to edit them and add some proteins or species using:
+
+```bash
 nano Proteins.txt
 nano Organism.txt
-For this example the proteins we are interested in are the ones recovered for the H.antecessor and the species we are interested in are thought to be at least somewhat related to H.antecessor. Now, to execute the pipeline simply type:
+```
+
+For this example the proteins we are interested in are the ones recovered for the *H.antecessor* and the species we are interested in are thought to be at least somewhat related to H.antecessor. Now, to execute the pipeline simply type:
 
 ```bash
 snakemake -j4 --resources FTP=7
 ```
 
 Depending on the computing power of your computer, you can increase the number of cores being used, by typing -j8 or  -j16 if you want to utilize 8 or 16 cores instead of 4. 
-Once the pipeline finishes running you can check the results by diving into the ‘Workspace’ folder. There are many output files that we will use later on, but the most important ones for now are located in:
+Once the pipeline finishes running you can check the results by diving into the ```Workspace``` folder. There are many output files that we will use later on, but the most important ones for now are located in:
 ```Workspace/3_FASTA_Seqs/All_Sequences.fa```
 
 where all your proteins for all your species are stored.
@@ -190,14 +194,14 @@ Now that we have downloaded our datasets we are ready to set up the translation.
 
 As we just mentioned, translation requires a couple of resources. First we need the location (chromosome/scaffold,position & strand) of the gene that produces the protein. Most genes require splicing, so we also need the exon and intron information . Finally, a reference amino acid sequence of the protein is also necessary. Given that we have run Pipeline 1 for the proteins of interest and the organisms and reference versions of interest (Homo sapiens GRCh37 & GRCh38), all of this data has been downloaded and is available to us.
 
-We’ll start with the 2 first datasets, which are both mapped on to GRCh38. First we need a txt file named ‘Organism.txt’, where the organism and reference version for the translation are given. For GRCh38 one is already in place and we can take a look at it with
+We’ll start with the 2 first datasets, which are both mapped on to GRCh38. First we need a txt file named ```Organism.txt```, where the organism and reference version for the translation are given. For GRCh38 one is already in place and we can take a look at it with
 
 ```bash
 less Organism.txt
 (Screenshot of file)
 ```
 
-Then we need a list of the samples we want to translate from, in the form of a txt file named ‘Samples.txt’. Since all of them are BAM files inside the folder ‘Dataset_Construction/Workspace/1_OG_BAM_FILES/’ we can use:
+Then we need a list of the samples we want to translate from, in the form of a txt file named ‘Samples.txt’. Since all of them are BAM files inside the folder ```Dataset_Construction/Workspace/1_OG_BAM_FILES/```we can use:
 
 ```bash
 ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.bam | cut -d ‘.’  -f 1 > Samples.txt
@@ -233,14 +237,14 @@ and we can store the result somewhere as
 cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Great_Apes_and_Modern_Humans.fa
 ```
 
-Next we want to translate a different dataset, namely Prufer et al 2017. This dataset consists of multiple ancient individuals mapped onto GRCh37 and carefully had their genotypes called. In order to translate them, first we need to switch our reference genome by editing the Organism.txt file
+Next we want to translate a different dataset, namely Prufer et al 2017. This dataset consists of multiple ancient individuals mapped onto GRCh37 and carefully had their genotypes called. In order to translate them, first we need to switch our reference genome by editing the ```Organism.txt``` file
 
 ```bash
 echo ‘Homo_sapiens	GRCh37’ > Organism.txt
 
 ```
 Then, since our data are now VCF files, we need a slightly different method of translating them. 
-WE have downloaded earlier the VCF files and placed them into Workspace/0_VCF_FILES/
+WE have downloaded earlier the VCF files and placed them into ```Workspace/0_VCF_FILES/```
 In order to prepare them for the translation, we can use a custom python script.
 
 ```bash
@@ -264,7 +268,7 @@ We are now set for the new translation and we can execute it again, by typing
 snakemake -j4
 ```
 
-And once this is also finished, we can combine the resulting translations into one dataset, along with the H.antecessor and exit the pipeline folder and environment.
+And once this is also finished, we can combine the resulting translations into one dataset, along with the *H.antecessor* and exit the pipeline folder and environment.
 
 ```bash
 cat Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa >> Translated.fa
