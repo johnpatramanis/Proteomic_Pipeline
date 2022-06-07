@@ -214,7 +214,7 @@ We can take a look at how the file looks with:
 less Samples.txt
 ```
 
-(SCREENSHOT HERE)
+# (SCREENSHOT HERE)
 
 With these two files set up, we don’t need anything else. If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those.
 All we need to do now, is switch to the appropriate conda environment and execute the pipeline:
