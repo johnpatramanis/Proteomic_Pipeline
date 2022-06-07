@@ -30,8 +30,8 @@ Scripts to set up a reference protein dataset using reference proteomes. The pip
 <br/><br/>
 
    
-## Tutorial
-# How to build the 'Paleo Proteomic Hominid Reference Dataset' and how to use it to reconstruct the phylogeny of H. antecessor:
+# Tutorial
+## How to build the 'Paleo Proteomic Hominid Reference Dataset' and how to use it to reconstruct the phylogeny of H. antecessor:
 
 <br/><br/> 
 
