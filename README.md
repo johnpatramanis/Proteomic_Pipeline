@@ -341,7 +341,7 @@ Now all we have to do is run the pipeline and wait.
 ```bash
 snakemake -j4
 ```
-
+Once this finishes running you will have a generated tree for each of your porteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins.
 
 <br/><br/>
 <br/><br/>
