@@ -206,52 +206,72 @@ ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.bam | cut -d ‘.’  -f 1 > 
 Notice that for the list the file extension should not be mentioned, just the name of the bam file.
 We can take a look at how the file looks with:
 
+```bash
 less Samples.txt
-(Screenshot of file)
+```
+
+(SCREENSHOT HERE)
 
 With these two files set up, we don’t need anything else. If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those.
 All we need to do now, is switch to the appropriate conda environment and execute the pipeline:
 
+```bash
 conda deactivate
 conda activate Translator
 snakemake -j4
+```
 
 This will take some time! Again, in the example above we use 4 cores, but if your computer is more powerful, you can try increasing the number of cores (e.g. -j32 ) to increase efficiency and decrease waiting time. Once this dataset finishes, we can take a look at the results by:
 
+```bash
 less Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa
+```
 
 and we can store the result somewhere as
 
+```bash
 cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Great_Apes_and_Modern_Humans.fa
+```
 
 Next we want to translate a different dataset, namely Prufer et al 2017. This dataset consists of multiple ancient individuals mapped onto GRCh37 and carefully had their genotypes called. In order to translate them, first we need to switch our reference genome by editing the Organism.txt file
 
+```bash
 echo ‘Homo_sapiens	GRCh37’ > Organism.txt
 
+```
 Then, since our data are now VCF files, we need a slightly different method of translating them. 
 WE have downloaded earlier the VCF files and placed them into Workspace/0_VCF_FILES/
 In order to prepare them for the translation, we can use a custom python script.
+
+```bash
 python3 Workspace/0_VCF_FILES/VCF_sample_list_generator.py -V (comma sep list of VCF) -R GRCh37.fa
 mv Workspace/0_VCF_FILES/VCF_Samples.txt ./
+```
 
 If we take a look at this new VCF_Samples.txt file, we can see the format required for the samples: A file with 3 space separated columns, one with the name of the sample inside the vcf, one with the name of the vcf file and one with the reference fasta file that corresponds to the sample.
 
+```bash
 less VCF_Samples.txt 
-
+```
 We also need to delete the previous Samples.txt file, otherwise the pipeline will attempt to retranslate those as well
 
+```bash
 rm Samples.txt
-
+```
 We are now set for the new translation and we can execute it again, by typing
 
+```bash
 snakemake -j4
+```
+
 And once this is also finished, we can combine the resulting translations into one dataset, along with the H.antecessor and exit the pipeline folder and environment.
 
+```bash
 cat Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa >> Translated.fa
 cat Great_Apes_and_Modern_Humans.fa >> Translated.fa
 conda deactivate
 cd ..
-   
+```   
    
    
 <br/><br/>
