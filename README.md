@@ -30,8 +30,11 @@ Scripts to set up a reference protein dataset using reference proteomes. The pip
 <br/><br/>
 
    
-# Tutorial on how to build the 'Paleo Proteomic Hominid Reference Dataset' and how to use it to reconstruct the phylogeny of H. antecessor:
-   
+## Tutorial
+# How to build the 'Paleo Proteomic Hominid Reference Dataset' and how to use it to reconstruct the phylogeny of H. antecessor:
+
+<br/><br/> 
+
 ## INTRODUCTION
 
 This tutorial aims to introduce the functionality of the pipelines by easily recreating the paleoproteomic-based phylogeny of H.antecessor from Frido et al. It is written with a non-bioinformatics background audience in mind and tries to go step by step, explaining as much as possible for each step. 
