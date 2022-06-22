@@ -44,7 +44,8 @@ This tutorial aims to introduce the functionality of the pipelines by easily rec
 
 ## STEP 0 - Installation
 
-The first step is the installation of the pipelines. The pipelines require a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. If you don't have  Conda installed, you can find a quick guide on how to do that here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html . If conda is installed and ready to go, we can start.
+The first step is the installation of the pipelines. The pipelines require a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. If you don't have  Conda installed, you can find a quick guide on how to do that here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html
+If conda is installed and ready to go, we can start.
 
 First navigate to a location on your computer where you want to install them and have sufficient space. Then, download the pipelines from github using the simple command:
 
