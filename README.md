@@ -2,7 +2,7 @@
 
 ## What is this?
 
-Here you will find all the code needed to run the Paleo-Phylo-Proteomic *Pipelines* to enable easier and more reproducable paleoproteomic analyses.
+Here you will find all the code needed to run the *Paleo-Phylo-Proteomic Pipelines* to enable easier and more reproducable paleoproteomic analyses.
 They take the form of Snakemake scripts coupled with Conda enviroments and below you can find a step by step tutorial on how to run them on your linux machine!
 
 **Huh interesting, how do they work?**
