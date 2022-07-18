@@ -97,6 +97,10 @@ head -n $END_LINE PaleoProteome.fa > H_antecessor.fa
 sed -i 's/\(>Atapuerca_H_antecessor_.\+\)GN.\+/\1/' H_antecessor.fa
 ```
 
+DO THE SAME FOR GIGANTOPETHICUS
+
+<br/><br/>
+
 If all 3 pipelines were installed without an error and the data was successfully downloaded, then congratulations , we can now start our phylogenetic reconstruction!
 
 
@@ -191,6 +195,16 @@ WARNING ABOUT DATA SIZE!!
 COMMANDS TO WGET DATASETS in the right folder
 COMMAND TO WGET GRCH37 or HG18
 ```
+
+ALTERNATIVE LIGHTER VERSION OF DWONLOAD
+
+```bash
+COMMANDS TO WGET DATASETS in the right folder
+COMMAND TO WGET GRCH37 or HG18
+```
+
+
+
 
 ```bash
 cd ./Dataset_Construction/
@@ -333,6 +347,7 @@ All we need to do now is let the pipeline know which datasets we want to run and
 ```bash
 echo ‘Reference_Data.fa	H_antecessor’ > Datasets.txt
 ```
+
 
 (OPTIONAL - MASKING MODERN SAMPLES AS ANCIENT)
 
