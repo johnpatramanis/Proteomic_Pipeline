@@ -5,14 +5,15 @@ import re
 
 
 
-if len(sys.argv)==5:
+if len(sys.argv)==6:
     GENE=sys.argv[1]
     GENE_ID=sys.argv[2]
     ORGANISM=sys.argv[3]
     ASSEMBLY=sys.argv[4]
+    TRANSCRIPT_NAME=sys.argv[5]
 
 
-elif len(sys.argv)<=4:
+elif len(sys.argv)<=5:
     GENE=sys.argv[1]
     GENE_ID=''
     ORGANISM=sys.argv[2]
@@ -49,6 +50,7 @@ if r.json!=[]:
     if 'error' not in MJ.keys():
         START=MJ['start']
         END=MJ['end']
+        IS_CANON=MJ['is_canonical']
         STRAND=MJ['strand']
         SEQ_REGION=MJ['seq_region_name']
         CURRENT_ASSEMBLY=MJ['assembly_name']
@@ -103,6 +105,11 @@ STARTS_FILE=open('Workspace/5_Loc_Files/{}/{}/starts.txt'.format(ORGANISM,ASSEMB
 
 if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID!='')):
     #Append the 'Gene_locs.txt' file for that organism/assembly, if Gene info is not missing
-    LOC_FILE.write('{}\t{}\t{}\t{}\t{}.fa\n'.format(GENE,str(SEQ_REGION),str(START),str(END),GENE))
+    LOC_FILE.write('{}\t{}\t{}\t{}\t{}.fa\n'.format(TRANSCRIPT_NAME,str(SEQ_REGION),str(START),str(END),TRANSCRIPT_NAME))
+    if IS_CANON==1:
+        LOC_FILE.write('{}\t{}\t{}\t{}\t{}.fa\n'.format(GENE,str(SEQ_REGION),str(START),str(END),GENE))
+    
     #Append the 'Starts.txt' file for that organism/assembly
-    STARTS_FILE.write('{}\t{}\t{}\n'.format(GENE,str(STARTS_START),STRAND))
+    STARTS_FILE.write('{}\t{}\t{}\n'.format(TRANSCRIPT_NAME,str(STARTS_START),STRAND))
+    if IS_CANON==1:
+        STARTS_FILE.write('{}\t{}\t{}\n'.format(GENE,str(STARTS_START),GENE))

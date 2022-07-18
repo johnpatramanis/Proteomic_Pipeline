@@ -16,16 +16,67 @@ FTP=7
 SLEEPER=1
 
 GENES=[]
+ISOFORMS={}
 ORGANISM=[]
 REFERENCE=[]
 
 
+
+###### LOAD REQUESTED PROTEINS/GENES
+###    HANDLE ISOFORMS
+
 PROTEIN_FILE=open('Proteins.txt','r')
 for line in PROTEIN_FILE:
-    line=line.strip()
-    line=line.replace("\\","-") #there are actually some genes with "/" in their name, which messes up the folder creation process
-    GENES.append(line)
 
+    line=line.replace("\\","-") #there are actually some genes with "/" in their name, which messes up the folder creation process
+    line=line.strip().split('::')
+    
+    
+    ## NO ISOFORM SPECIFIED
+    if len(line)==1:
+        
+        GENE=line[0]
+        GENES.append(GENE)
+
+        if GENE in ISOFORMS.keys():
+            ISOFORMS[GENE].append('CANON')
+            
+        if GENE not in ISOFORMS.keys():
+            ISOFORMS[GENE]=['CANON']
+    
+    
+    ## ISOFORM REQUESTED
+    if len(line)>1:
+        
+
+        GENE=line[0]
+        ISO=line[1]
+        
+        GENES.append(GENE)
+        
+    ### IF USER WANTS ALL ISOFORMS    
+        if ISO=='ALL':
+            ISOFORMS[GENE]='ALL'
+            
+            
+    #### IF USER WANTS SPECIFIC ISOFORMS           
+        if ISO!='ALL':
+        
+            ISO=GENE+'-'+ISO
+            
+            ## If more than one isoforms have been requeted for this gene
+            if GENE in ISOFORMS.keys():
+                ISOFORMS[GENE].append(ISO)
+                
+            ## If this is the first isoform requested for this gene
+            if GENE not in ISOFORMS.keys():
+                ISOFORMS[GENE]=[ISO]
+
+
+GENES=list(set(GENES))
+
+for J,K in ISOFORMS.items():
+    print(F'Requested Protein: {J} for Isoform(s): {K} ')
 
 
 
@@ -80,7 +131,7 @@ rule Get_Ensembl_Gene_IDs_ALL:
         #### Get GeneID for every gene of list
         GENE=wildcards.Gene
         print(GENE)
-        shell("""python3 Python_Scripts/Get_Gene_ID.py {} {}""".format(GENE,ORG)) ##### Modify to identify Isoforms 
+        shell("""python3 Python_Scripts/Get_Gene_ID.py {} {}""".format(GENE,ORG)) 
 
 
 #### Use GEN ID to get Transcript ID
@@ -104,21 +155,26 @@ rule Get_Ensembl_Transcript_IDs:
         FOUND_GENES=[x for x in GENES if x not in MISSING_GENES]    
         
         
-        #Check if path for organism exists/create it
+        ## Check if path for organism exists/create it
         path='Workspace/2_Transcript_IDs/'+str(ORG)
         if os.path.exists(path)==False:
             os.makedirs(path)
         
         
         GENE=wildcards.Gene
-        #Get transcript ID for every GeneID
+        ## Get transcript ID for every GeneID
         if GENE in FOUND_GENES:
         
             with open('Workspace/1_Gene_IDs/{}/{}'.format(ORG,GENE)) as f:
                 GENE_ID = f.readline().strip()
-            shell('''python3 Python_Scripts/Search_Ensembl.py {} {} {}'''.format(GENE,GENE_ID,ORG)) ##### Modify to detect if Isoform is wanted and then pick the right Isoform, produce the right Transcript ID
+            
+            ISOFORM=ISOFORMS[GENE]
+            if isinstance(ISOFORM, list)==1:
+                ISOFORM=','.join(ISOFORM)
+            
+            shell('''python3 Python_Scripts/Search_Ensembl.py {} {} {} {}'''.format(GENE,GENE_ID,ORG,ISOFORM)) 
 
-        #for missing GeneIDs make dummy in its place
+        ## For missing GeneIDs make dummy in its place
         if GENE in MISSING_GENES:
             shell('''touch Workspace/2_Transcript_IDs/{}/{} '''.format(ORG,GENE))
         time.sleep(SLEEPER)
@@ -158,9 +214,14 @@ rule Get_FASTA_Sequence_from_Transcript_ID:
         GENE=wildcards.Gene
             
         TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
-        TRNSCRPT_ID=TRNSCRPT_FILE.readline().strip()
         
-        shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG))
+        for TRNSCRPT in TRNSCRPT_FILE:
+            TRNSCRPT_ID=TRNSCRPT.strip().split('::')[0]
+            TRNSCRPT_NAME=TRNSCRPT.strip().split('::')[1]
+            
+            shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
+            time.sleep(2)
+            
         time.sleep(SLEEPER)
 
 
@@ -204,9 +265,15 @@ rule Get_Exon_Intron_Table_from_Transcript_ID:
         GENE=wildcards.Gene
             
         TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
-        TRNSCRPT_ID=TRNSCRPT_FILE.readline().strip()
         
-        shell('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG))
+        for TRNSCRPT in TRNSCRPT_FILE:
+            TRNSCRPT_ID=TRNSCRPT.strip().split('::')[0]
+            TRNSCRPT_NAME=TRNSCRPT.strip().split('::')[1]
+            
+            print('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
+            shell('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
+            time.sleep(2)
+            
         time.sleep(SLEEPER)
 
 
@@ -248,10 +315,16 @@ rule Get_Location_Info_from_Ensemble_Gene_ID_ALL:
         if os.path.exists(path)==False:
             os.makedirs(path)
         for GENE in GENES:
-            with open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE)) as f:
+            
+            TRANSCRIPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
+            for TRANSCRIPT in TRANSCRIPT_FILE:
+            
+                TRNSCRPT_ID=TRANSCRIPT.strip().split('::')[0]
+                TRNSCRPT_NAME=TRANSCRIPT.strip().split('::')[1]
                 
-                GENE_ID = f.readline().strip()
-                shell('''python3 Python_Scripts/Get_Assembly_Location.py {} {} {} {}'''.format(GENE,GENE_ID,ORG,REF))
+                shell('''python3 Python_Scripts/Get_Assembly_Location.py {} {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,REF,TRNSCRPT_NAME))
+                time.sleep(2)
+
         time.sleep(SLEEPER)
 
 

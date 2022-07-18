@@ -1,18 +1,17 @@
 import requests, sys
 import re
 
-#example on how to run: AMELX ENST00000380714 Homo_sapiens
-#example                AMELY ENST00000651267 Homo_sapiens
-#                       ENAM ENST00000396073 Homo_sapiens
-#Check this: AMELX '' Homo_sapiens or AMELX Homo_sapiens 
+#example on how to run: AMELX ENST00000380714 homo_sapiens AMELX-203
 
-if len(sys.argv)==4:
+
+if len(sys.argv)==5:
     GENE=sys.argv[1]
     TRNSCR_ID=sys.argv[2]
     ORGANISM=sys.argv[3]
+    TRNSCR_NAME=sys.argv[4]
 
 
-elif len(sys.argv)==3:
+elif len(sys.argv)==4:
     GENE=sys.argv[1]
     TRNSCR_ID=''
     ORGANISM=sys.argv[2]
@@ -26,13 +25,14 @@ r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
 
 EXON_LENGTH_LIST=[]
 EXON_NAME_LIST=[]
-# If any hits
+
+## If any hits
 if r.json!=[]:
     MJ=r.json()
     
     
-    #Find best result!
-    #If multiple hits
+    ## Find best result!
+    ## If multiple hits
     if (isinstance(MJ, list))==True: 
         MJ=MJ[0]
     
@@ -40,6 +40,7 @@ if r.json!=[]:
     if 'error' not in MJ.keys():
         start=int(MJ['start'])
         EXON=MJ['Exon']
+        IS_CANON=MJ['is_canonical']
         for EX in range(0,len(EXON)):
             
             strand=EXON[EX]['strand']
@@ -62,7 +63,10 @@ if r.json!=[]:
             
  
     
-TABLE_FILE=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,GENE),'w')
+TABLE_FILE_TRANSCRIPT=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,TRNSCR_NAME),'w')
+TABLE_FILE_GENE=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,GENE),'w')
 
 for L in range(0,len(EXON_LENGTH_LIST)):
-    TABLE_FILE.write('{}\t{}\n'.format(EXON_NAME_LIST[L],EXON_LENGTH_LIST[L]))
+    TABLE_FILE_TRANSCRIPT.write('{}\t{}\n'.format(EXON_NAME_LIST[L],EXON_LENGTH_LIST[L]))
+    if IS_CANON==1:
+        TABLE_FILE_GENE.write('{}\t{}\n'.format(EXON_NAME_LIST[L],EXON_LENGTH_LIST[L]))

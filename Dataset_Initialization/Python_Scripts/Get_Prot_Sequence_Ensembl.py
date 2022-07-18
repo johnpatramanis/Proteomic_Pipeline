@@ -1,16 +1,17 @@
 import requests, sys
 import re
+import time
 
-#example on how to run: AMELX ENST00000380714 Homo_sapiens
-#Check this: AMELX '' Homo_sapiens or AMELX Homo_sapiens 
+#example on how to run: python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py AMELX ENST00000380714 homo_sapiens AMELX-203
 
-if len(sys.argv)==4:
+
+if len(sys.argv)==5:
     GENE=sys.argv[1]
     TRNSCR_ID=sys.argv[2]
     ORGANISM=sys.argv[3]
+    TRNSCR_NAME=sys.argv[4]
 
-
-elif len(sys.argv)==3:
+elif len(sys.argv)==4:
     GENE=sys.argv[1]
     TRNSCR_ID=''
     ORGANISM=sys.argv[2]
@@ -34,6 +35,7 @@ if r.json!=[]:
     if (isinstance(MJ, list))==True:
     
         LS=MJ[0]
+        
         if 'seq' in LS.keys():
             SEQ=LS['seq']
             
@@ -44,7 +46,6 @@ if r.json!=[]:
     
     #If single hit, then just select that
     if (isinstance(MJ, list))==False:
-    
         if 'seq' in MJ.keys():
             SEQ=MJ['seq']
             
@@ -52,12 +53,49 @@ if r.json!=[]:
             SEQ='X'*100
 
 
-#if ID file empty
+## If ID file empty
 if r.json==[]:
     SEQ='-'*100
    
+   
+   
+   
+######### Check if transcript is canonical
+
+time.sleep(2)
+
+server = "http://rest.ensembl.org"
+ext = "/lookup/id/{}?expand=1".format(TRNSCR_ID)
+r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+
+if r.json!=[]:
+    MJ=r.json()
+    ## Find best result!
+    ## If multiple hits
+    if (isinstance(MJ, list))==True: 
+        MJ=MJ[0]
+    if 'error' not in MJ.keys():
+        IS_CANON=MJ['is_canonical']
+
+
+
+
+
+
+
+
+
     
-FASTA='>'+ORGANISM+'_'+GENE+'\n'+SEQ
-Fasta_ouptut=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,GENE),'w')
-Fasta_ouptut.write(FASTA)
-print(FASTA)
+FASTA_TRANSCRIPT='>'+ORGANISM+'_'+TRNSCR_NAME+'\n'+SEQ
+Fasta_ouptut_Transcript=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,TRNSCR_NAME),'w')
+
+FASTA_GENE='>'+ORGANISM+'_'+GENE+'\n'+SEQ
+Fasta_ouptut_Gene=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,GENE),'w')
+
+
+Fasta_ouptut_Transcript.write(FASTA_TRANSCRIPT)
+print(FASTA_TRANSCRIPT)
+
+if IS_CANON==1:
+    Fasta_ouptut_Gene.write(FASTA_GENE)
+    print(FASTA_GENE)
