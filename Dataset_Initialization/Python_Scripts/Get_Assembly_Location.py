@@ -112,4 +112,4 @@ if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID
     #Append the 'Starts.txt' file for that organism/assembly
     STARTS_FILE.write('{}\t{}\t{}\n'.format(TRANSCRIPT_NAME,str(STARTS_START),STRAND))
     if IS_CANON==1:
-        STARTS_FILE.write('{}\t{}\t{}\n'.format(GENE,str(STARTS_START),GENE))
+        STARTS_FILE.write('{}\t{}\t{}\n'.format(GENE,str(STARTS_START),STRAND))

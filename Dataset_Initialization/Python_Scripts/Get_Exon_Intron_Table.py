@@ -40,7 +40,7 @@ if r.json!=[]:
     if 'error' not in MJ.keys():
         start=int(MJ['start'])
         EXON=MJ['Exon']
-        IS_CANON=MJ['is_canonical']
+        IS_CANON=int(MJ['is_canonical'])
         for EX in range(0,len(EXON)):
             
             strand=EXON[EX]['strand']
@@ -64,7 +64,8 @@ if r.json!=[]:
  
     
 TABLE_FILE_TRANSCRIPT=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,TRNSCR_NAME),'w')
-TABLE_FILE_GENE=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,GENE),'w')
+if IS_CANON==1:
+    TABLE_FILE_GENE=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,GENE),'w')
 
 for L in range(0,len(EXON_LENGTH_LIST)):
     TABLE_FILE_TRANSCRIPT.write('{}\t{}\n'.format(EXON_NAME_LIST[L],EXON_LENGTH_LIST[L]))

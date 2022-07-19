@@ -75,7 +75,7 @@ if r.json!=[]:
     if (isinstance(MJ, list))==True: 
         MJ=MJ[0]
     if 'error' not in MJ.keys():
-        IS_CANON=MJ['is_canonical']
+        IS_CANON=int(MJ['is_canonical'])
 
 
 
@@ -89,13 +89,14 @@ if r.json!=[]:
 FASTA_TRANSCRIPT='>'+ORGANISM+'_'+TRNSCR_NAME+'\n'+SEQ
 Fasta_ouptut_Transcript=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,TRNSCR_NAME),'w')
 
-FASTA_GENE='>'+ORGANISM+'_'+GENE+'\n'+SEQ
-Fasta_ouptut_Gene=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,GENE),'w')
+
 
 
 Fasta_ouptut_Transcript.write(FASTA_TRANSCRIPT)
 print(FASTA_TRANSCRIPT)
 
 if IS_CANON==1:
+    FASTA_GENE='>'+ORGANISM+'_'+GENE+'\n'+SEQ
+    Fasta_ouptut_Gene=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,GENE),'w')
     Fasta_ouptut_Gene.write(FASTA_GENE)
     print(FASTA_GENE)
