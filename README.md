@@ -97,6 +97,9 @@ head -n $END_LINE PaleoProteome.fa > H_antecessor.fa
 sed -i 's/\(>Atapuerca_H_antecessor_.\+\)GN.\+/\1/' H_antecessor.fa
 ```
 
+```bash
+wget https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-019-1728-8/MediaObjects/41586_2019_1728_MOESM3_ESM.txt -O Gigantopethicus.fa
+```
 DO THE SAME FOR GIGANTOPETHICUS
 
 <br/><br/>
