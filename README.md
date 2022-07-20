@@ -37,7 +37,7 @@ Scripts to set up a reference protein dataset using reference proteomes. The pip
 
 ## INTRODUCTION
 
-This tutorial aims to introduce the functionality of the pipelines by easily recreating the paleoproteomic-based phylogeny of H.antecessor from Frido et al. It is written with a non-bioinformatics background audience in mind and tries to go step by step, explaining as much as possible for each step. 
+This tutorial aims to introduce the functionality of the pipelines by easily recreating the paleoproteomic-based phylogeny of Homo antecessor from Frido et al.2020 & Gigantopithecus blacki from Welker 2019 et. al . It is written with a non-bioinformatics background audience in mind and tries to go step by step, explaining as much as possible for each step. 
 
 <br/><br/>
 <br/><br/>
@@ -46,7 +46,7 @@ This tutorial aims to introduce the functionality of the pipelines by easily rec
 
 The first step is the installation of the pipelines. The pipelines require a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. If you don't have  Conda installed, you can find a quick guide on how to do that here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html.
 
-If conda is installed and ready to go, we can start. First navigate to a location on your computer where you want to install them and have sufficient space. Then, download the pipelines from github using the simple command:
+If conda is installed and ready to go, we can start the tutorial! First navigate to a location on your computer where you want to install them and have sufficient space. Then, download the pipelines from github using the simple command:
 
 ```bash
 git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git
@@ -98,7 +98,7 @@ sed -i 's/\(>Atapuerca_H_antecessor_.\+\)GN.\+/\1/' H_antecessor.fa
 ```
 And the Antecessor is ready to go!
 
-Similarly we can also download and prepare the Gigantopethicus from Welker 2019 et. al
+Similarly we can also download and prepare the Gigantopethicus data.
 
 ```bash
 wget https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-019-1728-8/MediaObjects/41586_2019_1728_MOESM3_ESM.txt -O Gigantopethicus_Raw.fa
@@ -108,6 +108,7 @@ cat Gigantopethicus_Raw.fa | sed  's/.\+\(Gigantopithecus\).\+GN=\(.\+\)/\1_\2/'
 
 <br/><br/>
 
+You should now have both the 2 ancient protein samples downloaded and properly formatted.
 If all 3 pipelines were installed without an error and the data was successfully downloaded, then congratulations , we can now start our phylogenetic reconstruction!
 
 
