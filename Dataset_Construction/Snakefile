@@ -589,7 +589,9 @@ rule request_chromosome_files_and_prepare_them:
 
 
 ## Chromosome Bam files to Fasta, different handlng of ancient and modern ones
-#
+##### TO DO
+##### Get which genes are in this chromosome and output them in fasta format through ANGSD
+##### Then Fix next step to simply move them from one file to the other while renaming them
 rule from_bam_to_fasta_ANGSD:
     input:
         BAM="Workspace/3_SPLIT_CHR/{sample}_{CHR}.bam",
