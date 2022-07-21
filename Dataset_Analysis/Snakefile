@@ -1,375 +1,484 @@
-#Run using "snakemake -j4 --resources FTP=7"
-
-
-#Dependancies to be used: Snakemake/python3
-#conda env export --from-history > environment.yaml
-#conda env create --name testenv --file environment.yaml
-
-import time
+#Run using snakemake -j32 -F
 import os
 import os.path
 
 
 
 ##### Load Input Files and usefull info  #####
-FTP=7
-SLEEPER=1
-
-GENES=[]
-ISOFORMS={}
-ORGANISM=[]
-REFERENCE=[]
 
 
+DATASETS={}
+ENDING_EXT={}
+DATASETS_FILE=open('Datasets.txt','r')
 
-###### LOAD REQUESTED PROTEINS/GENES
-###    HANDLE ISOFORMS
-
-PROTEIN_FILE=open('Proteins.txt','r')
-for line in PROTEIN_FILE:
-
-    line=line.replace("\\","-") #there are actually some genes with "/" in their name, which messes up the folder creation process
-    line=line.strip().split('::')
-    
-    
-    ## NO ISOFORM SPECIFIED
-    if len(line)==1:
-        
-        GENE=line[0]
-        GENES.append(GENE)
-
-        if GENE in ISOFORMS.keys():
-            ISOFORMS[GENE].append('CANON')
-            
-        if GENE not in ISOFORMS.keys():
-            ISOFORMS[GENE]=['CANON']
-    
-    
-    ## ISOFORM REQUESTED
-    if len(line)>1:
-        
-
-        GENE=line[0]
-        ISO=line[1]
-        
-        GENES.append(GENE)
-        
-    ### IF USER WANTS ALL ISOFORMS    
-        if ISO=='ALL':
-            ISOFORMS[GENE]='ALL'
-            
-            
-    #### IF USER WANTS SPECIFIC ISOFORMS           
-        if ISO!='ALL':
-        
-            ISO=GENE+'-'+ISO
-            
-            ## If more than one isoforms have been requeted for this gene
-            if GENE in ISOFORMS.keys():
-                ISOFORMS[GENE].append(ISO)
-                
-            ## If this is the first isoform requested for this gene
-            if GENE not in ISOFORMS.keys():
-                ISOFORMS[GENE]=[ISO]
-
-
-GENES=list(set(GENES))
-
-for J,K in ISOFORMS.items():
-    print(F'Requested Protein: {J} for Isoform(s): {K} ')
-
-
-
-ORGANISM_FILE=open('Organism.txt','r')
-for line in ORGANISM_FILE:
+Labels=DATASETS_FILE.readline()
+counter=1
+for line in DATASETS_FILE:
     line=line.strip().split()
-    ORGANISM.append(line[0])
-    if (len(line)==2):
-        REFERENCE.append(line[1])
+    Dataset=line[0]
+    Dataset=Dataset.split('.')
+    Ending=Dataset[len(Dataset)-1]
+    Dataset='.'.join(Dataset[:len(Dataset)-1])
+    AncSamples=line[1].split(',')
+    
+    ENDING_EXT[Dataset]=Ending
+    
+    if Dataset in DATASETS:
+        DATASETS[Dataset].append([x for x in AncSamples])
+
     else:
-        REFERENCE.append('CURRENT')
+        DATASETS[Dataset]=[[x for x in AncSamples]]
 
 
-#######################################################################################################################################################################
+print(DATASETS)
+
+JOINED_NAMES=[]
+GENES_OF_DATASET={}
+
+for DATASET,ANC_SAMPLES in DATASETS.items():
+    for SAMPLES in ANC_SAMPLES:
+    
+        DATASET_NAME=DATASET
+        JOINED_NAMES.append(DATASET_NAME)
+
+    ####### Find Genes   
+        if isinstance(SAMPLES, list) is True:
+
+            TOTAL_GENES=[]
+            
+            for SAMPLE in SAMPLES:
+                REF_FASTA=open('Workspace/1_OG_Dataset/{}.{}'.format(DATASET,ENDING_EXT[DATASET]),'r')
+                for line in REF_FASTA:
+                    line=line.strip().split('/')[0]
+                    line=line.strip().split('_')
+                    if len(line)>1:
+                        if '_'.join(line[:len(line)-1]) == '>' + SAMPLE:
+                            TOTAL_GENES.append(line[len(line)-1])
+
+                            
+            TOTAL_GENES=list(set(TOTAL_GENES))
+            
+            
+        if isinstance(SAMPLES, list) is False:
+            print(SAMPLES)
+            TOTAL_GENES=[]
+            
+            REF_FASTA=open('Workspace/1_OG_Dataset/{}.{}'.format(DATASET,ENDING_EXT[DATASET]),'r')
+            for line in REF_FASTA:
+                line=line.strip().split('/')[0]
+                line=line.strip().split('_')
+                if len(line)>1:
+                    if '_'.join(line[:len(line)-1]) == '>' + SAMPLES:
+                        TOTAL_GENES.append(line[len(line)-1])
+            TOTAL_GENES=list(set(TOTAL_GENES))
+            
+    GENES_OF_DATASET[DATASET_NAME]=TOTAL_GENES
+
+
+
+for DATASET,ANC_SAMPLES in DATASETS.items():
+    for SAMPLES in ANC_SAMPLES:
+
+        DATASET_NAME=DATASET
+
+        
+        
+        
+    GENES=GENES_OF_DATASET[DATASET_NAME]
+    print(f'Analysing Dataset of file {DATASET}, with {ANC_SAMPLES} assigned as ancient proteomes and containing in total these genes: {GENES}')
+
+SAMPLES=JOINED_NAMES
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################################################################################################################################################################################################################################################################################################
+##############################################################################################################################################################################################################################################################################################################################################
+##############################################################################################################################################################################################################################################################################################################################################
 ## Starting Rule
+
+
+
 
 rule all:
     input:
-        ["Workspace/5_Loc_Files/{}/{}/starts.txt".format(ORGANISM[x],REFERENCE[x]) for x in range(0,len(ORGANISM))],
-        ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(ORGANISM[x],REFERENCE[x]) for x in range(0,len(ORGANISM))],
-        expand("Workspace/4_EITs/{organism}/{sample}_ei.txt",sample=GENES,organism=set(ORGANISM)),
-        expand("Workspace/3_FASTA_Seqs/Genes_{organism}/{sample}.fa",sample=GENES,organism=set(ORGANISM)),
-        expand("Workspace/3_FASTA_Seqs/Combined_Per_Species/{organism}.fa",organism=set(ORGANISM)),
-        ["Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa".format(x) for x in GENES]
+        # expand('Workspace/2_DATASETS/{sample}/Samples.txt',sample=SAMPLES),
+        # expand('Workspace/2_DATASETS/{sample}/Alignment_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/Info_and_Checking_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/PhyML_Individual_Genes_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/PhyML_Concatenated_Genes_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/MrBayes_Concatenated_Genes_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/Collected_Alignments/Alignments_Collected',sample=SAMPLES)
 
 
 
 
 
 
-#######################################################################################################################################################################
-## Data Pipeline ##
 
-#### Search using Gene/Protein name, find best matching Gene -> get its Ensembl Gene ID
 
-rule Get_Ensembl_Gene_IDs_ALL:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################################################################################################################################################################################################################################################################################################
+## Dataset Pipeline ##
+
+
+
+
+
+## Organise Datasets
+#
+rule Organise_Data:
     input:
-        "Proteins.txt",
-        "Organism.txt"
+        "Datasets.txt"
     output:
-        "Workspace/1_Gene_IDs/{Organism}/{Gene}"
-    resources:
-        FTP=1
+        expand('Workspace/2_DATASETS/{sample}/Samples.txt',sample=SAMPLES)
     run:
-        ORG=wildcards.Organism
-        print(ORG)
-        #### Check if path for organism exists/create it
-        path='Workspace/1_Gene_IDs/'+str(ORG)
-        if os.path.exists(path)==False:
-            os.makedirs(path)
         
-        #### Get GeneID for every gene of list
-        GENE=wildcards.Gene
-        print(GENE)
-        shell("""python3 Python_Scripts/Get_Gene_ID.py {} {}""".format(GENE,ORG)) 
+        for DATASET,ANC_SAMPLES in DATASETS.items():
+            for SAMPLES in ANC_SAMPLES:
+                shell("""echo '{}' >  Workspace/2_DATASETS/{}/Samples.txt;""".format('\n'.join(SAMPLES),DATASET)) #append all versions of analysis
 
 
-#### Use GEN ID to get Transcript ID
 
 
-rule Get_Ensembl_Transcript_IDs:
+## Create a Genes folder for every dataset
+#
+rule Create_Genes_Folders:
     input:
-        "Workspace/1_Gene_IDs/{Organism}/{Gene}"
+        "Datasets.txt"
     output:
-        "Workspace/2_Transcript_IDs/{Organism}/{Gene}"
-    resources:
-        FTP=1
+        expand('Workspace/2_DATASETS/{sample}/Genes.txt',sample=SAMPLES)
     run:
-        ORG=wildcards.Organism    
-        
-        #check for missing Gene IDs
-        MISSING_FILE=open('Workspace/1_Gene_IDs/{}/Missing_IDs.txt'.format(ORG),'r')
-        MISSING_GENES=[]
-        for line in MISSING_FILE:
-            MISSING_GENES.append(line.strip())
-        FOUND_GENES=[x for x in GENES if x not in MISSING_GENES]    
-        
-        
-        ## Check if path for organism exists/create it
-        path='Workspace/2_Transcript_IDs/'+str(ORG)
-        if os.path.exists(path)==False:
-            os.makedirs(path)
-        
-        
-        GENE=wildcards.Gene
-        ## Get transcript ID for every GeneID
-        if GENE in FOUND_GENES:
-        
-            with open('Workspace/1_Gene_IDs/{}/{}'.format(ORG,GENE)) as f:
-                GENE_ID = f.readline().strip()
+
+        for DATASET,ANC_SAMPLES in DATASETS.items(): ### Create and fill in the Genes.txt file for each dataset
             
-            ISOFORM=ISOFORMS[GENE]
-            if isinstance(ISOFORM, list)==1:
-                ISOFORM=','.join(ISOFORM)
+            for SAMPS in ANC_SAMPLES:
+                DATASET_NAME=DATASET
             
-            shell('''python3 Python_Scripts/Search_Ensembl.py {} {} {} {}'''.format(GENE,GENE_ID,ORG,ISOFORM)) 
+            GENE_FILE=open('Workspace/2_DATASETS/{}/Genes.txt'.format(DATASET_NAME),'w')
+            
+            for GENE in GENES_OF_DATASET[DATASET_NAME]:
+                GENE_FILE.write(GENE)
+                if GENE != GENES_OF_DATASET[DATASET_NAME][len(GENES_OF_DATASET[DATASET_NAME])-1]:
+                    GENE_FILE.write('\n')
+            GENE_FILE.close()
 
-        ## For missing GeneIDs make dummy in its place
-        if GENE in MISSING_GENES:
-            shell('''touch Workspace/2_Transcript_IDs/{}/{} '''.format(ORG,GENE))
-        time.sleep(SLEEPER)
 
-rule Get_Ensembl_Transcript_IDs_ALL:
+
+
+## For each dataset, split it into gene specific sub-datasets
+#
+rule Create_Genes_Folders2:
     input:
-        expand("Workspace/1_Gene_IDs/{Organism}/{Gene}",Gene=GENES,Organism=set(ORGANISM))
-
-
-
-
-
-
-
-#### Use TRANSCRIPT ID to get Fasta sequence of protein
-
-
-
-
-           
-rule Get_FASTA_Sequence_from_Transcript_ID:
-    input:
-        "Workspace/2_Transcript_IDs/{Organism}/{Gene}"
+        'Workspace/2_DATASETS/{sample}/Genes.txt',
+        'Workspace/2_DATASETS/{sample}/Samples.txt'
     output:
-        "Workspace/3_FASTA_Seqs/Genes_{Organism}/{Gene}.fa"
-    resources:
-        FTP=1
+        'Workspace/2_DATASETS/{sample}/Foldering_Done'
     run:
-        ORG=wildcards.Organism  
+        ###### shell("""cat Workspace/2_DATASETS/{}/Genes.txt |while read line; do rm -rf $line; mkdir $line; done;""".format(X))
+        DATASET=wildcards.sample
+        SAMPL_FILE='Workspace/2_DATASETS/{}/Samples.txt'.format(wildcards.sample)
+        SAMPLES=[]
+        for LINE in SAMPL_FILE:
+            LINE=LINE.strip()
+            SAMPLES.append(LINE)
         
-        #Check if path for organism exists/create it
-        path='Workspace/3_FASTA_Seqs/Genes_'+str(ORG)
-        if os.path.exists(path)==False:
-            os.makedirs(path)
+        print(DATASET,SAMPLES)
         
-        #for each gene grab the transcript ID and use a script to get the AA fasta seq for it, ##### check some isoforms don't have a protein sequence! - maybe add them to 'missing' proteins
-        GENE=wildcards.Gene
-            
-        TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
+        ##### Use dataset name as input for the R script
+        ENDING=ENDING_EXT[DATASET]
         
-        for TRNSCRPT in TRNSCRPT_FILE:
-            TRNSCRPT_ID=TRNSCRPT.strip().split('::')[0]
-            TRNSCRPT_NAME=TRNSCRPT.strip().split('::')[1]
-            
-            shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
-            time.sleep(2)
-            
-        time.sleep(SLEEPER)
+        shell("""Rscript Rscripts/Rscript1.r /Workspace/2_DATASETS/{wildcards.sample} Workspace/1_OG_Dataset/{DATASET}.{ENDING};""")
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/Foldering_Done;""")
 
 
 
-
-
-
-rule Get_ALL_FASTA_Sequence_from_Transcript_ID:
+## Above but for all datasets
+#         
+rule Create_Genes_Folders2_for_All:
     input:
-        expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=set(ORGANISM))
-    resources:
-        FTP=1
+        expand('Workspace/2_DATASETS/{sample}/Genes.txt',sample=SAMPLES)
 
 
 
-
-
-#### Use TRANSCRIPT ID to create Intron - Exon Table
-
-
-
-
-
-
-
-
-rule Get_Exon_Intron_Table_from_Transcript_ID:
+## Align each dataset            
+#
+rule Align_Gene_Dataset:
     input:
-        "Workspace/2_Transcript_IDs/{Organism}/{Gene}"
+        'Workspace/2_DATASETS/{sample}/Foldering_Done'
     output:
-        "Workspace/4_EITs/{Organism}/{Gene}_ei.txt"
-    resources:
-        FTP=1
+        'Workspace/2_DATASETS/{sample}/Alignment_Done'
+    threads: 32
     run:
-        ORG=wildcards.Organism
-        #Check if path for organism exists/create it
-        path='Workspace/4_EITs/'+str(ORG)
-        if os.path.exists(path)==False:
-            os.makedirs(path)
-        
-        GENE=wildcards.Gene
-            
-        TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
-        
-        for TRNSCRPT in TRNSCRPT_FILE:
-            TRNSCRPT_ID=TRNSCRPT.strip().split('::')[0]
-            TRNSCRPT_NAME=TRNSCRPT.strip().split('::')[1]
-            
-            print('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
-            shell('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
-            time.sleep(2)
-            
-        time.sleep(SLEEPER)
+        GENES_CAT=open('Workspace/2_DATASETS/{}/Genes.txt'.format(wildcards.sample),'r')
+        for GENE_CAT in GENES_CAT:
+            GENE_CAT=GENE_CAT.strip()
+            shell("""mafft --ep 0 --op 0.5 --lop -0.5 --genafpair --maxiterate 20000 --thread {threads} --bl 80 --fmodel Workspace/2_DATASETS/{wildcards.sample}/{GENE_CAT}/{GENE_CAT}_no_ancient.fa >  Workspace/2_DATASETS/{wildcards.sample}/{GENE_CAT}/{GENE_CAT}_no_ancient_aln.fa;""")
+            shell("""mafft-einsi  --addlong Workspace/2_DATASETS/{wildcards.sample}/{GENE_CAT}/{GENE_CAT}_ancient.fa Workspace/2_DATASETS/{wildcards.sample}/{GENE_CAT}/{GENE_CAT}_no_ancient_aln.fa  > Workspace/2_DATASETS/{wildcards.sample}/{GENE_CAT}/{GENE_CAT}_re_aln.fa;""")
+            shell("""trimal -in Workspace/2_DATASETS/{wildcards.sample}/{GENE_CAT}/{GENE_CAT}_re_aln.fa -out Workspace/2_DATASETS/{wildcards.sample}/{GENE_CAT}/{GENE_CAT}_aln.fa  -noallgaps;""")
+        GENES_CAT.close()
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/Alignment_Done;""")
 
 
 
 
-
-rule Get_ALL_Exon_Intron_Table_from_Transcript_ID:
+## Align ALL datasets       
+#
+rule Align_All_Gene_Datasets:
     input:
-        expand("Workspace/2_Transcript_IDs/{organism}/{sample}",sample=GENES,organism=set(ORGANISM))
-    resources:
-        FTP=1
+        expand('Workspace/2_DATASETS/{sample}/Foldering_Done',sample=SAMPLES)          
+            
+
+ 
+############
+            ##### Other ideas - not implemented
+            #### ADD Ancient sequence to alignment##   mafft-einsi --addprofile COL17A1_ancient.fa COL17A1_aln.fa > COL17A1_NEW.fa
+            #### ADD Ancient sequence to alignment##   mafft-einsi --seed COL17A1_aln.fa  COL17A1_ancient.fa > COL17A1_NEW.fa
+            #### shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -INFILE=Workspace/2_DATASETS/{}/$line/$line"_o.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -PWMATRIX=BLOSUM -PWGAPOPEN=10 -ITERATION=TREE -NUMITER=1000 -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X))
+            #### shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -PROFILE1=Workspace/2_DATASETS/{}/$line/$line"_no_ancient_aln.fa" -PROFILE2=Workspace/2_DATASETS/{}/$line/$line"_ancient.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_re_aln.fa" -NUMITER=1000 -PWMATRIX=BLOSUM -PWGAPEXT=0.01 -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X,X))
+############
 
 
 
 
 
-
-
-
-#### Use TRANSCRIPT ID to get location info of the gene/protein
-
-
-
-
-rule Get_Location_Info_from_Ensemble_Gene_ID_ALL:
+## Generate statistics for each sample in each dataset, swap L/M aminoacids based on reference samples           
+#            
+rule Generate_Stats_and_Check_LM_AminoAcids:
     input:
-        expand("Workspace/2_Transcript_IDs/{{Organism}}/{Gene}",Gene=GENES)
+        'Workspace/2_DATASETS/{sample}/Alignment_Done'
     output:
-        "Workspace/5_Loc_Files/{Organism}/{Reference}/starts.txt",
-        "Workspace/5_Loc_Files/{Organism}/{Reference}/Gene_locs.txt"
-    resources:
-        FTP=1
-    run:
-        ORG=wildcards.Organism
-        REF=wildcards.Reference
+        'Workspace/2_DATASETS/{sample}/Info_and_Checking_Done'
+    run:       
+        shell("""Rscript Rscripts/Rscript2.r /Workspace/2_DATASETS/{wildcards.sample} ;""")
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/Info_and_Checking_Done ;""")
 
-        ########Check if path for organism exists/create it
-        path='Workspace/5_Loc_Files/'+str(ORG)+'/'+str(REF)
-        if os.path.exists(path)==False:
-            os.makedirs(path)
+## Request above for all datasets          
+# 
+rule Generate_Stats_and_Check_LM_AminoAcids_for_All:
+    input:
+        expand('Workspace/2_DATASETS/{sample}/Alignment_Done',sample=SAMPLES)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################################################################################################################################################################################################################################################################################################
+## If Alignment is good, now move on to concatenation, formating and data prepareation ##
+
+
+
+
+## Concatenate Genes of Dataset into one new fasta           
+#
+rule Generate_Concatenated_Datasets:
+    input:
+        'Workspace/2_DATASETS/{sample}/Info_and_Checking_Done'
+    output:
+        'Workspace/2_DATASETS/{sample}/Concatenation_Done'
+    params:
+        Protein_Cutoff=0.01
+    run:        
+        shell("""Rscript Rscripts/Rscript3.r /Workspace/2_DATASETS/{wildcards.sample} {params.Protein_Cutoff} ;""")
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/Concatenation_Done ;""")
+
+
+## Request Concatenation for all datasets           
+#
+rule Generate_Concatenated_Datasets_for_All:
+    input:
+        expand('Workspace/2_DATASETS/{sample}/Info_and_Checking_Done',sample=SAMPLES)
+
+
+
+
+
+## Convert FASTA files to Phylip format        
+#
+rule Generate_Phylip_Format:
+    input:
+        'Workspace/2_DATASETS/{sample}/Concatenation_Done'
+    output:
+        'Workspace/2_DATASETS/{sample}/Phylip_Format_Done'
+    run:        
+        shell("""Rscript Rscripts/Rscript4.r /Workspace/2_DATASETS/{wildcards.sample};""")
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/Phylip_Format_Done;""")
+
+
+## Request Conversion to Phylip for all Datasets       
+#
+rule Generate_Phylip_Format_for_All:
+    input:
+        expand('Workspace/2_DATASETS/{sample}/Concatenation_Done',sample=SAMPLES)
+
+
+
+
+
+## Run PhyML for each individual protein and generate trees      
+#
+rule Run_PhyML_for_Individual_Gene:
+    input:
+        'Workspace/2_DATASETS/{sample}/Phylip_Format_Done'
+    output:
+        'Workspace/2_DATASETS/{sample}/PhyML_Individual_Genes_Done'
+    threads: 25
+    run:
+        GENES=GENES_OF_DATASET[wildcards.sample]
         for GENE in GENES:
-            
-            TRANSCRIPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
-            for TRANSCRIPT in TRANSCRIPT_FILE:
-            
-                TRNSCRPT_ID=TRANSCRIPT.strip().split('::')[0]
-                TRNSCRPT_NAME=TRANSCRIPT.strip().split('::')[1]
-                
-                shell('''python3 Python_Scripts/Get_Assembly_Location.py {} {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,REF,TRNSCRPT_NAME))
-                time.sleep(2)
-
-        time.sleep(SLEEPER)
+            shell("""
+            cd Workspace/2_DATASETS/{wildcards.sample}/{GENE}/;\
+            RAND=$(( $RANDOM %99999));\
+            mpirun -n {threads} phyml-mpi -i {GENE}_aln_e.phy -d aa -b 100 -m JTT -c 4 -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 3 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check < /dev/null;
+            """)
+            shell("""touch Workspace/2_DATASETS/{wildcards.sample}/PhyML_Individual_Genes_Done;""")
 
 
-
-
-
-rule Get_ALL_Location_Info_from_Ensemble_Gene_ID_ALL:
+## Request PhyML output for All datasets and all genes
+#
+rule Run_PhyML_for_All_Datasets_All_Individual_Genes:
     input:
-        expand("Workspace/2_Transcript_IDs/{Organism}/{Gene}",Gene=GENES,Organism=set(ORGANISM))
-    resources:
-        FTP=1
+        expand('Workspace/2_DATASETS/{sample}/Phylip_Format_Done',sample=SAMPLES)   
 
 
-
-
-
-#### Combine all Fasta sequences  into a reference dataset
-
-
-
-
-rule Combine_FASTA_Sequences_into_Ref:
+       
+## Run PhyML on the concatenated datasets
+#        
+rule Run_PhyML_Concatenated_Genes:
     input:
-        expand("Workspace/3_FASTA_Seqs/Genes_{Organism}/{Gene}.fa",Gene=GENES,Organism=set(ORGANISM))
+        'Workspace/2_DATASETS/{sample}/Concatenation_Done',
+        'Workspace/2_DATASETS/{sample}/Phylip_Format_Done'
     output:
-        expand("Workspace/3_FASTA_Seqs/Combined_Per_Species/{Organism}.fa",Organism=set(ORGANISM)),
-        expand("Workspace/3_FASTA_Seqs/Combined_Per_Protein/{Gene}.fa",Gene=GENES),
-        'Workspace/3_FASTA_Seqs/All_Sequences.fa'
+        'Workspace/2_DATASETS/{sample}/PhyML_Concatenated_Genes_Done'
+    threads: 25
     run:
-        path='Workspace/3_FASTA_Seqs/Combined_Per_Species/'
-        if os.path.exists(path)==False:
-            os.makedirs(path)
-            
-        path2='Workspace/3_FASTA_Seqs/Combined_Per_Protein/'
-        if os.path.exists(path2)==False:
-            os.makedirs(path2)
-            
-        for ORG in list(set(ORGANISM)):
-            for GENE in GENES:
-                shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
-                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
-                
-                
-                shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(ORG,GENE,GENE))
-                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(GENE))
+        shell( """
+        cd  Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/;\
+        RAND=$(( $RANDOM %999));\
+        mpirun -n {threads} phyml-mpi -i CONCATINATED_aln_e.phy -d aa -b 100 -m JTT -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 4 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check < /dev/null;""")
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/PhyML_Concatenated_Genes_Done;""")
 
-                shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/All_Sequences.fa;'''.format(ORG,GENE))
-                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/All_Sequences.fa;'''.format(ORG,GENE,ORG))                
+## Run PhyML on the concatenated datasets
+#      
+rule Run_All_PhyML_Concatenated_Genes:
+    input:
+        expand('Workspace/2_DATASETS/{sample}/Concatenation_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/Phylip_Format_Done',sample=SAMPLES)
+
+##
+# Transform from fasta to Nexus format for MrBayes
+rule Generate_NEXUS_format:
+    input:
+        'Workspace/2_DATASETS/{sample}/Concatenation_Done'
+    output:
+        'Workspace/2_DATASETS/{sample}/NEXUS_Concatenated_Genes_Done'
+    run:        
+        shell( """
+        seqmagick convert --output-format nexus --alphabet protein Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.fa Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex;
+        """)### Turn into nexus file
+        shell("""sed -i "s/[']//g" Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex; """) #### Fix 'Sample' that is automatically genereated for some labels
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/NEXUS_Concatenated_Genes_Done;""")
+
+
+
+## 
+# Do a MrBayes run on the concatenated dataset
+rule Run_MrBayes_Concatenated_Genes:
+    input:
+        'Workspace/2_DATASETS/{sample}/NEXUS_Concatenated_Genes_Done'
+    output:
+        'Workspace/2_DATASETS/{sample}/MrBayes_Concatenated_Genes_Done'
+    threads: 32
+
+    run:
+        DIV=int(threads/4)
+        DIV_2=int(DIV/2)
+
+        shell("""RAND=$(( $RANDOM %999));\
+        rm Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex.*;\
+        echo -e 'set autoclose=yes\nexecute Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex'>Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
+        cat Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/Partition_Helper >> Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
+        echo -e 'prset aamodelpr = mixed;\nmcmc nchains = {DIV} nruns={DIV_2} ngen = 10000000 samplefreq=100 printfreq=100 diagnfreq=1000;\nsumt relburnin = yes burninfrac = 0.25;\nsump;\nquit;'>>Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
+        mpirun -np {DIV} mb-mpi < Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/log.txt;\
+        echo "MrBayes Run Done";\
+        """)
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/MrBayes_Concatenated_Genes_Done; """)
+        #### To unlink partitions # unlink statefreq=(all) revmat=(all) shape=(all) pinvar=(all);\n
+        ###### \nstoprule=yes; \nmcmcp stopval=0.01;
+
+
+## 
+# Collect Alignments into one folder
+rule Gether_Alignments_In_One_Place:
+    input:
+        'Workspace/2_DATASETS/{sample}/Concatenation_Done',
+        'Workspace/2_DATASETS/{sample}/Alignment_Done'
+        
+        
+    output:
+        'Workspace/2_DATASETS/{sample}/Collected_Alignments/Alignments_Collected'
+    run:
+        COLLECTION_FOLDER=F'Workspace/2_DATASETS/{wildcards.sample}/Collected_Alignments'
+        if os.path.exists(COLLECTION_FOLDER)==False:
+            os.mkdir(COLLECTION_FOLDER)
+
+
+        GENES=GENES_OF_DATASET[wildcards.sample]
+        for GENE in GENES:
+            shell("cp Workspace/2_DATASETS/{wildcards.sample}/{GENE}/{GENE}_aln_e.fa Workspace/2_DATASETS/{wildcards.sample}/Collected_Alignments/{GENE}_final_alignment.fa;")
+        shell("touch Workspace/2_DATASETS/{wildcards.sample}/Collected_Alignments/Alignments_Collected")
