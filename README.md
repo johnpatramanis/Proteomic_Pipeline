@@ -410,6 +410,6 @@ unzip main.zip
 This should take care of the code itself. If you need to update the conda enviroments ( e.g. the software used by the pipeline) as well you can find the yaml files in each of the 3 subfolders and do :
 
 ```bash
-conda env update --file YMLK.yml --prune
+conda env update --name ENV_NAME --file YML_FILE.yml --prune
 ```
 
