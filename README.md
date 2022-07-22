@@ -256,6 +256,13 @@ snakemake -j4
 
 This will take some time! Again, in the example above we use 4 cores, but if your computer is more powerful, you can try increasing the number of cores (e.g. -j32 ) to increase efficiency and decrease waiting time. Once this dataset finishes, we can take a look at the results by:
 
+If disk space is an issue for you, we can use one of Snakemake's features to reduce the amount of output the pipeline generates. Specifically we can use the parameter 
+``` --all-temp ``` which will make sure that any outputs between the input and the final output are deleted once used by the pipeline. To use it simply run
+
+```bash
+snakemake -j4 --all-temp 
+```
+
 ```bash
 less Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa
 ```
