@@ -391,12 +391,25 @@ Once this finishes running you will have a generated tree for each of your porte
    ls |cut -d '.' -f 1 
 ```
 
-**Development To Do list: (Dataset Initialization) - By Yiannis , for Yiannis
-   1) Isoforms???
- 
-   
-  **Development To Do list: (Dataset Analysis)** - By Yiannis , for Yiannis
-  1) Split up env per step? maybe no
-  2) Extend to star-BEAST alternatives that do MSC
-  3) replace grep command in Rscript2 -> fix names of dataset as they load and pick correctly the sample
-  4) Final touches to masking option, how to input them - concatenation
+## UPDATING  --  NEEDS SOME MORE WRITING
+
+If you have installed this workflow on your computer and a newer version of it has been released, you can simply update it!
+To do that go to where the Workflow Folder is located and simply repeat the download step:
+
+
+```bash
+git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git
+```
+
+OR
+
+```bash
+wget https://github.com/johnpatramanis/Proteomic_Pipeline/archive/refs/heads/main.zip
+unzip main.zip
+```
+This should take care of the code itself. If you need to update the conda enviroments ( e.g. the software used by the pipeline) as well you can find the yaml files in each of the 3 subfolders and do :
+
+```bash
+conda env update --file YMLK.yml --prune
+```
+
