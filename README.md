@@ -14,15 +14,15 @@ All of the scripts are based on Snakemake and Conda. I highly recomend reading t
 
 **1) Dataset Initialization:**
 
-Scripts to set up a reference protein dataset using reference proteomes. The pipeline also sets up pipeline number 2 with the resources necesary to use it.
+Easily download reference proteins/proteomes and fetch all resources required for the translation through Dataset Construction.
 
 **2) Dataset Construction:**
 
-   Scripts to translate DNA datasets into protein ones and properly format them.
+  Translate proteins from Whole Genome datasets. Supports BAM,CRAM and VCF files as input.
    
 **3) Dataset Analysis:**
 
-   Scripts to assemble a proteomic dataset, format and prepare it for a phylgenetic analysis- including the actual phylogenetic tree creation
+   Align a proteomic dataset, format and prepare it for a phylgenetic analysis- including the actual phylogenetic tree creation
    
 <br/><br/>
 <br/><br/>
