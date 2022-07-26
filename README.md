@@ -407,9 +407,11 @@ OR
 wget https://github.com/johnpatramanis/Proteomic_Pipeline/archive/refs/heads/main.zip
 unzip main.zip
 ```
-This should take care of the code itself. If you need to update the conda enviroments ( e.g. the software used by the pipeline) as well you can find the yaml files in each of the 3 subfolders and do :
+This should take care of the code itself. If you need to update the conda environments ( e.g. the software used by the pipeline) as well, you can enter the main directory with the 3 subfolders and update each of the environments:
 
 ```bash
-conda env update --name ENV_NAME --file YML_FILE.yml --prune
+conda env update --name Analyser --file Dataset_Analysis/Analyser.yml --prune
+conda env update --name Initiator --file Dataset_Initialization/Initiator.yml --prune
+conda env update --name Translator --file Dataset_Construction/Translator.yml --prune
 ```
 
