@@ -386,11 +386,6 @@ Once this finishes running you will have a generated tree for each of your porte
    
 
 
-
-```bash
-   ls |cut -d '.' -f 1 
-```
-
 ## UPDATING  --  NEEDS SOME MORE WRITING
 
 If you have installed this workflow on your computer and a newer version of it has been released, you can simply update it!
