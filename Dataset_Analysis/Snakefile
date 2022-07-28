@@ -1,4 +1,5 @@
 #Run using snakemake -j32 -F
+#Run using snakemake -j32 --touch
 import os
 import os.path
 
@@ -28,6 +29,8 @@ for line in DATASETS_FILE:
 
     else:
         DATASETS[Dataset]=[[x for x in AncSamples]]
+
+
 
 
 print(DATASETS)
@@ -263,7 +266,7 @@ rule Align_All_Gene_Datasets:
  
 ############
             ##### Other ideas - not implemented
-            #### ADD Ancient sequence to alignment##   mafft-einsi --addprofile COL17A1_ancient.fa COL17A1_aln.fa > COL17A1_NEW.fa
+            #### ADD Ancient sequence to alignment##   mafft --ep 0 --genafpair --maxiterate 1000 --addprofile COL17A1_ancient.fa COL17A1_aln.fa > COL17A1_NEW.fa
             #### ADD Ancient sequence to alignment##   mafft-einsi --seed COL17A1_aln.fa  COL17A1_ancient.fa > COL17A1_NEW.fa
             #### shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -INFILE=Workspace/2_DATASETS/{}/$line/$line"_o.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_aln.fa" -PWMATRIX=BLOSUM -PWGAPOPEN=10 -ITERATION=TREE -NUMITER=1000 -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X))
             #### shell("""cat Workspace/2_DATASETS/{}/Genes.txt | while read line; do clustalw -PROFILE1=Workspace/2_DATASETS/{}/$line/$line"_no_ancient_aln.fa" -PROFILE2=Workspace/2_DATASETS/{}/$line/$line"_ancient.fa" -outfile=Workspace/2_DATASETS/{}/$line/$line"_re_aln.fa" -NUMITER=1000 -PWMATRIX=BLOSUM -PWGAPEXT=0.01 -OUTORDER==INPUT -OUTPUT=FASTA; done;""".format(X,X,X,X))
@@ -453,7 +456,7 @@ rule Run_MrBayes_Concatenated_Genes:
         rm Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex.*;\
         echo -e 'set autoclose=yes\nexecute Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex'>Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
         cat Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/Partition_Helper >> Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
-        echo -e 'prset aamodelpr = mixed;\nmcmc nchains = {DIV} nruns={DIV_2} ngen = 10000000 samplefreq=100 printfreq=100 diagnfreq=1000;\nsumt relburnin = yes burninfrac = 0.25;\nsump;\nquit;'>>Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
+        echo -e 'prset aamodelpr = mixed;\nmcmc nchains = {DIV} nruns={DIV_2} ngen = 5000000 samplefreq=100 printfreq=100 diagnfreq=1000;\nsumt relburnin = yes burninfrac = 0.25;\nsump;\nquit;'>>Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
         mpirun -np {DIV} mb-mpi < Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/log.txt;\
         echo "MrBayes Run Done";\
         """)
