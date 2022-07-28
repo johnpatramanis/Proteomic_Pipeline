@@ -11,11 +11,11 @@ if len(sys.argv)==5:
     TRNSCR_NAME=sys.argv[4]
 
 
-elif len(sys.argv)==4:
+elif len(sys.argv)<=4:
     GENE=sys.argv[1]
     TRNSCR_ID=''
     ORGANISM=sys.argv[2]
-
+    TRNSCR_NAME=''
 
 server = "http://rest.ensembl.org"
 ext = "/lookup/id/{}?expand=1".format(TRNSCR_ID)
@@ -25,6 +25,8 @@ r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
 
 EXON_LENGTH_LIST=[]
 EXON_NAME_LIST=[]
+IS_CANON=0
+
 
 ## If any hits
 if r.json!=[]:
@@ -61,13 +63,31 @@ if r.json!=[]:
                 EXON_LENGTH_LIST.append((start-end_next)) #same logic as above, but we are in the reverse strand so, each exon is to the left of the previous one
                 EXON_NAME_LIST.append('Intron')
             
- 
+
+
+
+ANY_TRANSCRIPT_FOUND=(TRNSCR_NAME!='')
+
+
     
-TABLE_FILE_TRANSCRIPT=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,TRNSCR_NAME),'w')
-if IS_CANON==1:
+
+
+if (IS_CANON==1) or (ANY_TRANSCRIPT_FOUND==0):
     TABLE_FILE_GENE=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,GENE),'w')
 
-for L in range(0,len(EXON_LENGTH_LIST)):
-    TABLE_FILE_TRANSCRIPT.write('{}\t{}\n'.format(EXON_NAME_LIST[L],EXON_LENGTH_LIST[L]))
-    if IS_CANON==1:
-        TABLE_FILE_GENE.write('{}\t{}\n'.format(EXON_NAME_LIST[L],EXON_LENGTH_LIST[L]))
+
+if ANY_TRANSCRIPT_FOUND==1:
+    TABLE_FILE_TRANSCRIPT=open('Workspace/4_EITs/{}/{}_ei.txt'.format(ORGANISM,TRNSCR_NAME),'w')
+
+    for L in range(0,len(EXON_LENGTH_LIST)):
+        TABLE_FILE_TRANSCRIPT.write('{}\t{}\n'.format(EXON_NAME_LIST[L],EXON_LENGTH_LIST[L]))
+        if IS_CANON==1:
+            TABLE_FILE_GENE.write('{}\t{}\n'.format(EXON_NAME_LIST[L],EXON_LENGTH_LIST[L]))
+
+
+
+
+if (IS_CANON==1) or (ANY_TRANSCRIPT_FOUND==0):    
+    TABLE_FILE_GENE.close()
+if ANY_TRANSCRIPT_FOUND==1:
+    TABLE_FILE_TRANSCRIPT.close()

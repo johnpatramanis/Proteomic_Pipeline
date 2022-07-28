@@ -214,14 +214,22 @@ rule Get_FASTA_Sequence_from_Transcript_ID:
         GENE=wildcards.Gene
             
         TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
+        IS_EMPTY=os.stat('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE)).st_size
         
-        for TRNSCRPT in TRNSCRPT_FILE:
-            TRNSCRPT_ID=TRNSCRPT.strip().split('::')[0]
-            TRNSCRPT_NAME=TRNSCRPT.strip().split('::')[1]
-            
+        if IS_EMPTY>0:
+            for TRNSCRPT in TRNSCRPT_FILE:
+                TRNSCRPT_ID=TRNSCRPT.strip().split('::')[0]
+                TRNSCRPT_NAME=TRNSCRPT.strip().split('::')[1]
+                shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
+                time.sleep(2)
+                
+                
+        if IS_EMPTY==0:
+            TRNSCRPT_ID=''
+            TRNSCRPT_NAME=''
             shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
             time.sleep(2)
-            
+
         time.sleep(SLEEPER)
 
 
@@ -265,14 +273,21 @@ rule Get_Exon_Intron_Table_from_Transcript_ID:
         GENE=wildcards.Gene
             
         TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
+        IS_EMPTY=os.stat('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE)).st_size
         
-        for TRNSCRPT in TRNSCRPT_FILE:
-            TRNSCRPT_ID=TRNSCRPT.strip().split('::')[0]
-            TRNSCRPT_NAME=TRNSCRPT.strip().split('::')[1]
+        if IS_EMPTY>0:
+            for TRNSCRPT in TRNSCRPT_FILE:
+                TRNSCRPT_ID=TRNSCRPT.strip().split('::')[0]
+                TRNSCRPT_NAME=TRNSCRPT.strip().split('::')[1]
+                shell('''python3 Python_Scripts/Get_Exon_Intron_Table.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
+                time.sleep(2)
             
-            print('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
-            shell('''python3  Python_Scripts/Get_Exon_Intron_Table.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
+        if IS_EMPTY==0:
+            TRNSCRPT_ID=''
+            TRNSCRPT_NAME=''
+            shell('''python3 Python_Scripts/Get_Exon_Intron_Table.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
             time.sleep(2)
+        
             
         time.sleep(SLEEPER)
 
@@ -372,4 +387,20 @@ rule Combine_FASTA_Sequences_into_Ref:
                 shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(GENE))
 
                 shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/All_Sequences.fa;'''.format(ORG,GENE))
-                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/All_Sequences.fa;'''.format(ORG,GENE,ORG))                
+                shell('''echo "\n" >>Workspace/3_FASTA_Seqs/All_Sequences.fa;''')
+                
+                TRANSCRIPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
+                IS_EMPTY=os.stat('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE)).st_size
+                if IS_EMPTY>0:
+                    for TRANSCRIPT in TRANSCRIPT_FILE:
+                        TRNSCRPT_NAME=TRANSCRIPT.strip().split('::')[1]
+                        
+                        shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,TRNSCRPT_NAME,ORG)) 
+                        shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG))                
+                        
+                        
+                        shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(ORG,TRNSCRPT_NAME,TRNSCRPT_NAME))
+                        shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(TRNSCRPT_NAME))
+                        
+                        shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/All_Sequences.fa;'''.format(ORG,TRNSCRPT_NAME))
+                        shell('''echo "\n" >>Workspace/3_FASTA_Seqs/All_Sequences.fa;''')

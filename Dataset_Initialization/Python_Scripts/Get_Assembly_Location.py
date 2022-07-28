@@ -18,7 +18,7 @@ elif len(sys.argv)<=5:
     GENE_ID=''
     ORGANISM=sys.argv[2]
     ASSEMBLY=sys.argv[3]
-
+    TRANSCRIPT_NAME=''
 
 START=''
 END=''
@@ -101,7 +101,7 @@ else:
 LOC_FILE=open('Workspace/5_Loc_Files/{}/{}/Gene_locs.txt'.format(ORGANISM,ASSEMBLY),'a')
 STARTS_FILE=open('Workspace/5_Loc_Files/{}/{}/starts.txt'.format(ORGANISM,ASSEMBLY),'a')
 
-
+ANY_TRANSCRIPT_FOUND=(TRNSCR_NAME!='')
 
 if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID!='')):
     #Append the 'Gene_locs.txt' file for that organism/assembly, if Gene info is not missing
@@ -113,3 +113,8 @@ if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID
     STARTS_FILE.write('{}\t{}\t{}\n'.format(TRANSCRIPT_NAME,str(STARTS_START),STRAND))
     if IS_CANON==1:
         STARTS_FILE.write('{}\t{}\t{}\n'.format(GENE,str(STARTS_START),STRAND))
+        
+        
+        
+LOC_FILE.close()
+STARTS_FILE.close()
