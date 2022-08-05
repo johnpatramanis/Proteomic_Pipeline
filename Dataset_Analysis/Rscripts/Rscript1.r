@@ -25,7 +25,7 @@ for(i in 1:length(genes)){
 	d<-file.path(mainDir,genes[i])
 	setwd(d)
 	curfa<-fa[grep(genes[i], names(fa))]  ### biostring with only one gene (all fasta seqs that have the gene name in their name), all sample sequences tied with their sample name
-	
+	####grep to select only AMELX not AMELX2 paste0(genes[i],'\/','[1-9]+','$'
 	
 	
 	#### Isolate Selected Ancient Samples from modern

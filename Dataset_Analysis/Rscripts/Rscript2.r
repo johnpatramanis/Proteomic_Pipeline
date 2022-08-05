@@ -130,23 +130,41 @@ for(g in 1:length(genes)){              #### for every gene
     
     Jsites<-c() #find sites that have an I or an L for any of the ancient sites and keep them here
     
+	for (NUMBER_HERE in 1:nrow(fatabble)){
+		
+		ROW_NAME=row.names(fatabble)[NUMBER_HERE]
+		ROW_NAME=strsplit(ROW_NAME,'.', fixed=T)
+		
+		#### if name contains '.' already
+		if (length(ROW_NAME[[1]])>3){
+			ROW_NAME=ROW_NAME[[1]][1:(length(ROW_NAME[[1]])-2)]
+			ROW_NAME=paste(ROW_NAME,sep=' ',collapse='.')
+	
+			}else{## If it doesnt'
+			ROW_NAME=ROW_NAME[[1]][1]
+				}
+		rownames(fatabble)[NUMBER_HERE]<-ROW_NAME
+		}
+	
     
     
     
     for (K in Samples){ # Cycle through samples
-        aid<-grep(K, names(fa))
-		print(c(genes[g],K))
+        HAS_PROTEIN<-(paste0(K,'_',genes[g]) %in% rownames(fatabble))
+		print(c(genes[g],K,HAS_PROTEIN))
 
 		
 		
 		
-        if (is.integer0(K)==FALSE){ #if current sample does have this gene, 
+        if (HAS_PROTEIN==TRUE){ #if current sample does have this gene, 
+			aid<-which(paste0(K,'_',genes[g]) == rownames(fatabble))
             Jsites<-c(Jsites,which(fatabble[aid,]=="I" | fatabble[aid,]=="L"))    # find which sites of sample have either an I or L, append them to Jsites
             sam=K #keep that sample for later
 			}
     
 	
-		if (CONVERT_GAPS_TO_MISSING==TRUE){
+		if (CONVERT_GAPS_TO_MISSING==TRUE & HAS_PROTEIN==TRUE){
+			aid<-which(paste0(K,'_',genes[g]) == rownames(fatabble))
 			Gapsites<-which( fatabble[aid,]=="_" | fatabble[aid,]=="-" | fatabble[aid,]=="X" | fatabble[aid,]=="." )
 			fatabble[aid,Gapsites]='?'
 			
@@ -202,10 +220,7 @@ for(g in 1:length(genes)){              #### for every gene
         newseq<-apply(fatabble, 1, paste, collapse="")
         names(newseq)<-names(fa)
         writeXStringSet(AAStringSet(newseq), gsub(".fa", "_e.fa", f))
-        }
-    
-    
-    else{
+        }else{
 		newseq<-apply(fatabble, 1, paste, collapse="")
 		names(newseq)<-names(fa)
         writeXStringSet(AAStringSet(newseq), gsub(".fa", "_e.fa", f))
@@ -221,53 +236,82 @@ for(g in 1:length(genes)){              #### for every gene
 	MASKED=file.exists(file.path(mainDir,"MASKED"))
 
 		
-	#actual masking
+	### Actual masking
 	if (MASKED==TRUE){
-	
-			MASKED_SAMPS <- read.table(file.path(mainDir,"MASKED"), fill = TRUE, stringsAsFactors = FALSE)
+			
+			### which samples to be masked
+			MASKED_SAMPS <- scan(file.path(mainDir,"MASKED"), what="", sep="\n")
+			MASKED_SAMPS <- strsplit(MASKED_SAMPS, "[[:space:]]+")
 			
 			
 			NAMES=names(newseq)
-			#which samples to be masked
-			MASKED_SAMPS=c("ERZ324534","Gorilla_gorilla","Pan_paniscus","Pongo_abelii")
 			
+
 			
 			
 			
 			#Get names of samples (eg Gorilla_gorilla_ALB -> Gorilla_gorilla
 			for (J in 1:length(NAMES)){
 				STR=str_split(NAMES[J],"_")
-				print(STR)
-				# NAMES[J]=paste(head(STR[[1]],-1),collapse="_")
 				NAMES[J]=paste(STR[[1]][1:(length(STR[[1]]))-1],collapse="_")
-				print(NAMES[J])
+
 			}
 			
 			
-
-
-			samp=Samples[1]
-			
-			
-			
-			ANC_SAMPL=samp
-			ANC_SAMPL=fatabble[which(NAMES==ANC_SAMPL),]
-			print(ANC_SAMPL)
-			MISSING=which(ANC_SAMPL=="-" | ANC_SAMPL=="\\?" | ANC_SAMPL=="?" | ANC_SAMPL=="X"  )
 			NEW_NAMES<-names(fa)
-			
+			Masked_Samples=c()
 			## Update here to make sure missing is !=0
 			for (SMPL in 1:length(MASKED_SAMPS)){
 				
-				if(MASKED_SAMPS[SMPL] %in% NAMES){### check if sample to be masked exists in this protein, otherwise skip it
+			
+				#### Select Ancient Sample with which to mask modern ones, by default first ancient sample will be selected
+				samp=sam
 				
-				MASKED_SAMPLE=fatabble[which(NAMES==MASKED_SAMPS[SMPL]),]
 				
-				MASKED_SAMPLE_NAME=paste0("MASKED_",NAMES[which(NAMES==MASKED_SAMPS[SMPL])],"_AS_ANCIENT_",genes[g])
+				### If user has selected a specific ancient sample to use for masking of this one
+				if (length(MASKED_SAMPS[[SMPL]])>=2){
+					### If that ancient sample exist in the dataset
+					if (MASKED_SAMPS[[SMPL]][2] %in% NAMES){
+					### Use the selected one
+					samp=NAMES[which(NAMES==MASKED_SAMPS[[SMPL]][2])]
+					ANC_SAMPL=samp
+					ANC_SAMPL_NAME=NAMES[which(NAMES==ANC_SAMPL)]
+					ANC_SAMPL=fatabble[which(NAMES==ANC_SAMPL),]
 
-				MASKED_SAMPLE[MISSING]="?"
-				fatabble=rbind(fatabble,MASKED_SAMPLE)
-				NEW_NAMES=c(NEW_NAMES,MASKED_SAMPLE_NAME)
+					MISSING=which(ANC_SAMPL=="-" | ANC_SAMPL=="\\?" | ANC_SAMPL=="?" | ANC_SAMPL=="X"  )
+						
+						
+					}else{##### If the selected ancient sample is missing, then create a fake one full of missing positions!
+						ANC_SAMPL=samp
+						ANC_SAMPL_NAME=MASKED_SAMPS[[SMPL]][2]
+						ANC_SAMPL=fatabble[which(NAMES==ANC_SAMPL),]
+						ANC_SAMPL[1:length(ANC_SAMPL)]="?"
+
+						MISSING=which(ANC_SAMPL=="-" | ANC_SAMPL=="\\?" | ANC_SAMPL=="?" | ANC_SAMPL=="X"  )
+						}
+					
+				}else{#### If the user hasn't selected one, use the only one available
+				ANC_SAMPL=samp
+				ANC_SAMPL_NAME='ANCIENT'
+				ANC_SAMPL=fatabble[which(NAMES==ANC_SAMPL),]
+
+				MISSING=which(ANC_SAMPL=="-" | ANC_SAMPL=="\\?" | ANC_SAMPL=="?" | ANC_SAMPL=="X"  )
+				}
+				
+				
+				
+				
+				if(MASKED_SAMPS[[SMPL]][1] %in% NAMES){### check if sample to be masked exists in this protein, otherwise skip it
+					
+					Masked_Samples=c(Masked_Samples,MASKED_SAMPS[[SMPL]][1])
+					
+					MASKED_SAMPLE=fatabble[which(NAMES==MASKED_SAMPS[[SMPL]][1]),]
+					
+					MASKED_SAMPLE_NAME=paste0("MASKED_",NAMES[which(NAMES==MASKED_SAMPS[[SMPL]][1])],"_AS_",ANC_SAMPL_NAME,'_',genes[g])
+
+					MASKED_SAMPLE[MISSING]="?"
+					fatabble=rbind(fatabble,MASKED_SAMPLE)
+					NEW_NAMES=c(NEW_NAMES,MASKED_SAMPLE_NAME)
 				}
 				}
 			
@@ -307,12 +351,29 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
             fa<-readAAStringSet(f)
 
             fatabble<-as.matrix(t(as.data.frame(strsplit(as.character(fa), ""))))
+			
+			##### Fix tabble names
+			for (NUMBER_HERE in 1:nrow(fatabble)){
+				
+				ROW_NAME=row.names(fatabble)[NUMBER_HERE]
+				ROW_NAME=strsplit(ROW_NAME,'.', fixed=T)
+				
+				#### if name contains '.' already
+				if (length(ROW_NAME[[1]])>3){
+					ROW_NAME=ROW_NAME[[1]][1:(length(ROW_NAME[[1]])-2)]
+					ROW_NAME=paste(ROW_NAME,sep=' ',collapse='.')
 
+					}else{## If it doesnt'
+					ROW_NAME=ROW_NAME[[1]][1]
+						}
+				rownames(fatabble)[NUMBER_HERE]<-ROW_NAME
+				}
+			
             
-            # When you have multiple ancient samples, you should analyse them one by one. So lets remove the rest of them, if they exist for analysing this one
+            #### When you have multiple ancient samples, you should analyse them one by one. So lets remove the rest of them, if they exist for analysing this one
             for (non_sam in Samples){
                 if (non_sam!=sam){
-                    To_Remove=grep(non_sam,row.names(fatabble))
+                    To_Remove=which(row.names(fatabble)==non_sam)
 
                     if (is.integer0(To_Remove)==FALSE){
                         fatabble=fatabble[-To_Remove,]
@@ -320,10 +381,20 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
                         }
                 }
             }
+			
+            ##### Remove Masked samples as well, from the comparison
+			for (non_sam in Masked_Samples){
+			
+				To_Remove=which(row.names(fatabble)==non_sam)
+				
+				if (is.integer0(To_Remove)==FALSE){
+				    fatabble=fatabble[-To_Remove,]
+				    fa=fa[-To_Remove]
+			        }
+				}
             
-            
-			###### This is bad codding , grep(sam, names(fa)) should be replaced but labels need to be fixed as they are loaded!
-            fanonmissing<-fatabble[,( (fatabble[grep(sam, names(fa)),]!="-") & (fatabble[grep(sam, names(fa)),]!="X") & (fatabble[grep(sam, names(fa)),]!="?") )]
+			###### Isolate only positions where the ancient sample being looked at, has information
+            fanonmissing<-fatabble[,( (fatabble[which(row.names(fatabble)==paste0(sam,'_',genes[g])),]!="-") & (fatabble[which(row.names(fatabble)==paste0(sam,'_',genes[g])),]!="X") & (fatabble[which(row.names(fatabble)==paste0(sam,'_',genes[g])),]!="?") )]
 
             if(is.null(dim(fanonmissing))!=TRUE){
 				if (dim(fanonmissing)[2]>0){
@@ -356,7 +427,10 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
         }
 
     setwd(file.path(mainDir,directory))
-
+	
+	##### FINAL_TAB
+	tab<-rbind(tab, c(sam, 'Total',  sum(as.numeric(tab[,3])), sum(as.numeric(tab[,4])), sum(as.numeric(tab[,5])), sum(as.numeric(tab[,6])), sum(as.numeric(tab[,7])), sum(as.numeric(tab[,8])), sum(as.numeric(tab[,9])), '-'))
+	
     colnames(tab)<-c("Sample_name", "Gene_name", "Total_sites", "Sites_in_ancient", "Segregating_sites", "a_Segregating_sites", "Non_singletons", "a_Non_singletons", "Unique_ancient_sites", "File_name")
 
     #change name here:
@@ -366,3 +440,15 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+### TEST AREA

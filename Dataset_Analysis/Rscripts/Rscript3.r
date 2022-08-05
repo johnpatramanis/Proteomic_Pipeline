@@ -206,12 +206,12 @@ PARTITIONS=c(PARTITIONS,as.character('set partition=BY_PROTEIN;'))
 ############################################################################################################################################################################
 #### Masking of Samples Optional, should require a list to do so. If TRUE, runs
 
-# MASKED=0
-# MASKED_SAMPS=c()
+### MASKED=0
+#### MASKED_SAMPS=c()
 
-# if (MASKED==TRUE){
+### if (MASKED==TRUE){
     
-    # for (samp in Samples){
+##    # for (samp in Samples){
     
         # MASKED_SAMPS=c("Gorilla-gorilla","HUMAN","Pan_troglodytes","Pongo_abelii")
         # ANC_SAMPL=samp
@@ -235,7 +235,7 @@ PARTITIONS=c(PARTITIONS,as.character('set partition=BY_PROTEIN;'))
             # MASKED_SAMPLE[,MISSING]="-"
             # CONC=rbind(CONC,MASKED_SAMPLE)
             
-        # }
+ #       # }
         
     # }
     
