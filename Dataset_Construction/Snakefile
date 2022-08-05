@@ -44,9 +44,8 @@ if os.path.exists('Samples.txt')==True:
     for line in SAMPLE_FILE:
         line=line.strip().split('.')
         line='.'.join(line[0:len(line)])
-        SAMPLES.append(line)
-
-
+        if line!='':
+            SAMPLES.append(line)
 
 
 
@@ -85,9 +84,32 @@ GENE_LOCS_PATH='Gene_locs.txt'
 
 ##################################################
 ##Check if Gene_locs exist, if yes just load them
-if os.path.exists(GENE_LOCS_PATH)==True:
+if (os.path.exists(GENE_LOCS_PATH)==True) and (os.path.exists('Organism.txt')==False):
     GENE_LOCS=open("Gene_locs.txt","r")
+    
+## If it exists but there's also an Organism.txt file that is not empy:
+if (os.path.exists(GENE_LOCS_PATH)==True) and (os.path.exists('Organism.txt')==True):
+    print(os.stat('Organism.txt').st_size)
+    if (os.stat('Organism.txt').st_size)!=0:
+        
+        ## Copy over the appropriate Gene_locs file
+        os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/Gene_locs.txt ./'.format(ORGANISM,ASSEMBLY))
+        GENE_LOCS=open("Gene_locs.txt","r")
+        
+        ## Copy over the appropriate starts file
+        os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/starts.txt ./'.format(ORGANISM,ASSEMBLY))
+        
+        ## Clean up EIT folder and Copy over the appropriate exons/intron tables
 
+        os.system('cp ../Dataset_Initialization/Workspace/4_EITs/{}/*_ei.txt ./EIT/'.format(ORGANISM))
+        
+        if os.path.exists('Genes')==False:
+            os.makedirs('Genes')
+        os.system('cp ../Dataset_Initialization/Workspace/3_FASTA_Seqs/Genes_{}/*.fa ./Genes/'.format(ORGANISM))
+        
+        
+        
+        
 ########
 ##If it doesn't exist, the user want to use their own generated Gene Locs from the Initiator pipeline
 ##Possibilities:
@@ -112,14 +134,13 @@ if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==
     os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/starts.txt ./'.format(ORGANISM,ASSEMBLY))
     
     # Clean up EIT folder and Copy over the appropriate exons/intron tables
-    os.system('rm EIT/*_ei.txt')
+
     os.system('cp ../Dataset_Initialization/Workspace/4_EITs/{}/*_ei.txt ./EIT/'.format(ORGANISM))
     
     # Clean up FASTA folder and Copy over the appropriate fasta files
     
     if os.path.exists('Genes')==False:
         os.makedirs('Genes')
-    os.system('rm Genes/*.fa')
     os.system('cp ../Dataset_Initialization/Workspace/3_FASTA_Seqs/Genes_{}/*.fa ./Genes/'.format(ORGANISM))
 
 
@@ -210,7 +231,7 @@ rule Cram_to_bam:
     input:
         "Workspace/1_OG_BAM_FILES/{sample}.cram"
     output:
-        "Workspace/1_OG_BAM_FILES/{sample}.bam"
+        temp("Workspace/1_OG_BAM_FILES/{sample}.bam")
     threads:4
     shell:"samtools view -b -@ {threads} -o {output} {input}"
 
@@ -239,8 +260,8 @@ rule format_name:
         sed -e 's/SN:chr17/SN:17/' | sed -e 's/SN:chr18/SN:18/' | \
         sed -e 's/SN:chr19/SN:19/' | sed -e 's/SN:chr20/SN:20/' | \
         sed -e 's/SN:chr21/SN:21/' | sed -e 's/SN:chr22/SN:22/' | \
-        sed -e 's/SN:chrX/SN:X/' | sed -e 's/SN:chrY/SN:Y/' | \
-        sed -e 's/SN:chrM/SN:MT/' | samtools reheader - {input} > {output};"""
+        sed -e 's/SN:chrX/SN:X/' |\
+        sed -e 's/SN:chrM/SN:MT/' | sed -e 's/SN:chrY/SN:Y/' | sed -e 's/SN:chr\([^\s\\]\)/SN:\1/' |  sed -e 's/SN:Chr\([^\s\\]\)/SN:\1/' | samtools reheader - {input} > {output};"""
 
 
 
@@ -425,6 +446,7 @@ rule Convert_Ref:
         
     output:
         REF_OUT='Reference/{REF}.mod',
+        REF_OUT_INDEX='Reference/{REF}.mod.fai',
 
     threads:2
     run:
@@ -441,10 +463,10 @@ rule Convert_Ref:
         sed -e 's/>chr17/>17/' | sed -e 's/>chr18/>18/' | \
         sed -e 's/>chr19/>19/' | sed -e 's/>chr20/>20/' | \
         sed -e 's/>chr21/>21/' | sed -e 's/>chr22/>22/' | \
-        sed -e 's/>chrX/>X/' | sed -e 's/>chrY/>Y/' | \
-        sed -e 's/>chrM/>MT/' > {output.REF_OUT}
+        sed -e 's/>chrX/>X/' | sed -e 's/>chrY/>Y/' |  \
+        sed -e 's/>chrM/>MT/' | sed -e 's/>chr\([^\s\\]\)/>\1/' | sed -e 's/>Chr\([^\s\\]\)/>\1/' > {output.REF_OUT}
         """)
-
+        shell("""samtools faidx {output.REF_OUT}""")
 
 rule Convert_VCF_and_Index:
     input:
@@ -470,10 +492,11 @@ rule Convert_VCF_and_Index:
         sed -e 's/chr19/19/' | sed -e 's/chr20/20/' | \
         sed -e 's/chr21/21/' | sed -e 's/chr22/22/' | \
         sed -e 's/chrX/X/' | sed -e 's/chrY/Y/' | \
-        sed -e 's/chrM/MT/' > Workspace/0_VCF_FILES/{wildcards.GVCF}.TEMP
+        sed -e 's/chrM/MT/' | sed -e 's/chr\([^\s\\]\)/\1/' | sed -e 's/>Chr\([^\s\\]\)/>\1/' > Workspace/0_VCF_FILES/{wildcards.GVCF}.TEMP
         """)
         shell("""bgzip -c Workspace/0_VCF_FILES/{wildcards.GVCF}.TEMP > {output.VCF_OUT}""")
         shell("""tabix -C -p vcf {output.VCF_OUT} """)
+        shell("""rm Workspace/0_VCF_FILES/{wildcards.GVCF}.TEMP""")
 
 
 
@@ -598,7 +621,7 @@ rule from_bam_to_fasta_ANGSD:
         BAI="Workspace/3_SPLIT_CHR/{sample}_{CHR}.bam.bai"
     output:
         "Workspace/4_FASTA_FILES/{sample}_{CHR}.fa.gz"
-    threads: 6
+    threads: 4
     run:
         #### If user does not define any samples as ancient, using a txt file named 'Ancient_Samples.txt', treat all samples as modern!
         if (os.path.isfile('Ancient_Samples.txt')==False): 
