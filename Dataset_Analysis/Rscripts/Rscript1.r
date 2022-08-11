@@ -24,7 +24,23 @@ for(i in 1:length(genes)){
 
 	d<-file.path(mainDir,genes[i])
 	setwd(d)
-	curfa<-fa[grep(genes[i], names(fa))]  ### biostring with only one gene (all fasta seqs that have the gene name in their name), all sample sequences tied with their sample name
+	
+	FASTA_ENTRIES_WITH_GENE=c()
+	for( N in 1:length(names(fa))){
+		NAME_HERE=names(fa)[N]
+		NAME_HERE=strsplit(NAME_HERE,'/', fixed=T)[[1]][1]
+		NAME_HERE=strsplit(NAME_HERE,'_', fixed=T)
+		NAME_HERE=NAME_HERE[[1]][length(NAME_HERE[[1]])]
+		
+		if(NAME_HERE==genes[i]){
+			FASTA_ENTRIES_WITH_GENE=c(FASTA_ENTRIES_WITH_GENE,N)
+			}
+		
+		}
+	
+	
+	
+	curfa<-fa[FASTA_ENTRIES_WITH_GENE]  ### biostring with only one gene (all fasta seqs that have the gene name in their name), all sample sequences tied with their sample name
 	####grep to select only AMELX not AMELX2 paste0(genes[i],'\/','[1-9]+','$'
 	
 	
