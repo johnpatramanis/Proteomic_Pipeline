@@ -100,3 +100,5 @@ if (IS_CANON==1) or (ANY_TRANSCRIPT_FOUND==0):
     Fasta_ouptut_Gene.write(FASTA_GENE)
     print(FASTA_GENE)
     Fasta_ouptut_Gene.close()
+    
+    

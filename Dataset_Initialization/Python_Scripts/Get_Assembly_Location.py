@@ -101,7 +101,6 @@ else:
 LOC_FILE=open('Workspace/5_Loc_Files/{}/{}/Gene_locs.txt'.format(ORGANISM,ASSEMBLY),'a')
 STARTS_FILE=open('Workspace/5_Loc_Files/{}/{}/starts.txt'.format(ORGANISM,ASSEMBLY),'a')
 
-ANY_TRANSCRIPT_FOUND=(TRNSCR_NAME!='')
 
 if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID!='')):
     #Append the 'Gene_locs.txt' file for that organism/assembly, if Gene info is not missing

@@ -8,7 +8,7 @@
 import time
 import os
 import os.path
-
+from os.path import exists
 
 
 ##### Load Input Files and usefull info  #####
@@ -171,7 +171,7 @@ rule Get_Ensembl_Transcript_IDs:
             ISOFORM=ISOFORMS[GENE]
             if isinstance(ISOFORM, list)==1:
                 ISOFORM=','.join(ISOFORM)
-            
+
             shell('''python3 Python_Scripts/Search_Ensembl.py {} {} {} {}'''.format(GENE,GENE_ID,ORG,ISOFORM)) 
 
         ## For missing GeneIDs make dummy in its place
@@ -204,14 +204,16 @@ rule Get_FASTA_Sequence_from_Transcript_ID:
         FTP=1
     run:
         ORG=wildcards.Organism  
+        GENE=wildcards.Gene
         
         #Check if path for organism exists/create it
         path='Workspace/3_FASTA_Seqs/Genes_'+str(ORG)
         if os.path.exists(path)==False:
             os.makedirs(path)
-        
+        else:### Empty any files previously existing Isoforms for gene
+            shell(F'''rm -rf Workspace/3_FASTA_Seqs/Genes_{ORG}/{GENE}-*.fa ''')
         #for each gene grab the transcript ID and use a script to get the AA fasta seq for it, ##### check some isoforms don't have a protein sequence! - maybe add them to 'missing' proteins
-        GENE=wildcards.Gene
+        
             
         TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
         IS_EMPTY=os.stat('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE)).st_size
@@ -222,16 +224,22 @@ rule Get_FASTA_Sequence_from_Transcript_ID:
                 TRNSCRPT_NAME=TRNSCRPT.strip().split('::')[1]
                 shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
                 time.sleep(2)
-                
+            
+
+            
                 
         if IS_EMPTY==0:
             TRNSCRPT_ID=''
             TRNSCRPT_NAME=''
             shell('''python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
             time.sleep(2)
-
+        
+        
+        if (exists("Workspace/3_FASTA_Seqs/Genes_{}/{}.fa".format(ORG,GENE))!=True):
+            shell("""touch Workspace/3_FASTA_Seqs/Genes_{}/{}.fa""".format(ORG,GENE))
+            
         time.sleep(SLEEPER)
-
+        
 
 
 
@@ -265,12 +273,13 @@ rule Get_Exon_Intron_Table_from_Transcript_ID:
         FTP=1
     run:
         ORG=wildcards.Organism
+        GENE=wildcards.Gene
         #Check if path for organism exists/create it
         path='Workspace/4_EITs/'+str(ORG)
         if os.path.exists(path)==False:
             os.makedirs(path)
-        
-        GENE=wildcards.Gene
+        else:### Empty isoform files for that gene
+            shell(F'''rm -rf Workspace/4_EITs/{ORG}/{GENE}-*_ei.txt''')
             
         TRNSCRPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
         IS_EMPTY=os.stat('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE)).st_size
@@ -287,6 +296,10 @@ rule Get_Exon_Intron_Table_from_Transcript_ID:
             TRNSCRPT_NAME=''
             shell('''python3 Python_Scripts/Get_Exon_Intron_Table.py {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,TRNSCRPT_NAME))
             time.sleep(2)
+        
+        if (exists("Workspace/4_EITs/{}/{}_ei.txt".format(ORG,GENE))!=True):
+            shell("""touch Workspace/4_EITs/{}/{}_ei.txt""".format(ORG,GENE))
+        
         
             
         time.sleep(SLEEPER)
@@ -339,7 +352,13 @@ rule Get_Location_Info_from_Ensemble_Gene_ID_ALL:
                 
                 shell('''python3 Python_Scripts/Get_Assembly_Location.py {} {} {} {} {}'''.format(GENE,TRNSCRPT_ID,ORG,REF,TRNSCRPT_NAME))
                 time.sleep(2)
-
+        
+        if (exists('Workspace/5_Loc_Files/{}/{}/Gene_locs.txt'.format(ORG,REF))!=True):
+            shell("""touch Workspace/5_Loc_Files/{}/{}/Gene_locs.txt""".format(ORG,REF))
+            
+        if (exists('Workspace/5_Loc_Files/{}/{}/starts.txt'.format(ORG,REF))!=True):
+            shell("""touch Workspace/5_Loc_Files/{}/{}/starts.txt""".format(ORG,REF))
+        
         time.sleep(SLEEPER)
 
 
@@ -376,9 +395,41 @@ rule Combine_FASTA_Sequences_into_Ref:
         path2='Workspace/3_FASTA_Seqs/Combined_Per_Protein/'
         if os.path.exists(path2)==False:
             os.makedirs(path2)
+        
+        
+        
+        
+        
+        
+        #### Cleanup All proteins file
+        shell('''rm -rf  Workspace/3_FASTA_Seqs/All_Sequences.fa;''')
+        for ORG in list(set(ORGANISM)): 
+            ### Cleanup Species File
+            shell('''rm -rf  Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG))
             
+        for GENE in GENES: 
+            #### Cleanup Gene file
+            shell('''rm -rf  Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(GENE))
+            
+            TRANSCRIPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
+            for TRANSCRIPT in TRANSCRIPT_FILE:
+                TRNSCRPT_NAME=TRANSCRIPT.strip().split('::')[1]
+                #### Cleanup Transcript files
+                shell('''rm -rf  Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(TRNSCRPT_NAME))
+        
+        
+        
+        
+        #### Organise Combined Files, Per Species, Per Protein and Per Isoform
         for ORG in list(set(ORGANISM)):
+            
+            
+            
             for GENE in GENES:
+                
+                
+            
+            
                 shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
                 shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,GENE,ORG))                
                 
@@ -394,6 +445,9 @@ rule Combine_FASTA_Sequences_into_Ref:
                 if IS_EMPTY>0:
                     for TRANSCRIPT in TRANSCRIPT_FILE:
                         TRNSCRPT_NAME=TRANSCRIPT.strip().split('::')[1]
+                        
+                        
+                        
                         
                         shell('''cat Workspace/3_FASTA_Seqs/Genes_{}/{}.fa >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG,TRNSCRPT_NAME,ORG)) 
                         shell('''echo "\n" >>Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG))                

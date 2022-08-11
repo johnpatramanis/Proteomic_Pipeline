@@ -2,6 +2,7 @@ import requests, sys
 import re
 import os
 #Example input: AMELX ENSG00000125363 Homo_sapiens ['CANON', 'AHSG-201']
+# Another Example: KLK4 ENSG00000167749 homo_sapiens CANON
 
 def most_common(lst):
     return max(set(lst), key=lst.count)
@@ -12,7 +13,7 @@ GENE_ID=sys.argv[2]
 ORGANISM=sys.argv[3]
 ISOFORMS=sys.argv[4].split(',')
 
-print(ISOFORMS)
+
 
 
 
