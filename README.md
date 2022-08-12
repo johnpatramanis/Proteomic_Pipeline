@@ -181,6 +181,12 @@ We can save this simple reference dataset we have created using shell commands:
 ```bash
 cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa >> Reference_Proteomes.fa
 ```  
+We can now also de-activate Module's 1 environment, since we are moving on to Module 2
+
+```bash
+conda deactivate
+```
+
 
 <br/><br/>
 <br/><br/>   
@@ -189,7 +195,13 @@ cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa >> Reference_Proteomes.fa
 
 ## STEP 2 ( Dataset Enhancement)
 
-We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data from the translation of available genomic data. To do this we can use the 2nd pipeline. First we need to download some data to translate. For this example we will build a subset of the reference dataset presented in the publication of PaleoProPhyler {Link to Publication when its out}. For now we will use the following datasets:
+We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data from the translation of available genomic data. To do this we can use the 2nd Module. Activate the module by typing
+
+```bash
+conda activate Translator
+```
+
+First we need to download some data to translate though! For this example we will build a subset of the reference dataset presented in the publication of PaleoProPhyler {Link to Publication when its out}. For now we will use the following datasets:
 
 https://www.biorxiv.org/content/10.1101/2021.02.06.430068v2.full 
 https://pubmed.ncbi.nlm.nih.gov/28982794/
@@ -248,11 +260,9 @@ less Samples.txt
 # (SCREENSHOT HERE)
 
 With these two files set up, we don’t need anything else. If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those.
-All we need to do now, is switch to the appropriate conda environment and execute the pipeline:
+All we need to do now, is execute the pipeline:
 
 ```bash
-conda deactivate
-conda activate Translator
 snakemake -j4
 ```
 
