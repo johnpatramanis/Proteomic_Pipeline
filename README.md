@@ -37,7 +37,7 @@ Easily download reference proteins/proteomes and fetch all resources required fo
 
 ## INTRODUCTION
 
-This tutorial aims to introduce the functionality of the pipelines by easily recreating the paleoproteomic-based phylogeny of Homo antecessor from Welker et al.2020 & Gigantopithecus blacki from Welker 2019 et. al . The tutorial is written with a non-bioinformatics background audience in mind and moves in a step by step manner, trying to explain as much as possible in each step. 
+This tutorial aims to introduce the functionality of the pipelines by easily recreating the paleoproteomic-based phylogeny of *Homo antecessor* from Welker et al.2020 & *Gigantopithecus blacki* from Welker 2019 et. al . The tutorial is written with a non-bioinformatics background audience in mind and moves in a step by step manner, trying to explain as much as possible in each step. 
 
 <br/><br/>
 <br/><br/>
@@ -82,7 +82,7 @@ conda env create -f ./Dataset_Construction/Translator.yml
 ```bash
 conda env create -f ./Dataset_Analysis/Analyser.yml
 ```
-Finally since our goal here is to reconstruct the phylogeny of H.antecessor , we will download the protein sequences from the publication itself and then apply some shell magic to remove the Erectus sample that is also included and modify the labels to suit the pipeline.
+Finally, since our goal here is to reconstruct the phylogeny of *H.antecessor* and *G.blacki* , we will download the protein sequences from the publications themselves. We will then apply some shell magic to prepare the files, remove the *H.erectus* sample that is also included the dataset and modify the labels to suit the pipeline.
 
 ```bash
 wget https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-020-2153-8/MediaObjects/41586_2020_2153_MOESM4_ESM.txt -O PaleoProteome.fa
@@ -126,7 +126,7 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 ## STEP 1 ( Reference Dataset Initialisation )
 
-The only sequences we have on our hands right now are the proteins of H.antecessor and G.blacki . To recreate their phylogeny, we first need to set up a reference dataset with which we can compare our samples. To do that, we can use Module 1 of the pipeline, and create the ‘skeleton’ of a reference dataset, using the reference proteomes of different species that we expect to be somewhat related to H.antecessor. So let’s get ready to do that.
+The only sequences we have on our hands right now are the proteins of *H.antecessor* and *G.blacki* . To recreate their phylogeny, we first need to set up a reference dataset with which we can compare our samples. To do that, we can use Module 1 of the pipeline, and create the ‘skeleton’ of a reference dataset, using the reference proteomes of different species that we expect to be somewhat related to both *H.antecessor* and *G.blacki*. So let’s get ready to do that.
 
 ```bash
 cd ./Dataset_Initialization
@@ -160,14 +160,15 @@ less Proteins.txt
 less Organism.txt
 ```
 
-and you may want to edit them and add some proteins or species using Nano. If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html):
+and you may want to edit them and add some proteins or species using nano:
 
 ```bash
 nano Proteins.txt
 nano Organism.txt
 ```
+If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html)
 
-For this example the proteins we are interested in are the ones recovered for the *H.antecessor* and the species we are interested in are thought to be at least somewhat related to H.antecessor. Since this pipeline is heavily reliant on the Ensembl database, it would be wise to just check if the server of Ensembl is up and running before executing the pipeline. You can do that [here](https://www.ensembl.info/tag/service-status/). If everything looks fine, its now time to execute the pipeline by simply typing:
+For this example the proteins we are interested in are the ones recovered for the *H.antecessor* and *G.blacki* and the species we are interested in are thought to be at least somewhat related to these two extinct species. If everything looks fine, its now time to execute the pipeline by simply typing:
 
 ```bash
 snakemake -j4 --resources FTP=7
