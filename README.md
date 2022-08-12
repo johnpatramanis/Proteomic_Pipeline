@@ -189,15 +189,17 @@ cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa >> Reference_Proteomes.fa
 
 ## STEP 2 ( Dataset Enhancement)
 
-We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data from the translation of available genomic data. To do this we can use the 2nd pipeline. First we need to download some data to translate. For this example we will build the same reference genome presented in the publication of this workflow “ INSERT NAME OF PUBLICATION HERE “ . We will use the following datasets:
+We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data from the translation of available genomic data. To do this we can use the 2nd pipeline. First we need to download some data to translate. For this example we will build a subset of the reference dataset presented in the publication of PaleoProPhyler {Link to Publication when its out}. For now we will use the following datasets:
 
 https://www.biorxiv.org/content/10.1101/2021.02.06.430068v2.full 
-
-https://www.nature.com/articles/nature12228 
-
 https://pubmed.ncbi.nlm.nih.gov/28982794/
 
-WARNING ABOUT DATA SIZE!!
+$$$$ https://www.nature.com/articles/nature12228  ## Remapped data need to be uploaded somewhere
+
+$$$$ https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub ### Remapped data need to be uplaoded somewhere
+
+WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is XX GB
+If you have the disk space, proceed as bellow. If not you can move straight to Module 3.
 
 ```bash
 COMMANDS TO WGET DATASETS in the right folder
