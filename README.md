@@ -37,16 +37,16 @@ Easily download reference proteins/proteomes and fetch all resources required fo
 
 ## INTRODUCTION
 
-This tutorial aims to introduce the functionality of the pipelines by easily recreating the paleoproteomic-based phylogeny of Homo antecessor from Frido et al.2020 & Gigantopithecus blacki from Welker 2019 et. al . It is written with a non-bioinformatics background audience in mind and tries to go step by step, explaining as much as possible for each step. 
+This tutorial aims to introduce the functionality of the pipelines by easily recreating the paleoproteomic-based phylogeny of Homo antecessor from Welker et al.2020 & Gigantopithecus blacki from Welker 2019 et. al . The tutorial is written with a non-bioinformatics background audience in mind and moves in a step by step manner, trying to explain as much as possible in each step. 
 
 <br/><br/>
 <br/><br/>
 
 ## STEP 0 - Installation
 
-The first step is the installation of the pipelines. The pipelines require a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. If you don't have  Conda installed, you can find a quick guide on how to do that here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html.
+The first step is the installation of the pipeline. The pipeline requires a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. If you don't have Conda installed, you can find a quick guide on how to do that here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html.
 
-If conda is installed and ready to go, we can start the tutorial! First navigate to a location on your computer where you want to install them and have sufficient space. Then, download the pipelines from github using the simple command:
+If conda is installed and ready to go, we can start the tutorial! First navigate to a location on your computer where you want to install them and have sufficient space. Then, download the pipeline from github using the simple command:
 
 ```bash
 git clone https://github.com/johnpatramanis/Proteomic_Pipeline.git
@@ -67,7 +67,7 @@ Screenshot of typing that
 
 If the result matches the above screenshot, Conda is set and we can move on.
 
-To install all 3 pipelines enter the `‘Proteomic Pipeline’` folder using
+To install all 3 sub-Modules of the pipeline enter the `‘Proteomic Pipeline’` folder using
 
 ```cd Proteomic_Pieline``` 
 
@@ -126,7 +126,7 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 ## STEP 1 ( Reference Dataset Initialisation )
 
-The only sequences we have on our hands right now are the proteins of H.antecessor. To recreate its phylogeny, we first need to set up a reference dataset with which we can compare our sample. To do that, we can use Pipeline 1, and create the ‘skeleton’ of the reference dataset, using the reference proteomes of different species that we expect to be somewhat related to H.antecessor. So let’s get ready to do that.
+The only sequences we have on our hands right now are the proteins of H.antecessor and G.blacki . To recreate their phylogeny, we first need to set up a reference dataset with which we can compare our samples. To do that, we can use Module 1 of the pipeline, and create the ‘skeleton’ of a reference dataset, using the reference proteomes of different species that we expect to be somewhat related to H.antecessor. So let’s get ready to do that.
 
 ```bash
 cd ./Dataset_Initialization
