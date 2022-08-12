@@ -160,7 +160,7 @@ nano Proteins.txt
 nano Organism.txt
 ```
 
-For this example the proteins we are interested in are the ones recovered for the *H.antecessor* and the species we are interested in are thought to be at least somewhat related to H.antecessor. Since this pipeline is heavily reliant on the Ensembl database, it would be wise to just check if the server of Ensembl is up and running before executing the pipeline. You can do that here: https://www.ensembl.info/?s=service&submit=Search . If everything looks fine, its now time to execute the pipeline by simply typing:
+For this example the proteins we are interested in are the ones recovered for the *H.antecessor* and the species we are interested in are thought to be at least somewhat related to H.antecessor. Since this pipeline is heavily reliant on the Ensembl database, it would be wise to just check if the server of Ensembl is up and running before executing the pipeline. You can do that [here](https://www.ensembl.info/?s=service&submit=Search). If everything looks fine, its now time to execute the pipeline by simply typing:
 
 ```bash
 snakemake -j4 --resources FTP=7
