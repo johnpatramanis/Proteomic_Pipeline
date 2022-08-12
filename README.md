@@ -220,27 +220,24 @@ $$$$ https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Di
 WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is XX GB
 If you have the disk space, proceed as bellow. If not you can move straight to Module 3.
 
-```bash
-COMMANDS TO WGET DATASETS in the right folder
-COMMAND TO WGET GRCH37 or HG18
-```
-
-ALTERNATIVE LIGHTER VERSION OF DWONLOAD
+First we will download 9 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
+and you can download them using this loop:
 
 ```bash
 COMMANDS TO WGET DATASETS in the right folder
 COMMAND TO WGET GRCH37 or HG18
 ```
+If you don't want to download all of them, you can remove some of the links from the ```1KG_Samples.txt ``` file.
 
-
-
+Additionally we can download some of the archaic human samples. For these it is suggested to use the VCF files. Ancient DNA samples (e.g. BAM files) tend to contain multiple sequencing errors and the VCF files ahve been carefully called by researchers who specialise in this work.
+We can download and format the VCF files for 1 Neanderthal and 1 Denisovan usign the following commands:
 
 ```bash
 cd ./Dataset_Construction/
 ```
 
 
-Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly, the data are mapped on to. Considering the data we downloaded correspond to different reference genomes ( All of them are mapped onto the human reference genome, but different versions of it) we have to run the pipeline multiple times separately for each reference (2 times). 
+Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly, the data are mapped on to. Considering the data we downloaded correspond to different reference genomes (Modern humans are mapped onto GrCh38 and ancient ones are mapped onto GrCh37), we have to run the pipeline multiple times separately for each reference (2 times). 
 
 As we just mentioned, translation requires a couple of resources. First we need the location (chromosome/scaffold,position & strand) of the gene that produces the protein. Most genes require splicing, so we also need the exon and intron information . Finally, a reference amino acid sequence of the protein is also necessary. Given that we have run Pipeline 1 for the proteins of interest and the organisms and reference versions of interest (Homo sapiens GRCh37 & GRCh38), all of this data has been downloaded and is available to us.
 
