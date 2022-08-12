@@ -154,13 +154,13 @@ cp ../GitHub_Tutorial/Proteins.txt ./Proteins.txt
 
 You can also take a look at them using:
 
-(OPTIONAL COMMANDS)
+
 ```bash
 less Proteins.txt
 less Organism.txt
 ```
 
-and you may want to edit them and add some proteins or species using:
+and you may want to edit them and add some proteins or species using Nano. If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html):
 
 ```bash
 nano Proteins.txt
