@@ -1,0 +1,9 @@
+macaca_nemestrina
+macaca_mulatta
+papio_anubis
+homo_sapiens    GRCh37
+homo_sapiens    GRCh38
+gorilla_gorilla
+pan_paniscus
+pongo_abelii
+pan_troglodytes
