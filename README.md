@@ -143,9 +143,16 @@ For now, all you need to know is, activating the right environment is needed to 
 
 To use this pipeline we just need two things:
 1 txt file, named ```Proteins.txt``` with the proteins we are interested in and
-1 txt file, named ```Organism.txt``` with the scientific names of the species we are interested in.
-For this tutorial these files are already prepared and ready to use.
-You can take a look at them using
+1 txt file, named ```Organism.txt``` with the scientific names of the species we are interested in. For this version of the pipeline you can only select from species present in the [Ensembl database](https://www.ensembl.org/info/about/species.html)
+
+For this tutorial these files are already prepared and ready to use. You can copy them over from their folder using:
+
+```bash
+cp ../GitHub_Tutorial/Organism_Refs.txt ./Organism.txt
+cp ../GitHub_Tutorial/Proteins.txt ./Proteins.txt
+```
+
+You can also take a look at them using:
 
 (OPTIONAL COMMANDS)
 ```bash
