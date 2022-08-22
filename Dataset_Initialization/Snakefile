@@ -82,8 +82,6 @@ def INITIALISATION():
 
     GENES=list(set(GENES))
 
-    for J,K in ISOFORMS.items():
-        print(F'Requested Protein: {J} for Isoform(s): {K} ')
 
 
 
@@ -148,8 +146,14 @@ rule Get_Ensembl_Gene_IDs_ALL:
     resources:
         FTP=1
     run:
+    
+        for J,K in ISOFORMS.items():
+            print(F'Requested Protein: {J} for Isoform(s): {K} ')
+
+    
+    
         ORG=wildcards.Organism
-        print(ORG)
+        print(F'Working on organism: {ORG}')
         #### Check if path for organism exists/create it
         path='Workspace/1_Gene_IDs/'+str(ORG)
         if os.path.exists(path)==False:
@@ -157,7 +161,7 @@ rule Get_Ensembl_Gene_IDs_ALL:
         
         #### Get GeneID for every gene of list
         GENE=wildcards.Gene
-        print(GENE)
+
         shell("""python3 Python_Scripts/Get_Gene_ID.py {} {}""".format(GENE,ORG)) 
 
 
@@ -434,15 +438,15 @@ rule Combine_FASTA_Sequences_into_Ref:
             ### Cleanup Species File
             shell('''rm -rf  Workspace/3_FASTA_Seqs/Combined_Per_Species/{}.fa;'''.format(ORG))
             
-        for GENE in GENES: 
-            #### Cleanup Gene file
-            shell('''rm -rf  Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(GENE))
-            
-            TRANSCRIPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
-            for TRANSCRIPT in TRANSCRIPT_FILE:
-                TRNSCRPT_NAME=TRANSCRIPT.strip().split('::')[1]
-                #### Cleanup Transcript files
-                shell('''rm -rf  Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(TRNSCRPT_NAME))
+            for GENE in GENES: 
+                #### Cleanup Gene file
+                shell('''rm -rf  Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(GENE))
+                
+                TRANSCRIPT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORG,GENE),'r')
+                for TRANSCRIPT in TRANSCRIPT_FILE:
+                    TRNSCRPT_NAME=TRANSCRIPT.strip().split('::')[1]
+                    #### Cleanup Transcript files
+                    shell('''rm -rf  Workspace/3_FASTA_Seqs/Combined_Per_Protein/{}.fa;'''.format(TRNSCRPT_NAME))
         
         
         
