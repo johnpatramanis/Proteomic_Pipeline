@@ -11,83 +11,110 @@ import os.path
 from os.path import exists
 
 
-##### Load Input Files and usefull info  #####
-FTP=7
-SLEEPER=1
-
-GENES=[]
-ISOFORMS={}
-ORGANISM=[]
-REFERENCE=[]
 
 
 
-###### LOAD REQUESTED PROTEINS/GENES
-###    HANDLE ISOFORMS
 
-PROTEIN_FILE=open('Proteins.txt','r')
-for line in PROTEIN_FILE:
 
-    line=line.replace("\\","-") #there are actually some genes with "/" in their name, which messes up the folder creation process
-    line=line.strip().split('::')
-    
-    
-    ## NO ISOFORM SPECIFIED
-    if len(line)==1:
+################################################################################################################################################################################################
+def INITIALISATION():
+    ##### Load Input Files and usefull info  #####
+    FTP=7
+    SLEEPER=1
+
+    GENES=[]
+    ISOFORMS={}
+    ORGANISM=[]
+    REFERENCE=[]
+
+
+
+    ###### LOAD REQUESTED PROTEINS/GENES
+    ###    HANDLE ISOFORMS
+
+    PROTEIN_FILE=open('Proteins.txt','r')
+    for line in PROTEIN_FILE:
+
+        line=line.replace("\\","-") #there are actually some genes with "/" in their name, which messes up the folder creation process
+        line=line.strip().split('::')
         
-        GENE=line[0]
-        GENES.append(GENE)
-
-        if GENE in ISOFORMS.keys():
-            ISOFORMS[GENE].append('CANON')
+        
+        ## NO ISOFORM SPECIFIED
+        if len(line)==1:
             
-        if GENE not in ISOFORMS.keys():
-            ISOFORMS[GENE]=['CANON']
-    
-    
-    ## ISOFORM REQUESTED
-    if len(line)>1:
-        
+            GENE=line[0]
+            GENES.append(GENE)
 
-        GENE=line[0]
-        ISO=line[1]
-        
-        GENES.append(GENE)
-        
-    ### IF USER WANTS ALL ISOFORMS    
-        if ISO=='ALL':
-            ISOFORMS[GENE]='ALL'
-            
-            
-    #### IF USER WANTS SPECIFIC ISOFORMS           
-        if ISO!='ALL':
-        
-            ISO=GENE+'-'+ISO
-            
-            ## If more than one isoforms have been requeted for this gene
             if GENE in ISOFORMS.keys():
-                ISOFORMS[GENE].append(ISO)
+                ISOFORMS[GENE].append('CANON')
                 
-            ## If this is the first isoform requested for this gene
             if GENE not in ISOFORMS.keys():
-                ISOFORMS[GENE]=[ISO]
+                ISOFORMS[GENE]=['CANON']
+        
+        
+        ## ISOFORM REQUESTED
+        if len(line)>1:
+            
+
+            GENE=line[0]
+            ISO=line[1]
+            
+            GENES.append(GENE)
+            
+        ### IF USER WANTS ALL ISOFORMS    
+            if ISO=='ALL':
+                ISOFORMS[GENE]='ALL'
+                
+                
+        #### IF USER WANTS SPECIFIC ISOFORMS           
+            if ISO!='ALL':
+            
+                ISO=GENE+'-'+ISO
+                
+                ## If more than one isoforms have been requeted for this gene
+                if GENE in ISOFORMS.keys():
+                    ISOFORMS[GENE].append(ISO)
+                    
+                ## If this is the first isoform requested for this gene
+                if GENE not in ISOFORMS.keys():
+                    ISOFORMS[GENE]=[ISO]
 
 
-GENES=list(set(GENES))
+    GENES=list(set(GENES))
 
-for J,K in ISOFORMS.items():
-    print(F'Requested Protein: {J} for Isoform(s): {K} ')
+    for J,K in ISOFORMS.items():
+        print(F'Requested Protein: {J} for Isoform(s): {K} ')
 
 
 
-ORGANISM_FILE=open('Organism.txt','r')
-for line in ORGANISM_FILE:
-    line=line.strip().split()
-    ORGANISM.append(line[0])
-    if (len(line)==2):
-        REFERENCE.append(line[1])
-    else:
-        REFERENCE.append('CURRENT')
+    ORGANISM_FILE=open('Organism.txt','r')
+    for line in ORGANISM_FILE:
+        line=line.strip().split()
+        ORGANISM.append(line[0])
+        if (len(line)==2):
+            REFERENCE.append(line[1])
+        else:
+            REFERENCE.append('CURRENT')
+    
+    return GENES,ISOFORMS,ORGANISM,REFERENCE,SLEEPER,FTP
+
+################################################################################################################################################################################################################################################################################################################################################
+
+
+
+
+
+
+
+
+GENES,ISOFORMS,ORGANISM,REFERENCE,SLEEPER,FTP=INITIALISATION()
+
+
+
+
+
+
+
 
 
 #######################################################################################################################################################################

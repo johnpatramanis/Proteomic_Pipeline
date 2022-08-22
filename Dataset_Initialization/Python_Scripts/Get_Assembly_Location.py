@@ -1,5 +1,7 @@
 import requests, sys
 import re
+import json
+import time
 
 #example on how to run: AMELX ENSG00000125363 Homo_sapiens CURRENT
 
@@ -31,13 +33,29 @@ CURRENT_ASSEMBLY='CURRENT'
 
 server = "http://rest.ensembl.org"
 ext = "/lookup/id/{}?expand=1".format(GENE_ID)
- 
-r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+attempts=0
+r=[]
+
+
+while ((attempts<10) & (r==[])):
+    try:
+        r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+        MJ=r.json()
+
+    except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
+        time.sleep(10)
+        attempts+=1
+        SERVICE=0
+        r=[]
+
+    else:
+        SERVICE=1
+
 
 
 
 # If any hits
-if r.json!=[]:
+if r!=[]:
     MJ=r.json()
     
     
@@ -113,7 +131,12 @@ if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID
     if IS_CANON==1:
         STARTS_FILE.write('{}\t{}\t{}\n'.format(GENE,str(STARTS_START),STRAND))
         
-        
+       
         
 LOC_FILE.close()
 STARTS_FILE.close()
+
+   
+MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+if SERVICE==0:
+    MISSING_IDS.write('{}\n'.format(GENE))

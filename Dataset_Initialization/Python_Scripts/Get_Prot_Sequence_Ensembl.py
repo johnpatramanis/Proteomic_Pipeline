@@ -1,6 +1,7 @@
 import requests, sys
 import re
 import time
+import json
 
 #example on how to run: python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py AMELX ENST00000380714 homo_sapiens AMELX-203
 
@@ -21,13 +22,30 @@ elif len(sys.argv)<5:
 
 server = "http://rest.ensembl.org"
 ext = "/sequence/id/{}?type=protein".format(TRNSCR_ID)
- 
-r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+attempts=0
+r=[]
+
+
+while ((attempts<10) & (r==[])):
+    try:
+        r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+        MJ=r.json()
+
+    except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
+        time.sleep(10)
+        attempts+=1
+        SERVICE=0
+        r=[]
+
+    else:
+        SERVICE=1
+   
+
 
 
 
 # If any hits
-if r.json!=[]:
+if r!=[]:
     MJ=r.json()
     
     
@@ -55,10 +73,10 @@ if r.json!=[]:
 
 
 ## If ID file empty
-if r.json==[]:
+if r==[]:
     SEQ='-'*100
 
-   
+
    
    
 ######### Check if transcript is canonical
@@ -67,9 +85,27 @@ time.sleep(2)
 IS_CANON=0
 server = "http://rest.ensembl.org"
 ext = "/lookup/id/{}?expand=1".format(TRNSCR_ID)
-r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+attempts=0
+r=[]
 
-if r.json!=[]:
+
+while ((attempts<5) & (r==[])):
+    try:
+        r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+        MJ=r.json()
+
+    except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
+        time.sleep(10)
+        attempts+=1
+        SERVICE=0
+        r=[]
+
+    else:
+        SERVICE=1
+ 
+
+       
+if r!=[]:
     MJ=r.json()
     ## Find best result!
     ## If multiple hits
@@ -102,3 +138,7 @@ if (IS_CANON==1) or (ANY_TRANSCRIPT_FOUND==0):
     Fasta_ouptut_Gene.close()
     
     
+   
+MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+if SERVICE==0:
+    MISSING_IDS.write('{}\n'.format(GENE))
