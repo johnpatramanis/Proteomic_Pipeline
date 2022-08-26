@@ -25,76 +25,34 @@ ORGANISM_SEARCH='%20'.join(ORGANISM.split('_'))
 
 
 # requestURL=
-requestURL = "https://www.ebi.ac.uk/proteins/api/proteins?offset=0&size=100&gene={}&organism={}".format(GENE,ORGANISM_SEARCH)
+requestURL = "https://rest.uniprot.org/uniprotkb/search?query={}&organism={}&format=json".format(GENE,ORGANISM_SEARCH)
 
 
-r = requests.get(requestURL, headers={ "Accept" : "application/json"})
-
+r = requests.get(requestURL)
 
 # If any hits
 if r.json!=[]:
     MJ=r.json()
     
     
-    #Find best result
-    #If multi-le hits
-    if (isinstance(MJ, list))==True:
+    ### Find best result
+    ### If multi-le hits, just get first one
+    GENE_IDs=[]
+    if (isinstance(MJ, list))==True and (MJ!=[]):
+        MJ=MJ[0]
         
-        
-        
-        GENE_IDs=[]
-        
-        for LS in MJ:
-            
-            
-            
-            
-            
-            #check if the Gene we are looking for matches the Gene name of the search result OR any of its synonims
-            GENE_NAMES=[]
-            GENE_NAMES.append(LS['gene'][0]['name']['value'])
-            if 'synonyms' in LS['gene'][0].keys():
-                GENE_NAMES.append(LS['gene'][0]['synonyms'][0]['value'])
-            
-            
-            
-            #check if name of match is the same of the organism we are looking for
-            MATCH_NAME=re.findall(r"(?=("+'|'.join(GENE_NAMES)+r"))", GENE)
-            for L in LS['organism']['names']:
-                if L['type']=='scientific':
-                    SEARCH_ORGANISM='_'.join(L['value'].split(' '))
-            MATCH_ORGANISM=( ORGANISM==SEARCH_ORGANISM )
 
-
-
-            ## If name of gene can be found among synonims and organism name matches
-            if (((MATCH_NAME)!=[]) and (MATCH_ORGANISM)):
-
-            #### then Look up the Enemble gene_ID corresponding to it (if there is one)
-                if 'dbReferences' in LS.keys():
-                    for DATABASE in LS['dbReferences']:
-                        if DATABASE['type']=='Ensembl':
-                            GENE_IDs.append(DATABASE['properties']['gene ID'])
-            
-                    
-            
-            ################# For checking full output
-            # for J,K in LS.items():
-                # print('Label: {} \t Info: {} \n\n'.format(J,K))
-                
-            
-        
-        
-    
-    
-    
     #If single hit, then just select that
     if (isinstance(MJ, list))==False:
         
 
         #check if the Gene we are looking for matches the Gene name of the search result OR any of its synonims
         GENE_NAMES=[]
-        print(MJ)
+        if 'results' in MJ.keys():
+            MJ=MJ['results'][0]
+        print(MJ.keys())
+        # print(MJ['uniProtKBCrossReferences'])
+        print(MJ['entryType'])
         GENE_NAMES.append(MJ['gene'][0]['name']['value'])
         if 'synonyms' in MJ['gene'][0].keys():
             GENE_NAMES.append(MJ['gene'][0]['synonyms'][0]['value'])

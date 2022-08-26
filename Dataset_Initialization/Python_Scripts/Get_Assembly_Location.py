@@ -41,13 +41,11 @@ while ((attempts<10) & (r==[])):
     try:
         r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
         MJ=r.json()
-
     except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
         time.sleep(10)
         attempts+=1
         SERVICE=0
         r=[]
-
     else:
         SERVICE=1
 
@@ -83,20 +81,22 @@ if r!=[]:
             
             server = "https://rest.ensembl.org"
             ext = "/map/{}/{}/{}:{}..{}:{}/{}?".format(ORGANISM,CURRENT_ASSEMBLY,SEQ_REGION,START,END,STRAND,ASSEMBLY)
-             
             r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
             decoded = r.json()
             
             
             #if request gave valid results
             if 'mappings' in decoded.keys():
-                NEW_MAP=decoded['mappings'][0]['mapped']
-                
-                START=NEW_MAP['start']
-                END=NEW_MAP['end']
-                STRAND=NEW_MAP['strand']
-                SEQ_REGION=NEW_MAP['seq_region_name']
-                CURRENT_ASSEMBLY=NEW_MAP['assembly']
+                if decoded['mappings']!=[]:
+                    NEW_MAP=decoded['mappings'][0]['mapped']
+                    
+                    START=NEW_MAP['start']
+                    END=NEW_MAP['end']
+                    STRAND=NEW_MAP['strand']
+                    SEQ_REGION=NEW_MAP['seq_region_name']
+                    CURRENT_ASSEMBLY=NEW_MAP['assembly']
+                else:
+                    print('Error in finding position of Gene: {} in requested assembly'.format(GENE))
             else:
                 print('Error in finding position of Gene: {} in requested assembly'.format(GENE))
             
@@ -116,8 +116,8 @@ else:
     STARTS_START=1
 
 
-LOC_FILE=open('Workspace/5_Loc_Files/{}/{}/Gene_locs.txt'.format(ORGANISM,ASSEMBLY),'a')
-STARTS_FILE=open('Workspace/5_Loc_Files/{}/{}/starts.txt'.format(ORGANISM,ASSEMBLY),'a')
+LOC_FILE=open('Workspace/5_Loc_Files/{}/{}/Gene_locs.txt'.format(ORGANISM,CURRENT_ASSEMBLY),'a')
+STARTS_FILE=open('Workspace/5_Loc_Files/{}/{}/starts.txt'.format(ORGANISM,CURRENT_ASSEMBLY),'a')
 
 
 if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID!='')):
@@ -135,6 +135,7 @@ if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID
         
 LOC_FILE.close()
 STARTS_FILE.close()
+
 
    
 MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')

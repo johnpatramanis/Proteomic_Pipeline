@@ -13,6 +13,8 @@ def most_common(lst):
 
 GENE=sys.argv[1]
 ORGANISM=sys.argv[2]
+GENE_ID=''
+
 
 OUTPUT_FILE=open('Workspace/1_Gene_IDs/{}/{}'.format(ORGANISM,GENE),'w')
 MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Missing_IDs.txt'.format(ORGANISM),'a')
@@ -40,39 +42,97 @@ while ((attempts<10) & (r==[])):
         SERVICE=1
 
         
-        
-
-
-if r==[]:
-    #if not ok, make sure there is some output/ missing gene folder
-    OUTPUT_FILE.write('NO_ID_FOUND')
-    print('NO ID FOUND\n')
-    MISSING_IDS.write('{}\n'.format(GENE))
-    sys.exit()
 
 
 if r!=[]:
     MJ=r.json()
-    
-    # print(len(MJ))
-    # for L,S in MJ.items():
-        # print(L,S)
-        # print('\n')
         
     if 'id' in MJ.keys():
         GENE_ID=MJ['id']
         print(GENE_ID,'\n')
         OUTPUT_FILE.write(str(GENE_ID))
-        
+
+
+
+
+
+
+
+
+
+
+##### IF missing, first check for synonims, other codes etc
+if (r==[]) or 'id' not in r.json().keys():
+    
+    
+    ##### Search Xrefs database
+    
+    server = "https://rest.ensembl.org"
+    ext = F"/xrefs/symbol/{ORGANISM}/{GENE}?"
+ 
+    r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+    
+    while ((attempts<10) & (r==[])):
+        try:
+            r = requests.get(server+ext)
+            MJ=r.json()
+
+        except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
+            time.sleep(10)
+            attempts+=1
+            SERVICE=0
+            r=[]
+
+        else:
+            SERVICE=1
+            
+    
+
+    
+    #### If this found something        
+    if r!=[]:
+        MJ=r.json()
+        if MJ!=[]:
+        ##### If multiple matches, fetch first one
+            if type(MJ) is list:
+                MJ=MJ[0]
+            
+            #### Found an ID
+            if 'id' in MJ.keys():
+                GENE_ID=MJ['id']
+                print(GENE_ID,'\n')
+                OUTPUT_FILE.write(str(GENE_ID))
+                
+            ### if target has not ID  
+            if ('id' not in MJ.keys()):
+                GENE_ID=''
+                OUTPUT_FILE.write('NO_ID_FOUND')
+                print('NO ID FOUND\n')
+                MISSING_IDS.write('{}\n'.format(GENE))
+                
+        else:### If empty list is returned
+            GENE_ID=''
+    ##### If still missing
     else:
         GENE_ID=''
-        OUTPUT_FILE.write('NO_ID_FOUND')
-        print('NO ID FOUND\n')
-        MISSING_IDS.write('{}\n'.format(GENE))
-        
+
+    
+
+
 
    
-MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+    
+
+
+##### If Gene ID is still missing at the end of the day
+if GENE_ID=='':
+    OUTPUT_FILE.write('NO_ID_FOUND')
+    print('NO ID FOUND\n')
+    MISSING_IDS.write('{}\n'.format(GENE))
+    
+   
+##### If gene is missing due to lost connection, add it in a seperate list
 if SERVICE==0:
+    MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
     MISSING_IDS.write('{}\n'.format(GENE))
     OUTPUT_FILE.write('NO_CONNECTION_TO_SERVER')
