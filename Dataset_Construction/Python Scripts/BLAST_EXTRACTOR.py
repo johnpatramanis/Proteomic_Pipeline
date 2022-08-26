@@ -106,9 +106,9 @@ OUTPUT=OUTPUT.replace('_spliced.fa', '_translated.fa')
 print(OUTPUT)
 
 NAME=NAME.replace('_spliced','')
-if NAME.count('-')>=1:
-    NAME=NAME.split('-')
-    NAME=''.join(NAME[:len(NAME)-1])
+# if NAME.count('-')>=1:
+    # NAME=NAME.split('-')
+    # NAME=''.join(NAME[:len(NAME)-1])
     
 OUTPUT=open(OUTPUT,'w')
 OUTPUT.write('>{}\n'.format(NAME))

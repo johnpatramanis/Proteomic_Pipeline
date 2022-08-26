@@ -8,7 +8,7 @@
 
 import os
 import os.path
-
+import filecmp
 
 
 ##### Load Input Files and usefull info  #####
@@ -87,22 +87,24 @@ GENE_LOCS_PATH='Gene_locs.txt'
 if (os.path.exists(GENE_LOCS_PATH)==True) and (os.path.exists('Organism.txt')==False):
     GENE_LOCS=open("Gene_locs.txt","r")
     
+
 ## If it exists but there's also an Organism.txt file that is not empy:
 if (os.path.exists(GENE_LOCS_PATH)==True) and (os.path.exists('Organism.txt')==True):
     print(os.stat('Organism.txt').st_size)
-    if (os.stat('Organism.txt').st_size)!=0:
-        
-        ## Copy over the appropriate Gene_locs file
-        os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/Gene_locs.txt ./'.format(ORGANISM,ASSEMBLY))
-        GENE_LOCS=open("Gene_locs.txt","r")
-        
-        ## Copy over the appropriate starts file
-        os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/starts.txt ./'.format(ORGANISM,ASSEMBLY))
-        
-        ## Clean up EIT folder and Copy over the appropriate exons/intron tables
+    if ((os.stat('Organism.txt').st_size)!=0):
+        if (filecmp.cmp("Gene_locs.txt","../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(ORGANISM,ASSEMBLY))==False):
+            ## Copy over the appropriate Gene_locs file
+            os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/Gene_locs.txt ./'.format(ORGANISM,ASSEMBLY))
+            GENE_LOCS=open("Gene_locs.txt","r")
+            
+            ## Copy over the appropriate starts file
+            os.system('cp ../Dataset_Initialization/Workspace/5_Loc_Files/{}/{}/starts.txt ./'.format(ORGANISM,ASSEMBLY))
+            
+            ## Clean up EIT folder and Copy over the appropriate exons/intron tables
 
-        os.system('cp ../Dataset_Initialization/Workspace/4_EITs/{}/*_ei.txt ./EIT/'.format(ORGANISM))
-        
+            os.system('cp ../Dataset_Initialization/Workspace/4_EITs/{}/*_ei.txt ./EIT/'.format(ORGANISM))
+        else:
+            GENE_LOCS=open("Gene_locs.txt","r")
         if os.path.exists('Genes')==False:
             os.makedirs('Genes')
         os.system('cp ../Dataset_Initialization/Workspace/3_FASTA_Seqs/Genes_{}/*.fa ./Genes/'.format(ORGANISM))
@@ -119,9 +121,14 @@ if (os.path.exists(GENE_LOCS_PATH)==True) and (os.path.exists('Organism.txt')==T
 if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==False):
     raise NameError('No Gene_locs.txt file provided and no Organism.txt provided to create the Gene_locs.txt\n Please run the Dataset_Initialization pipeline with a target organism + protein set if you have not already./n If you already have done that, just create an Organism.txt file here with one selected organism for which that pipeline has run!')
 
+
+
 ##If it does not exist AND the user has provided a reference organism, but has not run the first pipeline for it, raise error
 if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==True) and ( os.path.exists(os.path.abspath(os.path.join(os.pardir,'Dataset_Initialization/Workspace/5_Loc_Files/{}/{}'.format(ORGANISM,ASSEMBLY))) ) == False ):   
     raise NameError('There was an error, either you have not run the Dataset_Initialization pipeline for this organism or there was a typo in the name/assembly.\n\n Here are your inputs: {} {} , check if they exists in Dataset_Initialization/Workspace/5_Loc_Files/ \n\nRemember to switch Conda enviroments when running each pipeline\n'.format(ORGANISM,ASSEMBLY))
+
+
+
 
 ##If not then copy all resources from Dataset_Initialization
 if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==True):
@@ -142,6 +149,7 @@ if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==
     if os.path.exists('Genes')==False:
         os.makedirs('Genes')
     os.system('cp ../Dataset_Initialization/Workspace/3_FASTA_Seqs/Genes_{}/*.fa ./Genes/'.format(ORGANISM))
+
 
 
 
@@ -183,15 +191,13 @@ CHROMOSOMES.sort()
 
 rule all:
     input:
+        SPLIT_CHRS=expand("Workspace/4_FASTA_FILES/{sample}_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES),
         FASTA=expand("Workspace/5_GENE_FASTA_FILES/{sample}_{GENE}.fa",GENE=GENES,sample=SAMPLES),
         BLAST_RESULTS=expand("Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES),
         FINAL_FASTA_RESULTS=expand( "Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES),
         ALL_PRTOEINS_ALL_SAMPLES=expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
         ALL_SAMPLES_PER_PROTEIN=expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
         ALL_PROTEINS_PER_SAMPLE=expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
-
-
-
 
 
 
@@ -245,7 +251,7 @@ rule format_name:
     input:
         "Workspace/1_OG_BAM_FILES/{sample}.bam"
     output:
-        "Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam"
+        temp("Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam")
     threads:4
     shell: 
         """samtools view -H {input} --threads={threads} |\
@@ -271,7 +277,7 @@ rule format_index_name:
     input:
         "Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam"
     output:
-        "Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam.bai"
+        temp("Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam.bai")
     threads: 4
     shell:
         "samtools index -b {input} -@ {threads}"
@@ -507,7 +513,7 @@ rule Output_FASTA_FROM_VCF:
     input:
         lambda wildcards: Get_VCF_file_and_Reference_Genome_for_Sample(wildcards.sample,VCF_SAMPLES)
     output:
-        'Workspace/0_VCF_FILES/{sample}_{GENE}.VCFA'
+        temp('Workspace/0_VCF_FILES/{sample}_{GENE}.VCFA')
     threads:4
     run:
         GENE_LOC_FILE=open('Gene_locs.txt')
@@ -587,8 +593,8 @@ rule request_chromosome_files_and_prepare_them:
         BAI=lambda wildcards: SPLIT_OR_NOT_SPLIT_BAI(wildcards.sample,CHROMOSOMES),
         GENE_LOCS="Gene_locs.txt"
     output:
-        expand("Workspace/3_SPLIT_CHR/{{sample}}_{CHR}.bam",CHR=CHROMOSOMES),   
-        expand("Workspace/3_SPLIT_CHR/{{sample}}_{CHR}.bam.bai",CHR=CHROMOSOMES)
+        temp(expand("Workspace/3_SPLIT_CHR/{{sample}}_{CHR}.bam",CHR=CHROMOSOMES)),   
+        temp(expand("Workspace/3_SPLIT_CHR/{{sample}}_{CHR}.bam.bai",CHR=CHROMOSOMES))
     run:
         for CHR in CHROMOSOMES:
             
