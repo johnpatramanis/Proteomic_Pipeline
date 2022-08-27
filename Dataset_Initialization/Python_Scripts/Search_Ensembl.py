@@ -51,7 +51,9 @@ if r!=[]:
     ## Check out transcripts to find the desitred isoform(s)
     
     if (isinstance(MJ, list))==False:
-        
+        print(MJ.keys())
+        print(MJ.values())
+        if 'Transcript' in MJ.keys():
         for TRNSCRPT in MJ['Transcript']:
             
             if ('ALL' in ISOFORMS) and (TRNSCRPT['biotype']=='protein_coding'):
