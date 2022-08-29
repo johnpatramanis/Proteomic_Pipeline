@@ -2,6 +2,7 @@ import requests, sys
 import re
 import json
 import time
+import os
 
 #example on how to run: AMELX ENSG00000125363 Homo_sapiens CURRENT
 
@@ -116,8 +117,16 @@ else:
     STARTS_START=1
 
 
-LOC_FILE=open('Workspace/5_Loc_Files/{}/{}/Gene_locs.txt'.format(ORGANISM,CURRENT_ASSEMBLY),'a')
-STARTS_FILE=open('Workspace/5_Loc_Files/{}/{}/starts.txt'.format(ORGANISM,CURRENT_ASSEMBLY),'a')
+LOC_FILE='Workspace/5_Loc_Files/{}/{}/Gene_locs.txt'.format(ORGANISM,CURRENT_ASSEMBLY)
+STARTS_FILE='Workspace/5_Loc_Files/{}/{}/starts.txt'.format(ORGANISM,CURRENT_ASSEMBLY)
+
+os.makedirs(os.path.dirname(LOC_FILE), exist_ok=True)
+os.makedirs(os.path.dirname(STARTS_FILE), exist_ok=True)
+
+
+LOC_FILE=open(LOC_FILE,'a')
+STARTS_FILE=open(STARTS_FILE,'a')
+
 
 
 if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID!='')):

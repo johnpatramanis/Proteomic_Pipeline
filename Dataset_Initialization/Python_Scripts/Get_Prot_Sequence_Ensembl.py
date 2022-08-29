@@ -6,11 +6,13 @@ import json
 #example on how to run: python3  Python_Scripts/Get_Prot_Sequence_Ensembl.py AMELX ENST00000380714 homo_sapiens AMELX-203
 
 
-if len(sys.argv)==5:
+if len(sys.argv)>=5:
     GENE=sys.argv[1]
     TRNSCR_ID=sys.argv[2]
     ORGANISM=sys.argv[3]
     TRNSCR_NAME=sys.argv[4]
+    ## If transcript ID is found but Ensembl does nto recognize it, Sequence will be -s
+    SEQ='-'*100
 
 elif len(sys.argv)<5:
     GENE=sys.argv[1]
@@ -24,6 +26,12 @@ server = "http://rest.ensembl.org"
 ext = "/sequence/id/{}?type=protein".format(TRNSCR_ID)
 attempts=0
 r=[]
+
+
+
+
+
+
 
 
 while ((attempts<10) & (r==[])):
@@ -65,16 +73,13 @@ if r!=[]:
     
     #If single hit, then just select that
     if (isinstance(MJ, list))==False:
-        if 'seq' in MJ.keys():
-            SEQ=MJ['seq']
-            
-        else:
-            SEQ='X'*100
+        if 'error' not in MJ.keys():
+            if 'seq' in MJ.keys():
+                SEQ=MJ['seq']
+                
+            else:
+                SEQ='X'*100
 
-
-## If ID file empty
-if r==[]:
-    SEQ='-'*100
 
 
    

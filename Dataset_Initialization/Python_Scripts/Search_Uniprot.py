@@ -22,6 +22,7 @@ ORGANISM=sys.argv[2]
 print(GENE,ORGANISM)
 
 ORGANISM_SEARCH='%20'.join(ORGANISM.split('_'))
+ORGANISM_SEARCH_ALT=' '.join(ORGANISM.split('_'))
 GENE_ID=''
 
 # requestURL=
@@ -51,11 +52,12 @@ if r.json!=[]:
             if MJ['results']!=[]:
                 MJ=MJ['results'][0]
                 if MJ['entryType']=='UniProtKB reviewed (Swiss-Prot)':
-                    for DATABASE in MJ['uniProtKBCrossReferences']:
-                        if DATABASE['database']=='Ensembl':
-                            for PROPER in DATABASE['properties']:
-                                if PROPER['key']=='GeneId':
-                                    GENE_ID=PROPER['value']
+                    if MJ["organism"]["scientificName"]==ORGANISM_SEARCH_ALT:
+                        for DATABASE in MJ['uniProtKBCrossReferences']:
+                            if DATABASE['database']=='Ensembl':
+                                for PROPER in DATABASE['properties']:
+                                    if PROPER['key']=='GeneId':
+                                        GENE_ID=PROPER['value']
 
     
     

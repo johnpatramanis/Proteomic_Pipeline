@@ -51,23 +51,22 @@ if r!=[]:
     ## Check out transcripts to find the desitred isoform(s)
     
     if (isinstance(MJ, list))==False:
-        print(MJ.keys())
-        print(MJ.values())
         if 'Transcript' in MJ.keys():
-        for TRNSCRPT in MJ['Transcript']:
-            
-            if ('ALL' in ISOFORMS) and (TRNSCRPT['biotype']=='protein_coding'):
-                TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
-            
-            
-            else:
+            for TRNSCRPT in MJ['Transcript']:
+                if ('biotype' in TRNSCRPT.keys()) and ('display_name' in TRNSCRPT.keys()) and ('id' in TRNSCRPT.keys()) and ('is_canonical' in  TRNSCRPT.keys()):
                 
-                if ('CANON' in ISOFORMS) and (TRNSCRPT['is_canonical']==1):
-                    TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
-
+                    if ('ALL' in ISOFORMS) and (TRNSCRPT['biotype']=='protein_coding'):
+                        TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
                     
-                if (TRNSCRPT['biotype']=='protein_coding') and (TRNSCRPT['display_name'] in ISOFORMS):
-                    TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
+                    
+                    else:
+                        
+                        if ('CANON' in ISOFORMS) and (TRNSCRPT['is_canonical']==1):
+                            TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
+
+                            
+                        if (TRNSCRPT['biotype']=='protein_coding') and (TRNSCRPT['display_name'] in ISOFORMS):
+                            TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
     
     
     
@@ -80,19 +79,16 @@ if r!=[]:
     
     print(TRNSCRPT_IDS)
     OUTPUT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORGANISM,GENE),'w')
+    MISSING_IDS=open('Workspace/2_Transcript_IDs/{}/Missing_IDs.txt'.format(ORGANISM),'a')
 
+    if TRNSCRPT_IDS==[]:
+        MISSING_IDS.write('{}\n'.format(GENE))
+    else:
 
-    for TRNSCRPT_ID in TRNSCRPT_IDS:
-        
-
-        OUTPUT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORGANISM,GENE),'a')
-        
-        if TRNSCRPT_ID!=[]:
-            OUTPUT_FILE.write(str(TRNSCRPT_ID)+'\n')
-        else:
-            OUTPUT_FILE.write('NO_TRNSCRPT_FOUND')
-            MISSING_IDS.write('{}\n'.format(GENE))
-    
+        for TRNSCRPT_ID in TRNSCRPT_IDS:
+            OUTPUT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORGANISM,GENE),'a')
+            if TRNSCRPT_ID!=[]:
+                OUTPUT_FILE.write(str(TRNSCRPT_ID)+'\n')
 
 
    
