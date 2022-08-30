@@ -117,10 +117,10 @@ GENES,ISOFORMS,ORGANISM,REFERENCE,SLEEPER,FTP=INITIALISATION()
 
 #######################################################################################################################################################################
 ## Starting Rule
-
+ruleorder:Initiate_Check_CleanUp_Files>Get_Ensembl_Gene_IDs_ALL
 rule all:
     input:
-        "Workspace/1_Gene_IDs/{Organism}/Missing_IDs.txt",
+        expand("Workspace/1_Gene_IDs/{organism}/Missing_IDs.txt",organism=set(ORGANISM)),
         ["Workspace/5_Loc_Files/{}/{}/starts.txt".format(ORGANISM[x],REFERENCE[x]) for x in range(0,len(ORGANISM))],
         ["Workspace/5_Loc_Files/{}/{}/Gene_locs.txt".format(ORGANISM[x],REFERENCE[x]) for x in range(0,len(ORGANISM))],
         expand("Workspace/4_EITs/{organism}/{sample}_ei.txt",sample=GENES,organism=set(ORGANISM)),
@@ -132,9 +132,10 @@ rule all:
 
 
 ######### Should change to an 'initiation rule'
-rule Check_for_missing_IDs:
+rule Initiate_Check_CleanUp_Files:
     input:
-        expand("Workspace/1_Gene_IDs/{{Organism}}/{Gene}",Gene=GENES)
+        'Proteins.txt',
+        'Organism.txt'
     output:
         "Workspace/1_Gene_IDs/{Organism}/Missing_IDs.txt",
         "Workspace/1_Gene_IDs/{Organism}/Still_Missing_IDs.txt",
@@ -145,7 +146,6 @@ rule Check_for_missing_IDs:
     
         for J,K in ISOFORMS.items():
             print(F'Requested Protein: {J} for Isoform(s): {K} ')
-    
     
     
         ORG=wildcards.Organism
@@ -162,9 +162,9 @@ rule Check_for_missing_IDs:
         if os.path.exists(path3)==False:
             shell(F"""touch Workspace/1_Gene_IDs/{str(ORG)}/Lost_Connection.txt""")
 
-         path4=F'Workspace/2_Transcript_IDs/{str(ORG)}/Missing_IDs.txt'
-         if os.path.exists(path4)==False:
-             shell(F"""touch Workspace/2_Transcript_IDs/{str(ORG)}/Missing_IDs.txt""")
+        path4=F'Workspace/2_Transcript_IDs/{str(ORG)}/Missing_IDs.txt'
+        if os.path.exists(path4)==False:
+            shell(F"""touch Workspace/2_Transcript_IDs/{str(ORG)}/Missing_IDs.txt""")
 
 
 
@@ -182,13 +182,10 @@ rule Get_Ensembl_Gene_IDs_ALL:
         "Organism.txt"
     output:
         "Workspace/1_Gene_IDs/{Organism}/{Gene}"
-        
     resources:
         FTP=1
+    priority: 1
     run:
-    
-
-
     
     
         ORG=wildcards.Organism

@@ -135,15 +135,17 @@ if ANY_TRANSCRIPT_FOUND==1:
     print(FASTA_TRANSCRIPT)
 
 
-if (IS_CANON==1) or (ANY_TRANSCRIPT_FOUND==0):
+if (IS_CANON==1):
     FASTA_GENE='>'+ORGANISM+'_'+GENE+'\n'+SEQ
     Fasta_ouptut_Gene=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,GENE),'w')
     Fasta_ouptut_Gene.write(FASTA_GENE)
     print(FASTA_GENE)
     Fasta_ouptut_Gene.close()
-    
-    
-   
+
+if (ANY_TRANSCRIPT_FOUND==0) and (TRNSCR_ID!=''):    
+    FAILING_ID=open('Workspace/3_FASTA_Seqs//Genes_{}/Failing_IDs.txt'.format(ORGANISM),'a')
+    FAILING_ID.write(GENE+'\n')
+
 MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
 if SERVICE==0:
     MISSING_IDS.write('{}\n'.format(GENE))
