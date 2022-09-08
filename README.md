@@ -1,4 +1,7 @@
 # PaleoProPhyler: A reproducable pipeline for Palaeo-Proteomic Phylogenetic reconstruction by Ioannis Patramanis
+
+![alt text](https://github.com/johnpatramanis/Proteomic_Pipeline/blob/main/GitHub_Tutorial/PaleoProPhyler%20Overview%20Fig.svg?raw=true)
+
 ## What is this?
 
 Here you will find all the code needed to run the *Paleo-Phylo-Proteomic Pipelines* to enable easier and more reproducable paleoproteomic analyses.
