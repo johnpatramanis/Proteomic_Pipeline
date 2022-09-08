@@ -224,8 +224,13 @@ First we will download 9 modern human individuals from the 1000 genomes project.
 and you can download them using this loop:
 
 ```bash
-COMMANDS TO WGET DATASETS in the right folder
-COMMAND TO WGET GRCH37 or HG18
+FILE="GitHub_Tutorial\1KG_Samples.txt";
+LINES=$(cat $FILE);
+for SAMPLE in $LINES
+do
+       wget --continue --progress=dot:mega --tries=0 "$SAMPLE";
+done
+
 ```
 If you don't want to download all of them, you can remove some of the links from the ```1KG_Samples.txt ``` file.
 
