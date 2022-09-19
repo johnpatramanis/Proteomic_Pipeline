@@ -162,9 +162,13 @@ if (os.path.exists(GENE_LOCS_PATH)==False) and (os.path.exists('Organism.txt')==
 #### Open Gene Locs and get the chromosomes corresponding to the proteins
 for line in GENE_LOCS:
     line=line.strip().split()
-    CHROMOSOMES.append(line[1])
-    GENES.append(line[0])
-    GENES_TO_REFERENCES[line[0]]=line[4]
+    GENE=line[0]
+    CHROMOSOME=line[1]
+    ## Avoid duplicates and empty lines
+    if (GENE not in GENES) and GENE!='':
+        GENES.append(GENE)
+        CHROMOSOMES.append(CHROMOSOME)
+        GENES_TO_REFERENCES[GENE]=line[4]
     
 
 
@@ -703,7 +707,7 @@ rule Isolate_Gene_from_fasta:
         #### If input is Chromosome Fasta
         if ( (X=='gz') ):
             for CHR in CHROMOSOMES:
-                shell("Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{wildcards.sample}_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/;")
+                shell("Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{wildcards.sample}_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/ {CHR};")
 
         #### If input is Fasta file from VCF, just rename it to .fa in appropriate folder
         if ( X=='VCFA' ):

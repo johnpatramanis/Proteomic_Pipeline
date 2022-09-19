@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly=TRUE)
 #command to run:    Rscript Rscript1.r 'sample_file' 'Gene_locs_file' 'output_location'
-#command to run (from Dataset_Construction folder):    Rscript R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/HG00614_19.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/
+#command to run (from Dataset_Construction folder):    Rscript R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/HG00614_19.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/ 19
 
 library(ShortRead)
 
@@ -10,15 +10,13 @@ genes<-read.table(args[2], as.is=T) # this file contains the chromosome/position
 
 fa<-readFasta(f)
 
-
+chr<-args[4]
 name<-gsub(".fa.gz", "",f)
-name<-strsplit(basename(name), "_")
+smp<-strsplit(basename(name), chr)
+smp<-strsplit(smp[[1]], "_")
+smp<-paste(smp[[1]],collapse='_')
 
-
-chr<-name[[1]][length(name[[1]])]
-smp<-paste(name[[1]][-(length(name[[1]]))],collapse='_')
-
-
+print("Loaded Sample")
 
 curgenes<-genes[genes[,2]==chr,]
 print(curgenes)
