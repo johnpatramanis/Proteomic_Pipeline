@@ -382,17 +382,20 @@ for (sam in Samples){ # Generate the Info for each ancient Sample (Seg sites, Si
                 }
             }
 			
-            ##### Remove Masked samples as well, from the comparison
-			for (non_sam in Masked_Samples){
 			
-				To_Remove=which(row.names(fatabble)==non_sam)
+            ##### Remove Masked samples as well, from the comparison
+			if (MASKED==TRUE){
+				for (non_sam in Masked_Samples){
 				
-				if (is.integer0(To_Remove)==FALSE){
-				    fatabble=fatabble[-To_Remove,]
-				    fa=fa[-To_Remove]
-			        }
-				}
+					To_Remove=which(row.names(fatabble)==non_sam)
+					
+					if (is.integer0(To_Remove)==FALSE){
+						fatabble=fatabble[-To_Remove,]
+						fa=fa[-To_Remove]
+						}
+					}
             
+			}
 			###### Isolate only positions where the ancient sample being looked at, has information
             fanonmissing<-fatabble[,( (fatabble[which(row.names(fatabble)==paste0(sam,'_',genes[g])),]!="-") & (fatabble[which(row.names(fatabble)==paste0(sam,'_',genes[g])),]!="X") & (fatabble[which(row.names(fatabble)==paste0(sam,'_',genes[g])),]!="?") )]
 
