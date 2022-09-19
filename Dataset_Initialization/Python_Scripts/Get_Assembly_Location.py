@@ -10,7 +10,7 @@ import os
 
 if len(sys.argv)==6:
     GENE=sys.argv[1]
-    GENE_ID=sys.argv[2]
+    GENE_ID=sys.argv[2].spit('.')[0]
     ORGANISM=sys.argv[3]
     ASSEMBLY=sys.argv[4]
     TRANSCRIPT_NAME=sys.argv[5]

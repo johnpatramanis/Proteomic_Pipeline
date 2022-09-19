@@ -132,7 +132,7 @@ if GENE_ID=='':
     
    
 ##### If gene is missing due to lost connection, add it in a seperate list
+LOST_CONNECTION_FILE=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
 if SERVICE==0:
-    MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
-    MISSING_IDS.write('{}\n'.format(GENE))
+    LOST_CONNECTION_FILE.write('{}\n'.format(GENE))
     OUTPUT_FILE.write('NO_CONNECTION_TO_SERVER')

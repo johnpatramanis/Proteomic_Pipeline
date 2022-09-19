@@ -8,7 +8,7 @@ import json
 
 if len(sys.argv)>=5:
     GENE=sys.argv[1]
-    TRNSCR_ID=sys.argv[2]
+    TRNSCR_ID=sys.argv[2].spit('.')[0]
     ORGANISM=sys.argv[3]
     TRNSCR_NAME=sys.argv[4]
     ## If transcript ID is found but Ensembl does nto recognize it, Sequence will be -s
@@ -21,7 +21,7 @@ elif len(sys.argv)<5:
     SEQ='N'*100
     TRNSCR_NAME=''
 
-
+SUCCESS=0
 server = "http://rest.ensembl.org"
 ext = "/sequence/id/{}?type=protein".format(TRNSCR_ID)
 attempts=0
@@ -65,6 +65,7 @@ if r!=[]:
         
         if 'seq' in LS.keys():
             SEQ=LS['seq']
+            SUCCESS=1
             
         else:
             SEQ='X'*100
@@ -76,7 +77,7 @@ if r!=[]:
         if 'error' not in MJ.keys():
             if 'seq' in MJ.keys():
                 SEQ=MJ['seq']
-                
+                SUCCESS=1
             else:
                 SEQ='X'*100
 
@@ -127,7 +128,7 @@ if r!=[]:
 
 ANY_TRANSCRIPT_FOUND=(TRNSCR_NAME!='')
 
-if ANY_TRANSCRIPT_FOUND==1:
+if ((ANY_TRANSCRIPT_FOUND==1) and (SUCCESS==1)):
     FASTA_TRANSCRIPT='>'+ORGANISM+'_'+TRNSCR_NAME+'\n'+SEQ
     Fasta_ouptut_Transcript=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,TRNSCR_NAME),'w')
     Fasta_ouptut_Transcript.write(FASTA_TRANSCRIPT)
@@ -135,17 +136,17 @@ if ANY_TRANSCRIPT_FOUND==1:
     print(FASTA_TRANSCRIPT)
 
 
-if (IS_CANON==1):
+if ((IS_CANON==1) and (SUCCESS==1)):
     FASTA_GENE='>'+ORGANISM+'_'+GENE+'\n'+SEQ
     Fasta_ouptut_Gene=open('Workspace/3_FASTA_Seqs/Genes_{}/{}.fa'.format(ORGANISM,GENE),'w')
     Fasta_ouptut_Gene.write(FASTA_GENE)
     print(FASTA_GENE)
     Fasta_ouptut_Gene.close()
 
-if (ANY_TRANSCRIPT_FOUND==0) and (TRNSCR_ID!=''):    
-    FAILING_ID=open('Workspace/3_FASTA_Seqs//Genes_{}/Failing_IDs.txt'.format(ORGANISM),'a')
+if ((TRNSCR_ID!='') and (SUCCESS==0)): # If originally there was a transcriptID given but it did not correspond to anything   
+    FAILING_ID=open('Workspace/3_FASTA_Seqs/Genes_{}/Failing_IDs.txt'.format(ORGANISM),'a')
     FAILING_ID.write(GENE+'\n')
 
-MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+LOST_CONNECTION_FILE=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
 if SERVICE==0:
-    MISSING_IDS.write('{}\n'.format(GENE))
+    LOST_CONNECTION_FILE.write('{}\n'.format(GENE))

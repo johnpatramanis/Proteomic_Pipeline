@@ -3,7 +3,7 @@ import re
 import os
 import time
 import json
-#Example input: AMELX ENSG00000125363 Homo_sapiens ['CANON', 'AHSG-201']
+# Example input: AMELX ENSG00000125363 Homo_sapiens ['CANON', 'AHSG-201']
 # Another Example: KLK4 ENSG00000167749 homo_sapiens CANON
 
 def most_common(lst):
@@ -11,7 +11,7 @@ def most_common(lst):
 
 
 GENE=sys.argv[1]
-GENE_ID=sys.argv[2]
+GENE_ID=sys.argv[2].spit('.')[0]
 ORGANISM=sys.argv[3]
 ISOFORMS=sys.argv[4].split(',')
 
@@ -92,7 +92,7 @@ if r!=[]:
 
 
    
-MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+LOST_CONNECTION_FILE=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
 if SERVICE==0:
-    MISSING_IDS.write('{}\n'.format(GENE))
+    LOST_CONNECTION_FILE.write('{}\n'.format(GENE))
     OUTPUT_FILE.write('NO_CONNECTION_TO_SERVER')
