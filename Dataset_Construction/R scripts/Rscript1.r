@@ -10,11 +10,10 @@ genes<-read.table(args[2], as.is=T) # this file contains the chromosome/position
 
 fa<-readFasta(f)
 
-chr<-args[4]
+smp<-args[4]
+chr<-args[5]
 name<-gsub(".fa.gz", "",f)
-smp<-strsplit(basename(name), chr)
-smp<-strsplit(smp[[1]], "_")
-smp<-paste(smp[[1]],collapse='_')
+
 
 print("Loaded Sample")
 

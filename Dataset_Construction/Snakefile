@@ -242,7 +242,7 @@ rule Cram_to_bam:
         "Workspace/1_OG_BAM_FILES/{sample}.cram"
     output:
         temp("Workspace/1_OG_BAM_FILES/{sample}.bam")
-    threads:4
+    threads:1
     shell:"samtools view -b -@ {threads} -o {output} {input}"
 
 
@@ -256,7 +256,7 @@ rule format_name:
         "Workspace/1_OG_BAM_FILES/{sample}.bam"
     output:
         temp("Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam")
-    threads:4
+    threads:1
     shell: 
         """samtools view -H {input} --threads={threads} |\
         sed -e 's/SN:chr1/SN:1/' | sed -e 's/SN:chr2/SN:2/' | \
@@ -282,7 +282,7 @@ rule format_index_name:
         "Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam"
     output:
         temp("Workspace/2_FORMATTED_BAM/{sample}_Formatted.bam.bai")
-    threads: 4
+    threads: 1
     shell:
         "samtools index -b {input} -@ {threads}"
 
@@ -458,7 +458,7 @@ rule Convert_Ref:
         REF_OUT='Reference/{REF}.mod',
         REF_OUT_INDEX='Reference/{REF}.mod.fai',
 
-    threads:2
+    threads:1
     run:
         shell("""
         cat {input.REF} |\
@@ -486,7 +486,7 @@ rule Convert_VCF_and_Index:
         VCF_OUT='Workspace/0_VCF_FILES/{GVCF}.mod',
         VCF_OUT_INDX='Workspace/0_VCF_FILES/{GVCF}.mod.csi',
 
-    threads:4
+    threads:1
     run:
         shell("""
         bcftools view {input.VCF} |\
@@ -518,7 +518,7 @@ rule Output_FASTA_FROM_VCF:
         lambda wildcards: Get_VCF_file_and_Reference_Genome_for_Sample(wildcards.sample,VCF_SAMPLES)
     output:
         temp('Workspace/0_VCF_FILES/{sample}_{GENE}.VCFA')
-    threads:4
+    threads:1
     run:
         GENE_LOC_FILE=open('Gene_locs.txt')
         LOC='1:11870-12870'  #### if Gene is not matched grab 1K bases from Chr1
@@ -557,7 +557,7 @@ rule format_split_into_chromosomes:
     output:
         expand("Workspace/3_SPLIT_CHR/{{sample}}_FRMT_{CHR}.SPLT", CHR=CHROMOSOMES),
         expand("Workspace/3_SPLIT_CHR/{{sample}}_FRMT_{CHR}.SPLT.bai", CHR=CHROMOSOMES)
-    threads:4
+    threads:1
     run:
         for CHR in CHROMOSOMES:
             shell("samtools view -b {input.BAM} {CHR} > Workspace/3_SPLIT_CHR/{wildcards.sample}_FRMT_{CHR}.SPLT --threads={threads};")
@@ -574,7 +574,7 @@ rule format_pre_split_All_chromosomes:
     output:
         BAM=expand("Workspace/3_SPLIT_CHR/{{sample}}_PRE_SPLIT_{CHR}.PRSPLT",CHR=CHROMOSOMES),
         BAI=expand("Workspace/3_SPLIT_CHR/{{sample}}_PRE_SPLIT_{CHR}.PRSPLT.bai",CHR=CHROMOSOMES)
-    threads:4
+    threads:1
     run:
         for CHR in CHROMOSOMES:
             FILE='Workspace/1_OG_BAM_FILES/{}{}.bam'.format(wildcards.sample,CHR)
@@ -631,7 +631,7 @@ rule from_bam_to_fasta_ANGSD:
         BAI="Workspace/3_SPLIT_CHR/{sample}_{CHR}.bam.bai"
     output:
         "Workspace/4_FASTA_FILES/{sample}_{CHR}.fa.gz"
-    threads: 4
+    threads: 1
     run:
         #### If user does not define any samples as ancient, using a txt file named 'Ancient_Samples.txt', treat all samples as modern!
         if (os.path.isfile('Ancient_Samples.txt')==False): 
@@ -707,7 +707,7 @@ rule Isolate_Gene_from_fasta:
         #### If input is Chromosome Fasta
         if ( (X=='gz') ):
             for CHR in CHROMOSOMES:
-                shell("Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{wildcards.sample}_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/ {CHR};")
+                shell("Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{wildcards.sample}_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/ {wildcards.sample} {CHR};")
 
         #### If input is Fasta file from VCF, just rename it to .fa in appropriate folder
         if ( X=='VCFA' ):
@@ -826,11 +826,11 @@ rule Assemble_protein_dataset:
         expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
         expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
     run:
-        COMMANDS1=expand("""touch Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/*_{GENE}_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; """,GENE=GENES)
-        COMMANDS2=expand("""touch Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; cat Workspace/8_PROTEINS_FASTAS/{sample}_*_translated.fa >>Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; """,sample=SAMPLES)
+        COMMANDS1=expand("""touch Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; for F in Workspace/8_PROTEINS_FASTAS/*_{GENE}_translated.fa; do cat "$F" >> Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; done;""",GENE=GENES)
+        COMMANDS2=expand("""touch Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; for F in Workspace/8_PROTEINS_FASTAS/{sample}_*_translated.fa; do cat "$F" >>Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; done;""",sample=SAMPLES)
         
         for CMD in COMMANDS1:
             shell(CMD)
         for CMD in COMMANDS2:
             shell(CMD)    
-        shell(""" cat Workspace/8_PROTEINS_FASTAS/*_translated.fa >>Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa; """)
+        shell(""" for F in Workspace/8_PROTEINS_FASTAS/*_translated.fa; do cat "$F" >> Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa; done; """)
