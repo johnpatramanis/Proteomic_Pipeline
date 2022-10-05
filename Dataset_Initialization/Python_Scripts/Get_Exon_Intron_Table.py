@@ -8,7 +8,7 @@ import time
 
 if len(sys.argv)==5:
     GENE=sys.argv[1]
-    TRNSCR_ID=sys.argv[2].spit('.')[0]
+    TRNSCR_ID=sys.argv[2].split('.')[0]
     ORGANISM=sys.argv[3]
     TRNSCR_NAME=sys.argv[4]
 

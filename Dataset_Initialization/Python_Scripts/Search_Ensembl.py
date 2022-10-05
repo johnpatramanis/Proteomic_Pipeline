@@ -11,7 +11,7 @@ def most_common(lst):
 
 
 GENE=sys.argv[1]
-GENE_ID=sys.argv[2].spit('.')[0]
+GENE_ID=sys.argv[2].split('.')[0]
 ORGANISM=sys.argv[3]
 ISOFORMS=sys.argv[4].split(',')
 
