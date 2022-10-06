@@ -195,7 +195,6 @@ CHROMOSOMES.sort()
 
 rule all:
     input:
-        SPLIT_CHRS=expand("Workspace/4_FASTA_FILES/{sample}_{CHR}.fa.gz",CHR=CHROMOSOMES,sample=SAMPLES),
         FASTA=expand("Workspace/5_GENE_FASTA_FILES/{sample}_{GENE}.fa",GENE=GENES,sample=SAMPLES),
         BLAST_RESULTS=expand("Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES),
         FINAL_FASTA_RESULTS=expand( "Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES),
@@ -391,10 +390,9 @@ def VCF_or_BAM(Sample,VCF_SAMPLES,CHROMOSOMES,GENES):
     
     if ((Sample in VCF_SAMPLES.keys())==True):
         REQUESTED_FASTA_TYPE= [ 'Workspace/0_VCF_FILES/{}_{}.VCFA'.format(Sample,GENE) for GENE in GENES ]
-
-    elif((Sample not in VCF_SAMPLES.keys())==True):
+        
+    if ((Sample not in VCF_SAMPLES.keys())==True):
         REQUESTED_FASTA_TYPE= [ 'Workspace/4_FASTA_FILES/{}_{}.fa.gz'.format(Sample,CHR) for CHR in CHROMOSOMES]
-
 
     return REQUESTED_FASTA_TYPE
 
@@ -660,26 +658,6 @@ rule from_bam_to_fasta_ANGSD:
             shell('cp ./Workspace/1_OG_BAM_FILES/dummy.fa ./Workspace/4_FASTA_FILES/{}_{}.fa'.format(wildcards.sample,wildcards.CHR))
             shell('gzip ./Workspace/4_FASTA_FILES/{}_{}.fa'.format(wildcards.sample,wildcards.CHR))
         
-
-
-
-
-
-## Request all fasta files
-#
-rule from_All_bam_to_fasta_ANGSD:
-    input:
-        BAM_OUT=expand("Workspace/3_SPLIT_CHR/{sample}_{CHR}.bam",sample=SAMPLES,CHR=CHROMOSOMES),
-        BAI_OUT=expand("Workspace/3_SPLIT_CHR/{sample}_{CHR}.bam.bai",sample=SAMPLES,CHR=CHROMOSOMES)
-
-
-
-
-
-
-
-
-
 
 
 
