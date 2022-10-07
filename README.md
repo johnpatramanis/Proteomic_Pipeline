@@ -20,7 +20,7 @@ Easily download reference proteins/proteomes and fetch all resources required fo
 
 **2) Dataset Construction:**
 
-  Translate proteins from Whole Genome datasets. Supports BAM,CRAM and VCF files as input.
+  Translate proteins from Whole Genome datasets. Supports BAM,CRAM and VCF files as input. Data needs to be mapped onto an [annotated reference genome from Ensemb](https://www.ensembl.org/info/about/species.html)
    
 **3) Dataset Analysis:**
 
