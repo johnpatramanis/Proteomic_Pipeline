@@ -48,6 +48,9 @@ This tutorial aims to introduce the functionality of the pipelines by easily rec
 
 The first step is the installation of the pipeline. The pipeline requires a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. If you don't have Conda installed, you can find a quick guide on how to do that here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html.
 
+You can check if conda is installed and properly set up on your computer by simply typing 
+‘conda’ on your command line.
+
 If conda is installed and ready to go, we can start the tutorial! First navigate to a location on your computer where you want to install them and have sufficient space. Then, download the pipeline from github using the simple command:
 
 ```bash
@@ -61,13 +64,6 @@ wget https://github.com/johnpatramanis/Proteomic_Pipeline/archive/refs/heads/mai
 unzip main.zip
 ```
 
-If your computer does not already have conda installed, you can get it from here:
-
-You can check if conda is installed and properly set up on your computer by simply typing 
-‘conda’ on your command line, 
-Screenshot of typing that
-
-If the result matches the above screenshot, Conda is set and we can move on.
 
 To install all 3 sub-Modules of the pipeline enter the `‘Proteomic Pipeline’` folder using
 
