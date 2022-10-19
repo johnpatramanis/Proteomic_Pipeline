@@ -46,40 +46,41 @@ IS_CANON=0
 
 
 ## If any hits
-if r!=[]:
-    MJ=r.json()
-    
-    
-    ## Find best result!
-    ## If multiple hits
-    if (isinstance(MJ, list))==True: 
-        MJ=MJ[0]
-    
+if ((r!=[]) and (SERVICE==1)):
+    if (r.headers.get('content-type') == 'application/json'):
+        MJ=r.json()
+        
+        
+        ## Find best result!
+        ## If multiple hits
+        if (isinstance(MJ, list))==True: 
+            MJ=MJ[0]
+        
 
-    if 'error' not in MJ.keys():
-        start=int(MJ['start'])
-        EXON=MJ['Exon']
-        IS_CANON=int(MJ['is_canonical'])
-        for EX in range(0,len(EXON)):
-            
-            strand=EXON[EX]['strand']
-            start=int(EXON[EX]['start'])
-            end=int(EXON[EX]['end'])
-                    
-            
-            EXON_LENGTH_LIST.append((end-start)+1)
-            EXON_NAME_LIST.append(EXON[EX]['id'])
-            
-            if (EX<len(EXON)-1) & (strand==1):
-                start_next=int(EXON[EX+1]['start'])-1
-                EXON_LENGTH_LIST.append((start_next-end)) #from the end of this exon to the start of the next one lies an intron, get its length
-                EXON_NAME_LIST.append('Intron')
-            
-            if (EX<len(EXON)-1) & (strand==-1):
-                end_next=int(EXON[EX+1]['end'])+1 
-                EXON_LENGTH_LIST.append((start-end_next)) #same logic as above, but we are in the reverse strand so, each exon is to the left of the previous one
-                EXON_NAME_LIST.append('Intron')
-            
+        if 'error' not in MJ.keys():
+            start=int(MJ['start'])
+            EXON=MJ['Exon']
+            IS_CANON=int(MJ['is_canonical'])
+            for EX in range(0,len(EXON)):
+                
+                strand=EXON[EX]['strand']
+                start=int(EXON[EX]['start'])
+                end=int(EXON[EX]['end'])
+                        
+                
+                EXON_LENGTH_LIST.append((end-start)+1)
+                EXON_NAME_LIST.append(EXON[EX]['id'])
+                
+                if (EX<len(EXON)-1) & (strand==1):
+                    start_next=int(EXON[EX+1]['start'])-1
+                    EXON_LENGTH_LIST.append((start_next-end)) #from the end of this exon to the start of the next one lies an intron, get its length
+                    EXON_NAME_LIST.append('Intron')
+                
+                if (EX<len(EXON)-1) & (strand==-1):
+                    end_next=int(EXON[EX+1]['end'])+1 
+                    EXON_LENGTH_LIST.append((start-end_next)) #same logic as above, but we are in the reverse strand so, each exon is to the left of the previous one
+                    EXON_NAME_LIST.append('Intron')
+                
 
 
 
@@ -113,6 +114,6 @@ if ANY_TRANSCRIPT_FOUND==1:
     
     
    
-MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connection.txt'.format(ORGANISM),'a')
 if SERVICE==0:
     MISSING_IDS.write('{}\n'.format(GENE))

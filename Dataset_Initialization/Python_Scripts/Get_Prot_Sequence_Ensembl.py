@@ -53,33 +53,34 @@ while ((attempts<10) & (r==[])):
 
 
 # If any hits
-if r!=[]:
-    MJ=r.json()
-    
-    
-    #Find best result!
-    #If multiple hits
-    if (isinstance(MJ, list))==True:
-    
-        LS=MJ[0]
+if ((r!=[]) and (SERVICE==1)):
+    if (r.headers.get('content-type') == 'application/json'):
+        MJ=r.json()
         
-        if 'seq' in LS.keys():
-            SEQ=LS['seq']
-            SUCCESS=1
-            
-        else:
-            SEQ='X'*100
-            
         
-    
-    #If single hit, then just select that
-    if (isinstance(MJ, list))==False:
-        if 'error' not in MJ.keys():
-            if 'seq' in MJ.keys():
-                SEQ=MJ['seq']
+        #Find best result!
+        #If multiple hits
+        if (isinstance(MJ, list))==True:
+        
+            LS=MJ[0]
+            
+            if 'seq' in LS.keys():
+                SEQ=LS['seq']
                 SUCCESS=1
+                
             else:
                 SEQ='X'*100
+                
+            
+        
+        #If single hit, then just select that
+        if (isinstance(MJ, list))==False:
+            if 'error' not in MJ.keys():
+                if 'seq' in MJ.keys():
+                    SEQ=MJ['seq']
+                    SUCCESS=1
+                else:
+                    SEQ='X'*100
 
 
 
@@ -147,6 +148,6 @@ if ((TRNSCR_ID!='') and (SUCCESS==0)): # If originally there was a transcriptID 
     FAILING_ID=open('Workspace/3_FASTA_Seqs/Genes_{}/Failing_IDs.txt'.format(ORGANISM),'a')
     FAILING_ID.write(GENE+'\n')
 
-LOST_CONNECTION_FILE=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+LOST_CONNECTION_FILE=open('Workspace/1_Gene_IDs/{}/Lost_Connection.txt'.format(ORGANISM),'a')
 if SERVICE==0:
     LOST_CONNECTION_FILE.write('{}\n'.format(GENE))

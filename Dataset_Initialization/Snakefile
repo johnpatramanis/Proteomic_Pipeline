@@ -140,8 +140,10 @@ rule Initiate_Check_CleanUp_Files:
         "Workspace/1_Gene_IDs/{Organism}/Missing_IDs.txt",
         "Workspace/1_Gene_IDs/{Organism}/Still_Missing_IDs.txt",
         "Workspace/1_Gene_IDs/{Organism}/Lost_Connection.txt",
+        "Workspace/1_Gene_IDs/{Organism}/Found_through_Uniprot.txt",
         "Workspace/2_Transcript_IDs/{Organism}/Missing_IDs.txt",
         "Workspace/3_FASTA_Seqs/Genes_{Organism}/Failing_IDs.txt"
+        
     priority: 10
     run:
     
@@ -167,11 +169,13 @@ rule Initiate_Check_CleanUp_Files:
         if os.path.exists(path4)==False:
             shell(F"""touch Workspace/2_Transcript_IDs/{str(ORG)}/Missing_IDs.txt""")
 
-        path5=F'"Workspace/3_FASTA_Seqs/Genes_{str(ORG)}/Failing_IDs.txt"'
+        path5=F'Workspace/3_FASTA_Seqs/Genes_{str(ORG)}/Failing_IDs.txt'
         if os.path.exists(path5)==False:
             shell(F"""touch Workspace/3_FASTA_Seqs/Genes_{str(ORG)}/Failing_IDs.txt""")
-
-
+        
+        path6=F'Workspace/1_Gene_IDs/{str(ORG)}/Found_through_Uniprot.txt'
+        if os.path.exists(path6)==False:
+            shell(F"""touch Workspace/1_Gene_IDs/{str(ORG)}/Found_through_Uniprot.txt""")
 
 #######################################################################################################################################################################
 ## Data Pipeline ##

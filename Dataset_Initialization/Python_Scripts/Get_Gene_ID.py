@@ -62,7 +62,7 @@ if r!=[]:
 
 
 ##### IF missing, first check for synonims, other codes etc
-if (r==[]) or 'id' not in r.json().keys():
+if ((r==[]) or ('id' not in r.json().keys())) and (GENE_ID==''):
     
     
     ##### Search Xrefs database
@@ -88,9 +88,11 @@ if (r==[]) or 'id' not in r.json().keys():
             
     
 
-    
-    #### If this found something        
-    if r!=[]:
+
+
+#### If this found something        
+if (((r!=[]) and (SERVICE==1)) and (GENE_ID=='')):
+    if (r.headers.get('content-type') == 'application/json'):
         MJ=r.json()
         if MJ!=[]:
         ##### If multiple matches, fetch first one
@@ -112,9 +114,7 @@ if (r==[]) or 'id' not in r.json().keys():
                 
         else:### If empty list is returned
             GENE_ID=''
-    ##### If still missing
-    else:
-        GENE_ID=''
+
 
     
 
@@ -132,7 +132,6 @@ if GENE_ID=='':
     
    
 ##### If gene is missing due to lost connection, add it in a seperate list
-LOST_CONNECTION_FILE=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+LOST_CONNECTION_FILE=open('Workspace/1_Gene_IDs/{}/Lost_Connection.txt'.format(ORGANISM),'a')
 if SERVICE==0:
     LOST_CONNECTION_FILE.write('{}\n'.format(GENE))
-    OUTPUT_FILE.write('NO_CONNECTION_TO_SERVER')

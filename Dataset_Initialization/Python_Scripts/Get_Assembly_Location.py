@@ -54,52 +54,53 @@ while ((attempts<10) & (r==[])):
 
 
 # If any hits
-if r!=[]:
-    MJ=r.json()
-    
-    
-    #Find best result!
-    #If multiple hits
-    if (isinstance(MJ, list))==True: 
-        MJ=MJ[0]
-    
+if ((r!=[]) and (SERVICE==1)):
+    if (r.headers.get('content-type') == 'application/json'):
+        MJ=r.json()
+        
+        
+        #Find best result!
+        #If multiple hits
+        if (isinstance(MJ, list))==True: 
+            MJ=MJ[0]
+        
 
-    if 'error' not in MJ.keys():
-        START=MJ['start']
-        END=MJ['end']
-        IS_CANON=MJ['is_canonical']
-        STRAND=MJ['strand']
-        SEQ_REGION=MJ['seq_region_name']
-        CURRENT_ASSEMBLY=MJ['assembly_name']
-        
-        print('\nAcquiring Positions of Genes for requested Assembly\n ')
-        print('\nCurrent assembly is: {} \n'.format(CURRENT_ASSEMBLY))
-        print('Your chosen assembly is: {} \n'.format(ASSEMBLY))
-        
-        #if user provided with alternative assembly
-        if (ASSEMBLY!='CURRENT') and (CURRENT_ASSEMBLY!=ASSEMBLY):
+        if 'error' not in MJ.keys():
+            START=MJ['start']
+            END=MJ['end']
+            IS_CANON=MJ['is_canonical']
+            STRAND=MJ['strand']
+            SEQ_REGION=MJ['seq_region_name']
+            CURRENT_ASSEMBLY=MJ['assembly_name']
+            
+            print('\nAcquiring Positions of Genes for requested Assembly\n ')
+            print('\nCurrent assembly is: {} \n'.format(CURRENT_ASSEMBLY))
+            print('Your chosen assembly is: {} \n'.format(ASSEMBLY))
+            
+            #if user provided with alternative assembly
+            if (ASSEMBLY!='CURRENT') and (CURRENT_ASSEMBLY!=ASSEMBLY):
+                            
+                
+                server = "https://rest.ensembl.org"
+                ext = "/map/{}/{}/{}:{}..{}:{}/{}?".format(ORGANISM,CURRENT_ASSEMBLY,SEQ_REGION,START,END,STRAND,ASSEMBLY)
+                r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+                decoded = r.json()
+                
+                
+                #if request gave valid results
+                if 'mappings' in decoded.keys():
+                    if decoded['mappings']!=[]:
+                        NEW_MAP=decoded['mappings'][0]['mapped']
                         
-            
-            server = "https://rest.ensembl.org"
-            ext = "/map/{}/{}/{}:{}..{}:{}/{}?".format(ORGANISM,CURRENT_ASSEMBLY,SEQ_REGION,START,END,STRAND,ASSEMBLY)
-            r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
-            decoded = r.json()
-            
-            
-            #if request gave valid results
-            if 'mappings' in decoded.keys():
-                if decoded['mappings']!=[]:
-                    NEW_MAP=decoded['mappings'][0]['mapped']
-                    
-                    START=NEW_MAP['start']
-                    END=NEW_MAP['end']
-                    STRAND=NEW_MAP['strand']
-                    SEQ_REGION=NEW_MAP['seq_region_name']
-                    CURRENT_ASSEMBLY=NEW_MAP['assembly']
+                        START=NEW_MAP['start']
+                        END=NEW_MAP['end']
+                        STRAND=NEW_MAP['strand']
+                        SEQ_REGION=NEW_MAP['seq_region_name']
+                        CURRENT_ASSEMBLY=NEW_MAP['assembly']
+                    else:
+                        print('Error in finding position of Gene: {} in requested assembly'.format(GENE))
                 else:
                     print('Error in finding position of Gene: {} in requested assembly'.format(GENE))
-            else:
-                print('Error in finding position of Gene: {} in requested assembly'.format(GENE))
             
 print('\nGenerating Gene info for Gene: {}\nLocation: {}:{}-{}\tstrand:{}\nAssembly Name: {}\n Will default to current online assembly if possible.'.format(GENE,SEQ_REGION,START,END,STRAND,CURRENT_ASSEMBLY))             
             
@@ -147,6 +148,6 @@ STARTS_FILE.close()
 
 
    
-MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+MISSING_IDS=open('Workspace/1_Gene_IDs/{}/Lost_Connection.txt'.format(ORGANISM),'a')
 if SERVICE==0:
     MISSING_IDS.write('{}\n'.format(GENE))

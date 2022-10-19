@@ -44,55 +44,55 @@ while ((attempts<10) & (r==[])):
 TRNSCRPT_IDS=[]
 
 # If any hits
-if r!=[]:
-    MJ=r.json()
-     
-    
-    ## Check out transcripts to find the desitred isoform(s)
-    
-    if (isinstance(MJ, list))==False:
-        if 'Transcript' in MJ.keys():
-            for TRNSCRPT in MJ['Transcript']:
-                if ('biotype' in TRNSCRPT.keys()) and ('display_name' in TRNSCRPT.keys()) and ('id' in TRNSCRPT.keys()) and ('is_canonical' in  TRNSCRPT.keys()):
-                
-                    if ('ALL' in ISOFORMS) and (TRNSCRPT['biotype']=='protein_coding'):
-                        TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
+if ((r!=[]) and (SERVICE==1)):
+    if (r.headers.get('content-type') == 'application/json'):
+        MJ=r.json()
+         
+        
+        ## Check out transcripts to find the desitred isoform(s)
+        
+        if (isinstance(MJ, list))==False:
+            if 'Transcript' in MJ.keys():
+                for TRNSCRPT in MJ['Transcript']:
+                    if ('biotype' in TRNSCRPT.keys()) and ('display_name' in TRNSCRPT.keys()) and ('id' in TRNSCRPT.keys()) and ('is_canonical' in  TRNSCRPT.keys()):
                     
-                    
-                    else:
+                        if ('ALL' in ISOFORMS) and (TRNSCRPT['biotype']=='protein_coding'):
+                            TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
                         
-                        if ('CANON' in ISOFORMS) and (TRNSCRPT['is_canonical']==1):
-                            TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
-
+                        
+                        else:
                             
-                        if (TRNSCRPT['biotype']=='protein_coding') and (TRNSCRPT['display_name'] in ISOFORMS):
-                            TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
-    
-    
-    
-        ## Scan Transcript entry info
-        # for J,K in MJ.items():        
-            # print('Label: {} \t Info: {} \n\n'.format(J,K))
-    
-    
-    
-    
-    print(TRNSCRPT_IDS)
-    OUTPUT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORGANISM,GENE),'w')
-    MISSING_IDS=open('Workspace/2_Transcript_IDs/{}/Missing_IDs.txt'.format(ORGANISM),'a')
+                            if ('CANON' in ISOFORMS) and (TRNSCRPT['is_canonical']==1):
+                                TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
 
-    if TRNSCRPT_IDS==[]:
-        MISSING_IDS.write('{}\n'.format(GENE))
-    else:
+                                
+                            if (TRNSCRPT['biotype']=='protein_coding') and (TRNSCRPT['display_name'] in ISOFORMS):
+                                TRNSCRPT_IDS.append(TRNSCRPT['id']+'::'+TRNSCRPT['display_name'])
+        
+        
+        
+            ## Scan Transcript entry info
+            # for J,K in MJ.items():        
+                # print('Label: {} \t Info: {} \n\n'.format(J,K))
+        
+        
+        
+        
+        print(TRNSCRPT_IDS)
+        OUTPUT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORGANISM,GENE),'w')
+        MISSING_IDS=open('Workspace/2_Transcript_IDs/{}/Missing_IDs.txt'.format(ORGANISM),'a')
 
-        for TRNSCRPT_ID in TRNSCRPT_IDS:
-            OUTPUT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORGANISM,GENE),'a')
-            if TRNSCRPT_ID!=[]:
-                OUTPUT_FILE.write(str(TRNSCRPT_ID)+'\n')
+        if TRNSCRPT_IDS==[]:
+            MISSING_IDS.write('{}\n'.format(GENE))
+        else:
+
+            for TRNSCRPT_ID in TRNSCRPT_IDS:
+                OUTPUT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORGANISM,GENE),'a')
+                if TRNSCRPT_ID!=[]:
+                    OUTPUT_FILE.write(str(TRNSCRPT_ID)+'\n')
 
 
    
-LOST_CONNECTION_FILE=open('Workspace/1_Gene_IDs/{}/Lost_Connextion_IDs.txt'.format(ORGANISM),'a')
+LOST_CONNECTION_FILE=open('Workspace/1_Gene_IDs/{}/Lost_Connection.txt'.format(ORGANISM),'a')
 if SERVICE==0:
     LOST_CONNECTION_FILE.write('{}\n'.format(GENE))
-    OUTPUT_FILE.write('NO_CONNECTION_TO_SERVER')
