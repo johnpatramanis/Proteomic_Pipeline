@@ -195,9 +195,9 @@ CHROMOSOMES.sort()
 
 rule all:
     input:
-        FASTA=expand("Workspace/5_GENE_FASTA_FILES/{sample}_{GENE}.fa",GENE=GENES,sample=SAMPLES),
-        BLAST_RESULTS=expand("Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES),
-        FINAL_FASTA_RESULTS=expand( "Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES),
+        #FASTA=expand("Workspace/5_GENE_FASTA_FILES/{sample}_{GENE}.fa",GENE=GENES,sample=SAMPLES),
+        #BLAST_RESULTS=expand("Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES),
+        #FINAL_FASTA_RESULTS=expand( "Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES),
         ALL_PRTOEINS_ALL_SAMPLES=expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
         ALL_SAMPLES_PER_PROTEIN=expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
         ALL_PROTEINS_PER_SAMPLE=expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
@@ -386,13 +386,30 @@ def SPLIT_OR_NOT_SPLIT_BAI(Sample,CHROMOSOMES):
 
 ##### VCF or BAM/CRAM as input (for rule)
 
-def VCF_or_BAM(Sample,VCF_SAMPLES,CHROMOSOMES,GENES):
+def VCF_or_BAM(Sample,VCF_SAMPLES,CHROMOSOMES,GENE):
     
     if ((Sample in VCF_SAMPLES.keys())==True):
-        REQUESTED_FASTA_TYPE= [ 'Workspace/0_VCF_FILES/{}_{}.VCFA'.format(Sample,GENE) for GENE in GENES ]
+    
+        REQUESTED_FASTA_TYPE= 'Workspace/0_VCF_FILES/{}_{}.VCFA'.format(Sample,GENE)
+        
+        
+        
+        
         
     if ((Sample not in VCF_SAMPLES.keys())==True):
-        REQUESTED_FASTA_TYPE= [ 'Workspace/4_FASTA_FILES/{}_{}.fa.gz'.format(Sample,CHR) for CHR in CHROMOSOMES]
+        
+        GENE_LOCS=open('Gene_locs.txt','r')
+        CHR=1 #backup if Chromosome in not found
+        
+        for line in GENE_LOCS:
+            line=line.strip().split()
+            if line[0]==GENE:
+                CHR=line[1]## TEST
+                break
+                
+        REQUESTED_FASTA_TYPE= 'Workspace/4_FASTA_FILES/{}_{}.fa.gz'.format(Sample,CHR)
+
+
 
     return REQUESTED_FASTA_TYPE
 
@@ -674,18 +691,26 @@ rule from_bam_to_fasta_ANGSD:
 
 rule Isolate_Gene_from_fasta:
     input:
-        lambda wildcards: VCF_or_BAM(wildcards.sample,VCF_SAMPLES,CHROMOSOMES,GENES)
+        lambda wildcards: VCF_or_BAM(wildcards.sample,VCF_SAMPLES,CHROMOSOMES,wildcards.GENE)
     output:
-        expand("Workspace/5_GENE_FASTA_FILES/{{sample}}_{GENE}.fa",GENE=GENES)
+        "Workspace/5_GENE_FASTA_FILES/{sample}_{GENE}.fa"
     run:
         #### Check first file of input, get file extention ending
         X=input[0].split('.')
         X=X[len(X)-1]
-        
+        GENE=wildcards.GENE
         #### If input is Chromosome Fasta
         if ( (X=='gz') ):
-            for CHR in CHROMOSOMES:
-                shell("Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{wildcards.sample}_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/ {wildcards.sample} {CHR};")
+            
+            CHR=1## backup if CHR is not found
+            GENE_LOCS=open('Gene_locs.txt','r')
+            for line in GENE_LOCS:
+                line=line.strip().split()
+                if line[0]==GENE:
+                    CHR=line[1]
+                    break
+
+            shell("Rscript ./R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/{wildcards.sample}_{CHR}.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/ {wildcards.sample} {CHR} {GENE};")
 
         #### If input is Fasta file from VCF, just rename it to .fa in appropriate folder
         if ( X=='VCFA' ):

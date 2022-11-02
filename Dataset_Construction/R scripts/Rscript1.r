@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly=TRUE)
 #command to run:    Rscript Rscript1.r 'sample_file' 'Gene_locs_file' 'output_location'
-#command to run (from Dataset_Construction folder):    Rscript R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/HG00614_19.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/ 19
+#command to run (from Dataset_Construction folder):    Rscript R\ scripts/Rscript1.r Workspace/4_FASTA_FILES/HG00614_19.fa.gz Gene_locs.txt Workspace/5_GENE_FASTA_FILES/ HG00614 1 SDHB
 
 library(ShortRead)
 
@@ -8,16 +8,17 @@ f<-args[1]   #those are created from previous step, or from other pipelines
 genes<-read.table(args[2], as.is=T) # this file contains the chromosome/positions for the genes of interest
 
 
-fa<-readFasta(f)
+fa<-readFasta(f) ### Chromosome fasta
 
 smp<-args[4]
 chr<-args[5]
-name<-gsub(".fa.gz", "",f)
+gene<-args[6]
+
 
 
 print("Loaded Sample")
 
-curgenes<-genes[genes[,2]==chr,]
+curgenes<-genes[genes[,1]==gene,]
 print(curgenes)
 
 
@@ -39,4 +40,4 @@ for(i in 1:length(curgenes[,1])){
 		writeFasta(newseq, paste0(args[3],smp, "_", curgenes[i,1], ".fa")) # write it out
 		}
 	
-		}
+	}
