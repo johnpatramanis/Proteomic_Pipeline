@@ -198,8 +198,8 @@ rule all:
         #FASTA=expand("Workspace/5_GENE_FASTA_FILES/{sample}_{GENE}.fa",GENE=GENES,sample=SAMPLES),
         #BLAST_RESULTS=expand("Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES),
         #FINAL_FASTA_RESULTS=expand( "Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES),
-        ALL_PRTOEINS_ALL_SAMPLES=expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
-        ALL_SAMPLES_PER_PROTEIN=expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
+        # ALL_PRTOEINS_ALL_SAMPLES=expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
+        # ALL_SAMPLES_PER_PROTEIN=expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
         ALL_PROTEINS_PER_SAMPLE=expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
 
 
@@ -819,21 +819,45 @@ rule Extract_All_Blastools_output:
 
 
 
-## Merge proteins from the same individual into one fasta file and all the same protein from every individual into their own fast file
+### Merge proteins from the same individual into one fasta file 
 #
+
+rule Assemble_protein_dataset_per_Sample:
+    input:
+        expand("Workspace/8_PROTEINS_FASTAS/{{sample}}_{GENE}_translated.fa",GENE=GENES)
+    output:
+        "Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa"
+    run:
+    
+        shell(F'''touch Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{wildcards.sample}_PROT_REFERENCE.fa;''')
+        for GENE in GENES:
+            shell(F'''cat Workspace/8_PROTEINS_FASTAS/{wildcards.sample}_{GENE}_translated.fa >> Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{wildcards.sample}_PROT_REFERENCE.fa; ''')
+
+
+
+### Merge all the same protein from every individual into their own fast file
+#
+rule Assemble_protein_dataset_per_Protein:
+    input:
+        expand("Workspace/8_PROTEINS_FASTAS/{sample}_{{GENE}}_translated.fa",sample=SAMPLES)
+    output:
+        "Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa"
+    run:
+        shell(F'''touch Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{wildcards.GENE}_PROT_REFERENCE.fa;''')
+        for sample in SAMPLES:
+            shell(F'''cat Workspace/8_PROTEINS_FASTAS/{sample}_{wildcards.GENE}_translated.fa >> Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{wildcards.GENE}_PROT_REFERENCE.fa;''')
+
+
+
+### Finally merge all proteins for all individuals into 1 Fasta
 rule Assemble_protein_dataset:
     input:
-        expand("Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES)
-    output:
-        expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
         expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
         expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
+    output:
+        "Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"
+
     run:
-        COMMANDS1=expand("""touch Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; for F in Workspace/8_PROTEINS_FASTAS/*_{GENE}_translated.fa; do cat "$F" >> Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa; done;""",GENE=GENES)
-        COMMANDS2=expand("""touch Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; for F in Workspace/8_PROTEINS_FASTAS/{sample}_*_translated.fa; do cat "$F" >>Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa; done;""",sample=SAMPLES)
-        
-        for CMD in COMMANDS1:
-            shell(CMD)
-        for CMD in COMMANDS2:
-            shell(CMD)    
-        shell(""" for F in Workspace/8_PROTEINS_FASTAS/*_translated.fa; do cat "$F" >> Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa; done; """)
+        shell("""touch Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa;""")
+        for GENE in GENES:
+            shell(F'''cat  Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa >> Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa;''')
