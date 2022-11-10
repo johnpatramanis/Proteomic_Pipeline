@@ -35,5 +35,5 @@ Easily download reference proteins/proteomes and fetch all resources required fo
 If you want to try to use this, please see the [Tutorial](Tutorial.md) on how to install and use the pipelines.
 
 ## Dependencies
-The pipelines/workflows presented here, multiple, publicly avaialble, software. All of the software and packages used by the pipelines are installed through the conda environments available here (see [Tutorial](Tutorial.md) ). For the full list of the sofatware and packages used, check [this PDF file](TEST.md):
+The pipelines/workflows presented here, multiple, publicly avaialble, software. All of the software and packages used by the pipelines are installed through the conda environments available here (see [Tutorial](Tutorial.md) ). For the full list of the sofatware and packages used, check [this PDF file](Supplementary.pdf):
 
