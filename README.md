@@ -30,8 +30,8 @@ Easily download reference proteins/proteomes and fetch all resources required fo
 <br/><br/>
 <br/><br/>
 <br/><br/>
-<br/><br/>
 
+## Tutorial
 If you want to try to use this, please see the [Tutorial](Tutorial.md) on how to install and use the pipelines.
 
 [Testing Link to other file](TEST.md)
