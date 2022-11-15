@@ -55,6 +55,8 @@ conda env create -f ./Dataset_Construction/Translator.yml
 ```bash
 conda env create -f ./Dataset_Analysis/Analyser.yml
 ```
+<br/><br/>
+If there were no errors until this point, then you have successfully installed the 3 modules!
 
 <br/><br/>
 
