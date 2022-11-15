@@ -108,7 +108,7 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 ## STEP 1 - Reference Dataset Initialisation
 
-The only sequences we have on our hands right now are the proteins of *H.antecessor* and *G.blacki* . To recreate their phylogeny, we first need to set up a reference dataset with which we can compare our samples. To do that, we can use Module 1 of the pipeline, and create the ‘skeleton’ of a reference dataset, using the reference proteomes of different species that we expect to be somewhat related to both *H.antecessor* and *G.blacki*. So let’s get ready to do that.
+The only sequences we have on our hands right now are the proteins of *H.antecessor* and *G.blacki*. In order to try to recreate their phylogeny, we first need to set up a reference dataset with which we can compare the sequences of our samples. To do that, we can use Module 1 of the pipeline, and create the ‘skeleton’ of a reference dataset. We can do that by using the reference proteomes of different species that we expect to be somewhat related to both *H.antecessor* and *G.blacki*. So let’s get ready to do that.
 
 ```bash
 cd ./Dataset_Initialization
