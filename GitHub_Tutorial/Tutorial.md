@@ -188,7 +188,7 @@ conda deactivate
 
 ## STEP 2 - Dataset Enhancement
 
-We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data from the translation of available genomic data. To do this we can use the 2nd Module. Activate the module by typing
+We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data translated from available genomic data. To do this we can use the 2nd Module. Activate the module by typing
 
 ```bash
 conda activate Translator
@@ -203,10 +203,10 @@ $$$$ https://www.nature.com/articles/nature12228  ## Remapped data need to be up
 
 $$$$ https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub ### Remapped data need to be uplaoded somewhere
 
-WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is XX GB
+WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is 270 GB
 If you have the disk space, proceed as bellow. If not you can move straight to Module 3.
 
-First we will download 9 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
+We will first download 9 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
 and you can download them using this loop:
 
 ```bash
@@ -218,7 +218,7 @@ do
 done
 
 ```
-If you don't want to download all of them, you can remove some of the links from the ```1KG_Samples.txt ``` file.
+If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file, each line should correspond to one sample. I would suggest keeping at least 2 individuals from the original file.
 
 Additionally we can download some of the archaic human samples. For these it is suggested to use the VCF files. Ancient DNA samples (e.g. BAM files) tend to contain multiple sequencing errors and the VCF files ahve been carefully called by researchers who specialise in this work.
 We can download and format the VCF files for 1 Neanderthal and 1 Denisovan usign the following commands:
