@@ -158,6 +158,8 @@ snakemake -j4 --resources FTP=7
 ```
 
 Depending on the computing power of your computer, you can increase the number of cores being used, by typing -j8 or  -j16 if you want to utilize 8 or 16 cores instead of 4. 
+FTP is a unique 'resource' for this module that makes sure you are not making too many requests per second from Ensembl. If you do, Ensembl might shut you out for a few moments, leading to the script crashing. I highly suggest not using anything more than FTP=7 (you can use less , it might make things slightly slower)
+
 Once the pipeline finishes running you can check the results by diving into the ```Workspace``` folder. There are many output files that we will use later on, but the most important ones for now are located in:
 ```Workspace/3_FASTA_Seqs/All_Sequences.fa```
 
