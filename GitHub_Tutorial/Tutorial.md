@@ -64,11 +64,13 @@ If there were no errors until this point, then you have successfully installed t
 
 Finally, since our goal here is to reconstruct the enamel phylogeny of *H.antecessor* and *G.blacki* as they were presented in their original publications, we will download the protein sequences from the publications themselves. We will then apply some shell magic to prepare the files, remove the *H.erectus* sample that is also included the dataset and modify the labels to suit the pipeline.
 
+First Download the published Fasta sequences from the *H.antecessor* repository.
+
 ```bash
 wget https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-020-2153-8/MediaObjects/41586_2020_2153_MOESM4_ESM.txt -O PaleoProteome.fa
 ```
 
-Some shell magic....
+Then some shell magic to prepare the file ....
 
 ```bash
 END_LINE=$(grep -o -i -n -m 1 Dmanisi_H_ere  PaleoProteome.fa | cut -d ':' -f 1)
@@ -88,7 +90,7 @@ cat Gigantopethicus_Raw.fa | sed  's/.\+\(Gigantopithecus\).\+GN=\(.\+\)/\1_\2/'
 
 <br/><br/>
 
-You should now have both the 2 ancient protein samples downloaded and properly formatted.
+You should now have both ancient protein samples downloaded and properly formatted in 2 files: H_antecessor.fa, Gigantopethicus.fa .
 If all 3 pipelines were installed without an error and the data was successfully downloaded, then congratulations , we can now start our phylogenetic reconstruction!
 
 
