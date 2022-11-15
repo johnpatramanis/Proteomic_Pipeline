@@ -231,9 +231,12 @@ Additionally we can download some of the archaic human samples. For these it is 
 We can download and format the VCF files for 1 Neanderthal and 1 Denisovan usign the following commands:
 
 ```bash
-wget --continue --progress=dot:mega --tries=0 -O /Workspace/0_VCF_FILES/Neanderthal.vcf  "$SAMPLE" ;
-wget --continue --progress=dot:mega --tries=0 -O /Workspace/0_VCF_FILES/Neanderthal.vcf  "$SAMPLE" ;
+cd Workspace/0_VCF_FILES/
+wget -r --no-parent http://cdna.eva.mpg.de//neandertal/altai/AltaiNeandertal/VCF;
+wget -r --no-parent http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;
 
+
+cd ../..
 ```
 
 
