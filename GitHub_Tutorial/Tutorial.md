@@ -45,6 +45,8 @@ conda env create -f ./Dataset_Initialization/Initiator.yml
 ```
 There could be some messages popping up, types ' y' if asked to confirm.
 
+<br/><br/>
+
 Then the same for the other 2 environments:
 
 ```bash
@@ -53,6 +55,9 @@ conda env create -f ./Dataset_Construction/Translator.yml
 ```bash
 conda env create -f ./Dataset_Analysis/Analyser.yml
 ```
+
+<br/><br/>
+
 Finally, since our goal here is to reconstruct the phylogeny of *H.antecessor* and *G.blacki* , we will download the protein sequences from the publications themselves. We will then apply some shell magic to prepare the files, remove the *H.erectus* sample that is also included the dataset and modify the labels to suit the pipeline.
 
 ```bash
