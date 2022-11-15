@@ -32,6 +32,7 @@ wget https://github.com/johnpatramanis/Proteomic_Pipeline/archive/refs/heads/mai
 unzip main.zip
 ```
 
+<br/><br/>
 
 To install all 3 sub-Modules of the pipeline enter the `‘Proteomic Pipeline’` folder using
 
@@ -42,6 +43,9 @@ and then one by one, type the commands below:
 ```bash
 conda env create -f ./Dataset_Initialization/Initiator.yml
 ```
+There could be some messages to accept creating a new environment, types ' y' if asked
+Then the same for the other 2 environments:
+
 ```bash
 conda env create -f ./Dataset_Construction/Translator.yml
 ```
