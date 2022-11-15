@@ -115,7 +115,7 @@ cd ./Dataset_Initialization
 conda activate Initiator
 ```
 
-With the above commands we are now inside the folder of Pipeline 1 and have ‘activated’ the pipeline’s environment. This environment has now also unlocked new software on our command line, which the pipeline will use. You can test this out by typing:
+With the above commands we are now inside the folder of Module 1 and have ‘activated’ the Conda environment of this 1st module of the pipeline. This environment has now also unlocked new software on our command line, which the pipeline will use. You can test this out by typing:
 ```bash
 snakemake
 ```
