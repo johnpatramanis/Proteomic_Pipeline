@@ -188,10 +188,16 @@ conda deactivate
 
 ## STEP 2 - Dataset Enhancement
 
-We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data translated from available genomic data. To do this we can use the 2nd Module. Activate the module by typing
+We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data translated from available genomic data. To do this we can use the 2nd Module. Activate the module by typing:
 
 ```bash
 conda activate Translator
+```
+
+and move into the right folder:
+
+```bash
+cd ./Dataset_Construction/
 ```
 
 First we need to download some data to translate though! For this example we will build a subset of the reference dataset presented in the publication of PaleoProPhyler {Link to Publication when its out}. For now we will use the following datasets:
@@ -216,15 +222,18 @@ for SAMPLE in $LINES
 do
        wget --continue --progress=dot:mega --tries=0 "$SAMPLE";
 done
-
+mv *.cram Workspace/1_OG_BAM_FILES/
 ```
 If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file, each line should correspond to one sample. I would suggest keeping at least 2 individuals from the original file.
 
-Additionally we can download some of the archaic human samples. For these it is suggested to use the VCF files. Ancient DNA samples (e.g. BAM files) tend to contain multiple sequencing errors and the VCF files ahve been carefully called by researchers who specialise in this work.
+
+Additionally we can download some of the archaic human samples. For these it is suggested to use the VCF files. Ancient DNA samples (e.g. their BAM files) tend to contain multiple  errors and the VCF files have been more carefully called by the researchers who specialise in this work.
 We can download and format the VCF files for 1 Neanderthal and 1 Denisovan usign the following commands:
 
 ```bash
-cd ./Dataset_Construction/
+wget --continue --progress=dot:mega --tries=0 -O /Workspace/0_VCF_FILES/Neanderthal.vcf  "$SAMPLE" ;
+wget --continue --progress=dot:mega --tries=0 -O /Workspace/0_VCF_FILES/Neanderthal.vcf  "$SAMPLE" ;
+
 ```
 
 
