@@ -43,7 +43,8 @@ and then one by one, type the commands below:
 ```bash
 conda env create -f ./Dataset_Initialization/Initiator.yml
 ```
-There could be some messages to accept creating a new environment, types ' y' if asked
+There could be some messages popping up, types ' y' if asked to confirm.
+
 Then the same for the other 2 environments:
 
 ```bash
