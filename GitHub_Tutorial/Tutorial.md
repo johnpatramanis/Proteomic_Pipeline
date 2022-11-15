@@ -11,7 +11,7 @@ This tutorial aims to introduce the functionality of the pipelines by easily rec
 <br/><br/>
 <br/><br/>
 
-## STEP 0 - Installation
+## STEP 0 - Installation and Data preparation
 
 The first step is the installation of the pipeline. The pipeline requires a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. If you don't have Conda installed, you can find a quick guide on how to do that here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html.
 
@@ -106,7 +106,7 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 
 
-## STEP 1 ( Reference Dataset Initialisation )
+## STEP 1 - Reference Dataset Initialisation
 
 The only sequences we have on our hands right now are the proteins of *H.antecessor* and *G.blacki* . To recreate their phylogeny, we first need to set up a reference dataset with which we can compare our samples. To do that, we can use Module 1 of the pipeline, and create the ‘skeleton’ of a reference dataset, using the reference proteomes of different species that we expect to be somewhat related to both *H.antecessor* and *G.blacki*. So let’s get ready to do that.
 
@@ -183,7 +183,7 @@ conda deactivate
 <br/><br/>
 <br/><br/>
 
-## STEP 2 ( Dataset Enhancement)
+## STEP 2 - Dataset Enhancement
 
 We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data from the translation of available genomic data. To do this we can use the 2nd Module. Activate the module by typing
 
@@ -332,7 +332,7 @@ cd ..
 
 
 
-## STEP 3 ( Phylogenetic Reconstruction )
+## STEP 3 - Phylogenetic Analysis
 
 We now have the paleo-proteomic data ( ```H_antecessor.fa```) , the reference proteomes ( ```Reference_Proteomes.fa```) and the translated sequences ( ```Translated.fa``` ), which we can all merge together into the dataset we want to run a phylogenetic analysis.
 
@@ -390,7 +390,7 @@ Once this finishes running you will have a generated tree for each of your porte
    
 
 
-## UPDATING  --  NEEDS SOME MORE WRITING
+## Keeping up to date
 
 If you have installed this workflow on your computer and a newer version of it has been released, you can simply update it!
 To do that go to where the Workflow Folder is located and simply repeat the download step:
