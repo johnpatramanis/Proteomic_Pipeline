@@ -120,8 +120,8 @@ With the above commands we are now inside the folder of Module 1 and have ‘act
 snakemake
 ```
 
-You can read more about conda environments here if you are interested: LINK
-For now, all you need to know is, activating the right environment is needed to use each of the pipelines.
+You can read more about conda environments [here](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/environments.html) if you are interested.
+For now, all you need to know is, activating the right environment is needed to use each of the modules of the pipeline.
 
 To use this pipeline we just need two things:
 1 txt file, named ```Proteins.txt``` with the proteins we are interested in and
