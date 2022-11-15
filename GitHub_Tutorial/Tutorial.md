@@ -59,7 +59,8 @@ conda env create -f ./Dataset_Analysis/Analyser.yml
 If there were no errors until this point, then you have successfully installed the 3 modules!
 
 <br/><br/>
-### Downloading Published Palaeoproteomic Data
+
+## Downloading Published Palaeoproteomic Data
 
 Finally, since our goal here is to reconstruct the enamel phylogeny of *H.antecessor* and *G.blacki* as they were presented in their original publications, we will download the protein sequences from the publications themselves. We will then apply some shell magic to prepare the files, remove the *H.erectus* sample that is also included the dataset and modify the labels to suit the pipeline.
 
