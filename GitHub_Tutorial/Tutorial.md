@@ -142,13 +142,14 @@ less Proteins.txt
 less Organism.txt
 ```
 
-and you may want to edit them and add some proteins or species using nano:
+and you may want to edit them and add some proteins or species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
+If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html)
 
 ```bash
 nano Proteins.txt
 nano Organism.txt
 ```
-If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html)
+
 
 For this example the proteins we are interested in are the ones recovered for the *H.antecessor* and *G.blacki* and the species we are interested in are thought to be at least somewhat related to these two extinct species. If everything looks fine, its now time to execute the pipeline by simply typing:
 
