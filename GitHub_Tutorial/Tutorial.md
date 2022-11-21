@@ -234,7 +234,7 @@ We can download and format the VCF files for 1 Neanderthal and 1 Denisovan usign
 ```bash
 cd Workspace/0_VCF_FILES/
 
-wget -r --no-parent http://cdna.eva.mpg.de//neandertal/altai/AltaiNeandertal/VCF;
+wget -r --no-parent http://cdna.eva.mpg.de//neandertal/altai/AltaiNeandertal/VCF/;
 wget -r --no-parent http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;
 
 cd ../..
@@ -268,7 +268,6 @@ We can take a look at how the file looks with:
 less Samples.txt
 ```
 
-# (SCREENSHOT HERE)
 
 With these two files set up, we don’t need anything else. If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those.
 All we need to do now, is execute the pipeline:
@@ -296,7 +295,7 @@ and we can store the result somewhere as
 cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Great_Apes_and_Modern_Humans.fa
 ```
 
-Next we want to translate a different dataset, namely Prufer et al 2017. This dataset consists of multiple ancient individuals mapped onto GRCh37 and carefully had their genotypes called. In order to translate them, first we need to switch our reference genome by editing the ```Organism.txt``` file
+Next we want to translate a different dataset, namely [Prufer et al 2017](https://pubmed.ncbi.nlm.nih.gov/28982794/). This dataset consists of multiple ancient individuals mapped onto GRCh37 and carefully had their genotypes called. In order to translate them, first we need to switch our reference genome by editing the ```Organism.txt``` file
 
 ```bash
 echo ‘Homo_sapiens	GRCh37’ > Organism.txt
