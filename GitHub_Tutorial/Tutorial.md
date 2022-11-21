@@ -352,7 +352,7 @@ cd ..
 
 ## STEP 3 - Phylogenetic Analysis
 
-We now have the paleo-proteomic data ( ```H_antecessor.fa```) , the reference proteomes ( ```Reference_Proteomes.fa```) and the translated sequences ( ```Translated.fa``` ), which we can all merge together into the dataset we want to run a phylogenetic analysis.
+We now have the paleo-proteomic data ( ```H_antecessor.fa```) , the reference proteomes ( ```Reference_Proteomes.fa```) and the translated sequences ( ```Translated.fa``` ), which we can all merge together into the dataset which we want to run a phylogenetic analysis on.
 
 ```bash
 cat H_antecessor.fa >>  Reference_Data.fa
