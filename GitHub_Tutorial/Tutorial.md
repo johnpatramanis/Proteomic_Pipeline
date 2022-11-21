@@ -200,14 +200,15 @@ and move into the right folder:
 cd ./Dataset_Construction/
 ```
 
-First we need to download some data to translate though! For this example we will build a subset of the reference dataset presented in the publication of PaleoProPhyler {Link to Publication when its out}. For now we will use the following datasets:
+First we need to download some data to translate though! For this example we will build a subset of the reference dataset presented in the publication of PaleoProPhyler {Link to Publication when its out}. For now we can use any of the following datasets:
 
-https://www.biorxiv.org/content/10.1101/2021.02.06.430068v2.full 
+https://www.biorxiv.org/content/10.1101/2021.02.06.430068v2.full
+
 https://pubmed.ncbi.nlm.nih.gov/28982794/
 
-$$$$ https://www.nature.com/articles/nature12228  ## Remapped data need to be uploaded somewhere
+https://www.nature.com/articles/nature12228  ## Remapped data need to be uploaded somewhere
 
-$$$$ https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub ### Remapped data need to be uplaoded somewhere
+https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub ### Remapped data need to be uplaoded somewhere
 
 WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is 270 GB
 If you have the disk space, proceed as bellow. If not you can move straight to Module 3.
