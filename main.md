@@ -7,8 +7,7 @@ author:
 bibliography:
 - references.bib
 date: 2022-11-22
-title: "**PaleoProPhyler: a reproducible pipeline for phylogenetic
-  inference using ancient proteins**"
+title: "PaleoProPhyler: a reproducible pipeline for phylogenetic inference using ancient proteins"
 ---
 
 # Summary
