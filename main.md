@@ -10,15 +10,19 @@ authors:
   - name: Ioannis Patramanis
     affiliation: 1
   - name: Jazmin Ramos Madrigal
-    affiliation: 1
+    affiliation: 3
   - name: Enrico Cappellini
-    affiliation: 1
+    affiliation: 2
   - name: Fernando Racimo
     affiliation: 1
 
 affiliations:
   - name: Section for Molecular Ecology and Evolution, Globe Institute, University of Copenhagen
     index: 1
+  - name: Lundbeck GeoGenetics Centre, Globe Institute, University of Copenhagen
+    index: 2
+  - name: Center for Evolutionary Hologenomics, Globe Institute, University of Copenhagen
+    index: 3
 date: 2022-11-22
 bibliography: references.bib 
 ---
