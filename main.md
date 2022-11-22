@@ -1,14 +1,28 @@
 ---
-author:
-- Ioannis Patramanis
-- Jazmin Ramos Madrigal
-- Enrico Cappellini
-- Fernando Racimo
+authors:
+- name:Ioannis Patramanis
+  affiliation: 1
+- name:Jazmin Ramos Madrigal
+  affiliation: 3
+- name:Enrico Cappellini
+- affiliation: 2
+- name:Fernando Racimo
+- affiliation: 1,2
+
+affiliations:
+  - name: Section for Molecular Ecology and Evolution, Globe Institute, University of Copenhagen
+    index: 1
+  - name: Lundbeck GeoGenetics Centre, Globe Institute, University of Copenhagen
+    index: 2
+  - name: Center for Evolutionary Hologenomics, Globe Institute, University of Copenhagen
+    index: 3
+
 bibliography:
 - references.bib
 date: 2022-11-22
 title: "PaleoProPhyler: a reproducible pipeline for phylogenetic inference using ancient proteins"
 ---
+
 
 # Summary
 
