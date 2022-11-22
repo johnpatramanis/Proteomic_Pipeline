@@ -14,7 +14,7 @@ authors:
   - name: Enrico Cappellini
     affiliation: 2
   - name: Fernando Racimo
-    affiliation: 1
+    affiliation: 1,2
 
 affiliations:
   - name: Section for Molecular Ecology and Evolution, Globe Institute, University of Copenhagen
