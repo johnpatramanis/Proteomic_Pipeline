@@ -1,4 +1,4 @@
-# PaleoProPhyler: A reproducable pipeline for Palaeo-Proteomic Phylogenetic reconstruction.
+# PaleoProPhyler: A reproducible pipeline for Palaeo-Proteomic Phylogenetic reconstruction.
 
 ![alt text](https://github.com/johnpatramanis/Proteomic_Pipeline/blob/main/GitHub_Tutorial/PaleoProPhyler%20Overview%20Fig.svg?raw=true)
 
