@@ -25,7 +25,7 @@ Easily download reference proteins/proteomes and fetch all resources required fo
    
 **3) Dataset Analysis:**
 
-   Align a proteomic dataset, format and prepare it for a phylgenetic analysis. Run phylogenetic trees including for each individual protein of the dataset and a concatenation of all of the available proteins.
+   Align a proteomic dataset, format and prepare it for a phylgenetic analysis. Run phylogenetic trees including for each individual protein of the dataset and for a concatenation of all of the available proteins.
    
 <br/><br/>
 <br/><br/>
