@@ -235,7 +235,7 @@ We can download and format the VCF files for 1 Neanderthal and 1 Denisovan usign
 cd Workspace/0_VCF_FILES/
 
 wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ( 70 Giga bytes )
-wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;
+wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/; (54 Giga bytes )
 
 cd ../..
 ```
