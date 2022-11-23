@@ -17,7 +17,7 @@ All of the scripts are based on Snakemake and Conda. I highly recomend reading t
 
 **1) Dataset Initialization:**
 
-Easily download reference proteins/proteomes and fetch all resources required for the translation through Dataset Construction.
+Easily download reference proteins/proteomes and fetch all resources required for the translation through the 'Dataset Construction' module.
 
 **2) Dataset Construction:**
 
@@ -25,7 +25,7 @@ Easily download reference proteins/proteomes and fetch all resources required fo
    
 **3) Dataset Analysis:**
 
-   Align a proteomic dataset, format and prepare it for a phylgenetic analysis- including the actual phylogenetic tree creation
+   Align a proteomic dataset, format and prepare it for a phylgenetic analysis. Run phylogenetic trees including for each individual protein of the dataset and a concatenation of all of the available proteins.
    
 <br/><br/>
 <br/><br/>
