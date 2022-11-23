@@ -41,3 +41,5 @@ If you want to have a detailed explanation of what is happening "under the hood"
 ## Dependencies
 The pipelines/workflows presented here use, multiple publicly available software. All of the software and packages used by the pipelines are installed through the conda environments available here ( see [Tutorial](GitHub_Tutorial/Tutorial.md) ). For the full list of the software and packages used, check out the last pages of [the supplementary file](GitHub_Tutorial/Supplementary.pdf):
 
+## License
+PalaeoProPhyler is released under the [MIT License](LICENSE.md)
