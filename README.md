@@ -34,7 +34,7 @@ Easily download reference proteins/proteomes and fetch all resources required fo
 ## Tutorial
 If you want to try to use PalaeoProPhyler, please see the [Tutorial](GitHub_Tutorial/Tutorial.md) on how to install and use each of its pipelines.
 
-## Pipeline Code - Under the Hood
+## Code Overview - Under the Hood
 If you want to have a detailed explanation of what is happening "under the hood" in each of the modules of PalaeoProPhyler, you can read about it in [the supplementary file](GitHub_Tutorial/Supplementary.pdf). This should provide you with a text explanation as well as commands and links to scripts.
 
 
