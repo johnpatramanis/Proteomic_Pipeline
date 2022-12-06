@@ -128,8 +128,7 @@ pipeline to operate on different platforms, granting it ease of access
 and portability. The pipeline is divided into three distinct but
 interacting modules (Modules 1,2 and 3), each of which is composed of a
 Snakemake script and a Conda environment
-[\[fig:Overview\]](#fig:Overview){reference-type="ref"
-reference="fig:Overview"}. The modules are intended to synergize with
+[1](#fig:Overview){reference-type="ref" reference="fig:Overview"}. The modules are intended to synergize with
 each other, but can also be used independently. An in-depth explanation
 of each step of each module, as well as the code being run in the
 background, is provided on the software's Github page as well as in the
@@ -143,7 +142,7 @@ ancient hominid history using the publicly available enamel proteomes of
 translated genomes from hundreds of present-day and ancient hominid
 samples. In the process, we have generated the most complete and up to
 date, molecular hominid phyloproteomic tree
-[1](#fig:PhyloTree){reference-type="ref" reference="fig:PhyloTree"}. The
+[2](#fig:PhyloTree){reference-type="ref" reference="fig:PhyloTree"}. The
 process of generating the reference dataset and its phyloproteomic tree
 using PaleoProPhyler is covered in detail in the step-by-step [Github
 Tutorial](https://github.com/johnpatramanis/Proteomic_Pipeline/blob/main/GitHub_Tutorial/Tutorial.md).
