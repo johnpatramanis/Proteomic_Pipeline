@@ -114,9 +114,9 @@ available reference proteomes, bulk translation of CRAM, BAM or VCF
 files into amino acid seuqences in FASTA format, and various forms of
 phylogenetic tree reconstruction.
 
-::: figure*
-![image](graphics/PaleoProPhyler_Overview_Fig.png)
-:::
+
+![Overview of the pipeline](graphics/PaleoProPhyler_Overview_Fig.png){#fig:Overview}
+
 
 # Description of the Pipeline
 
