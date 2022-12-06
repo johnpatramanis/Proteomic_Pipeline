@@ -115,8 +115,7 @@ files into amino acid seuqences in FASTA format, and various forms of
 phylogenetic tree reconstruction.
 
 
-![Overview of the pipeline](graphics/PaleoProPhyler_Overview_Fig.png){#fig:Overview}
-
+![Overview of the pipeline\label{fig:Overview}](graphics/PaleoProPhyler_Overview_Fig.png)
 
 # Description of the Pipeline
 
@@ -154,8 +153,7 @@ tree was constructed using 9 protein sequences obtained from enamel and
 includes more than 100 hominid individuals translated from genomic data,
 two individuals from published palaeoproteomic datasets as well as
 sequence data from a *Macaca* and a *Hylobates* individual, which are
-used to root the tree.](graphics/tree-plot.png){#fig:PhyloTree
-width="45%"}
+used to root the tree.\label{fig:PhyloTree}](graphics/tree-plot.png){width=45%}
 
 # Protein Reference Dataset
 
