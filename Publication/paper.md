@@ -153,7 +153,7 @@ tree was constructed using 9 protein sequences obtained from enamel and
 includes more than 100 hominid individuals translated from genomic data,
 two individuals from published palaeoproteomic datasets as well as
 sequence data from a *Macaca* and a *Hylobates* individual, which are
-used to root the tree.\label{fig:PhyloTree}](graphics/tree-plot.png){width=45%}
+used to root the tree.\label{fig:PhyloTree}](graphics/tree-plot.png){ width=45% }
 
 # Protein Reference Dataset
 
