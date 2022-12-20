@@ -41,5 +41,9 @@ If you want to have a detailed explanation of what is happening "under the hood"
 ## Dependencies
 The pipelines/workflows presented here use, multiple publicly available software. All of the software and packages used by the pipelines are installed through the conda environments available here ( see [Tutorial](GitHub_Tutorial/Tutorial.md) ). For the full list of the software and packages used, check out the last pages of [the supplementary file](GitHub_Tutorial/Supplementary.pdf):
 
+
+## User Extentions
+Users with experience in conding/bioinformatics are free to alter, add or remove steps of the pipelines if they see fit. If you do that however and use the altered version of the pipeline in a publication, make sure you record and mention every alteration! I would suggest updating the conda environments with any new software that you add and uploading on Github the entire folder of the altered workflows.
+
 ## License
 PalaeoProPhyler is released under the [MIT License](LICENSE.md)
