@@ -36,14 +36,14 @@ unzip main.zip
 
 To install all 3 sub-Modules of the pipeline enter the `‘Proteomic Pipeline’` folder using
 
-```cd Proteomic_Pieline``` 
+```cd Proteomic_Pipeline``` 
 
 and then one by one, type the commands below:
 
 ```bash
 conda env create -f ./Dataset_Initialization/Initiator.yml
 ```
-There could be some messages popping up, types ' y' if asked to confirm.
+There could be some messages popping up, types 'y' if asked to confirm.
 
 <br/><br/>
 
