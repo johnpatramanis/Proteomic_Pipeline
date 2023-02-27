@@ -119,7 +119,10 @@ If all 3 pipelines were installed without an error and the data was successfully
 <br/><br/>
 <br/><br/>
 <br/><br/>
-
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
 
 
 
@@ -221,9 +224,12 @@ We can now also de-activate Module's 1 environment, since we are moving on to Mo
 conda deactivate
 ```
 
-
 <br/><br/>
-<br/><br/>   
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
 <br/><br/>
 <br/><br/>
 
@@ -383,7 +389,10 @@ cd ..
    
    
    
-   
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
 <br/><br/>
 <br/><br/>
 <br/><br/>
@@ -439,6 +448,10 @@ snakemake -j4
 ```
 Once this finishes running you will have a generated tree for each of your porteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins.
 
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
 <br/><br/>
 <br/><br/>
 <br/><br/>
