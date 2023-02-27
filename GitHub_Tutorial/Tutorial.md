@@ -102,7 +102,7 @@ cat Gigantopethicus_Raw.fa | sed  's/.\+\(Gigantopithecus\).\+GN=\(.\+\)/\1_\2/'
 
 <br/><br/>
 
-You should now have both ancient protein samples downloaded and properly formatted in 2 files: H_antecessor.fa, Gigantopethicus.fa .
+You should now have both ancient protein samples downloaded and properly formatted in 2 files: "H_antecessor.fa" & "Gigantopethicus.fa" .
 If all 3 pipelines were installed without an error and the data was successfully downloaded, then congratulations , we can now start our phylogenetic reconstruction!
 
 
