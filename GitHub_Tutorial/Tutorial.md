@@ -120,18 +120,20 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 ## STEP 1 - Reference Dataset Initialisation
 
-The only sequences we have on our hands right now are the proteins of *H.antecessor* and *G.blacki*. In order to try to recreate their phylogeny, we first need to set up a reference dataset with which we can compare their sequences. To do that, we can use Module 1 of the pipeline, and create the ‘scaffold’ of a reference dataset. We can do that by using the reference proteomes of different species that we expect to be somewhat related to both *H.antecessor* and *G.blacki*. So let’s get ready to do that.
+The only sequences we have on our hands right now are the proteins of *H.antecessor* and *G.blacki*. In order to explore their phylogeny, we first need to set up a reference dataset with which we can compare their sequences to. To do that, we can use Module 1 of the pipeline, and create the ‘scaffold’ of a reference dataset. We can do that by using the reference proteomes of different species that we expect to be somewhat related to both *H.antecessor* and *G.blacki*. So let’s get ready to do that.
 
 ```bash
-cd ./Dataset_Initialization
+cd ./Dataset_Initialization/
 conda activate Initiator
 ```
 
-With the above commands we are now inside the folder of Module 1 and have ‘activated’ the Conda environment of this 1st module of the pipeline. This environment has now also unlocked new software on our command line, which the pipeline will use. You can test this out by typing:
+With the above commands we are now inside the folder of Module 1 and have ‘activated’ the Conda environment of this 1st module of the pipeline. This environment has now also unlocked new software on our command line, which the pipeline will use. An example of this is [snakemake](https://snakemake.readthedocs.io/en/stable/), a tool which all of the pipelines are based upon. You can test if snakemake is available to you by typing:
+
 ```bash
-snakemake
+snakemake --help
 ```
 
+This will just print out the full command list of snakemake, which means snakemake is ready to go.
 You can read more about conda environments [here](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/environments.html) if you are interested.
 For now, all you need to know is, activating the right environment is needed to use each of the modules of the pipeline.
 
