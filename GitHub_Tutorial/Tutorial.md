@@ -135,11 +135,13 @@ snakemake --help
 
 This will just print out the full command list of snakemake, which means snakemake is ready to go.
 You can read more about conda environments [here](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/environments.html) if you are interested.
-For now, all you need to know is, activating the right environment is needed to use each of the modules of the pipeline.
+For now, all you need to know is that activating the right environment is needed to use each of the modules of the pipeline. Most linux machines display which conda environment is activated at any time point in a bracket next to the command line e.g. (Initiator)
 
-To use this pipeline we just need two things:
-1 txt file, named ```Proteins.txt``` with the proteins we are interested in and
-1 txt file, named ```Organism.txt``` with the scientific names of the species we are interested in. For this version of the pipeline you can only select from species present in the [Ensembl database](https://www.ensembl.org/info/about/species.html)
+
+To use this module of the pipeline we just need two input files:
+a) 1 txt file, named ```Proteins.txt``` with the gene names of the proteins we are interested in. For example if we were interested in Enamelin, we would add ```ENAM``` into that file. Only one gene name per line should be provided
+
+b) 1 txt file, named ```Organism.txt``` with the scientific names of the species we are interested in. For this version of the pipeline you can only select from species present in the [Ensembl database](https://www.ensembl.org/info/about/species.html). The species name should be without capital letters and with underscores instead of spaces e.g. ```homo_sapiens```. Once again only one species per line should be provided. Additionally if you want to use a specific reference version/asembly of a species, you can do that. Simply add a tab or a space after the species name and then write the assembly version e.g. ```homo_sapiens GRCh37```. If no specific assembly is provided the latest version of Ensembl will be used. Be aware of the proper name of each assembly as it needs to match pefectly with what Ensembl has in its database (e.g. "GRch37" would not work). You can look some of the assembly names [here](https://www.ensembl.org/info/website/archives/assembly.html).
 
 For this tutorial these files are already prepared and ready to use. You can copy them over from their folder using:
 
