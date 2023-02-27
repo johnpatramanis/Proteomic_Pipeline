@@ -62,9 +62,9 @@ conda env create -f ./Dataset_Analysis/Analyser.yml
 <br/><br/>
 If there were no errors until this point, then you have successfully installed all 3 modules!
 You can always check which conda environments are installed on your machine by typing:
-conda env list
-```bash
 
+```bash
+conda env list
 ```
 
 <br/><br/>
