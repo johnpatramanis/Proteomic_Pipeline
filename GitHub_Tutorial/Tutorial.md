@@ -16,9 +16,8 @@ This tutorial aims to introduce the functionality of the pipelines by easily rec
 The first step is the installation of the pipeline. The pipeline requires a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. If you don't have Conda installed, you can find a quick guide on how to do that here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html.
 
 You can check if conda is installed and properly set up on your Linux machine by simply typing:
-```bash
-conda
-``` in your command line.
+```conda```
+in your command line.
 
 If conda is installed and ready to go, we can start the tutorial!
 First navigate to a location on your computer where you want to install the pipeline and where you have sufficient space. Then, download the pipeline from github using the simple command:
