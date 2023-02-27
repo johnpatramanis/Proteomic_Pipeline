@@ -138,6 +138,8 @@ You can read more about conda environments [here](https://docs.conda.io/projects
 For now, all you need to know is that activating the right environment is needed to use each of the modules of the pipeline. Most linux machines display which conda environment is activated at any time point in a bracket next to the command line e.g. (Initiator)
 
 
+<br/><br/> 
+
 To use this module of the pipeline we just need two input files:
 a) 1 txt file, named ```Proteins.txt``` with the gene names of the proteins we are interested in. For example if we were interested in Enamelin, we would add ```ENAM``` into that file. Only one gene name per line should be provided
 
@@ -145,6 +147,7 @@ b) 1 txt file, named ```Organism.txt``` with the scientific names of the species
 
 ![alt text](https://github.com/johnpatramanis/Proteomic_Pipeline/blob/main/GitHub_Tutorial/Images/Assembly_Loc.PNG?raw=true)
 
+<br/><br/> 
 
 For this tutorial both of the above files are already prepared and ready to use. You can copy them over from their folder using:
 
