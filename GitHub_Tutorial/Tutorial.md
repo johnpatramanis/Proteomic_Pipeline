@@ -47,11 +47,11 @@ and then one by one, type the commands below:
 ```bash
 conda env create -f ./Dataset_Initialization/Initiator.yml
 ```
-There could be some messages popping up, types 'y' if asked to confirm.
+There could be some messages popping up, simply types 'y' if asked to confirm the installation.
 
 <br/><br/>
 
-Then the same for the other 2 environments:
+Then repeat the same process for the other 2 environments:
 
 ```bash
 conda env create -f ./Dataset_Construction/Translator.yml
@@ -60,7 +60,12 @@ conda env create -f ./Dataset_Construction/Translator.yml
 conda env create -f ./Dataset_Analysis/Analyser.yml
 ```
 <br/><br/>
-If there were no errors until this point, then you have successfully installed the 3 modules!
+If there were no errors until this point, then you have successfully installed all 3 modules!
+You can always check which conda environments are installed on your machine by typing:
+conda env list
+```bash
+
+```
 
 <br/><br/>
 
