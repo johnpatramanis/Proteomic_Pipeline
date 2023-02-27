@@ -233,7 +233,7 @@ conda deactivate
 <br/><br/>
 <br/><br/>
 
-## STEP 2 - Dataset Enhancement
+## STEP 2 - Reference Dataset Enrichment / Protein translation
 
 <br/><br/> 
 
