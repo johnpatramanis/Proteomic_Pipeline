@@ -13,12 +13,18 @@ This tutorial aims to introduce the functionality of the pipelines by easily rec
 
 ## STEP 0 - Installation and Data preparation
 
+<br/><br/>
+
+### Install Conda
 The first step is the installation of the pipeline. The pipeline requires a Linux operating system with Conda installed. If you have that, then the installation is quite straightforward. If you don't have Conda installed, you can find a quick guide on how to do that here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html.
 
 You can check if conda is installed and properly set up on your Linux machine by simply typing:
 ```conda```
 in your command line.
 
+<br/><br/>
+
+### Download the workflows
 If conda is installed and ready to go, we can start the tutorial!
 First navigate to a location on your computer where you want to install the pipeline and where you have sufficient space. Then, download the pipeline from github using the simple command:
 
@@ -35,6 +41,8 @@ mv Proteomic_Pipeline-main Proteomic_Pipeline
 ```
 
 <br/><br/>
+
+### Install the Conda environments
 
 To install all 3 sub-Modules of the pipeline enter the `‘Proteomic Pipeline’` folder using
 
@@ -69,7 +77,7 @@ conda env list
 
 <br/><br/>
 
-## Downloading Published Palaeoproteomic Data
+### Download and format the published palaeoproteomic data
 
 Finally, since our goal here is to reconstruct the enamel phylogeny of *H.antecessor* and *G.blacki* as they were presented in their original publications, we will download the protein sequences from the publications themselves. We will then apply some shell magic to prepare the files, remove the *H.erectus* sample that is also included the dataset and modify the labels to suit the pipeline.
 
@@ -120,6 +128,9 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 ## STEP 1 - Reference Dataset Initialisation
 
+<br/><br/>
+### Activate the first module
+
 The only sequences we have on our hands right now are the proteins of *H.antecessor* and *G.blacki*. In order to explore their phylogeny, we first need to set up a reference dataset with which we can compare their sequences to. To do that, we can use Module 1 of the pipeline, and create the ‘scaffold’ of a reference dataset. We can do that by using the reference proteomes of different species that we expect to be somewhat related to both *H.antecessor* and *G.blacki*. So let’s get ready to do that.
 
 ```bash
@@ -139,6 +150,7 @@ For now, all you need to know is that activating the right environment is needed
 
 
 <br/><br/> 
+### Prepare input of the first module
 
 To use this module of the pipeline we just need two input files:
 a) 1 txt file, named ```Proteins.txt``` with the gene names of the proteins we are interested in. For example if we were interested in Enamelin, we would add ```ENAM``` into that file. Only one gene name per line should be provided
@@ -172,6 +184,9 @@ nano Proteins.txt
 nano Organism.txt
 ```
 
+<br/><br/> 
+
+### Run the first module
 
 For this example the proteins we are interested in are the ones recovered for the *H.antecessor* and *G.blacki* and the species we are interested in are thought to be at least somewhat related to these two extinct species. If everything looks fine, its now time to execute the pipeline by simply typing:
 
@@ -181,6 +196,10 @@ snakemake -j4 --resources FTP=7
 
 Depending on the computing power of your computer, you can increase the number of cores being used, by typing -j8 or  -j16 if you want to utilize 8 or 16 cores instead of 4. 
 FTP is a unique 'resource' for this module that makes sure you are not making too many requests per second from Ensembl. If you do, Ensembl might shut you out for a few moments, leading to the script crashing. I highly suggest not using anything more than FTP=7 (you can use less , it might make things slightly slower)
+
+<br/><br/> 
+
+### Check the output the first module
 
 Once the pipeline finishes running you can check the results by diving into the ```Workspace``` folder. There are many output files that we will use later on, but the most important ones for now are located in:
 ```Workspace/3_FASTA_Seqs/All_Sequences.fa```
@@ -209,6 +228,9 @@ conda deactivate
 <br/><br/>
 
 ## STEP 2 - Dataset Enhancement
+
+<br/><br/> 
+
 
 We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data translated from available genomic data. To do this we can use the 2nd Module. Activate the module by typing:
 
