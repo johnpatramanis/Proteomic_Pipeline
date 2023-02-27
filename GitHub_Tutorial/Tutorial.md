@@ -38,7 +38,7 @@ mv Proteomic_Pipeline-main Proteomic_Pipeline
 
 To install all 3 sub-Modules of the pipeline enter the `‘Proteomic Pipeline’` folder using
 
-```cd Proteomic_Pipeline``` 
+```bashcd Proteomic_Pipeline``` 
 
 and then one by one, type the commands below:
 
