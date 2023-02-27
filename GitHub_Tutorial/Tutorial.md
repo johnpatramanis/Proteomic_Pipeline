@@ -6,7 +6,7 @@
 
 ## INTRODUCTION
 
-This tutorial aims to introduce the functionality of the pipelines by easily recreating the enamel paleoproteomic-based phylogeny of *Homo antecessor* from [Welker et al.2020](https://www.nature.com/articles/s41586-020-2153-8) & *Gigantopithecus blacki* from [Welker 2019 et. al.](https://www.nature.com/articles/s41586-019-1728-8). The goal here is not to support the phylogenetic placement of these species, but rather to showcase how running the different modules of PaleoProPhyler in conjunction with the published paleo-proteomes can reproduce the results presented in those publications. The tutorial is written with a non-bioinformatics background audience in mind and proceeds in a step by step manner, trying to explain as much as possible in each step. 
+This tutorial aims to introduce the functionality of the pipelines by easily recreating the enamel paleoproteomic-based phylogeny of *Homo antecessor* from [Welker et al.2020](https://www.nature.com/articles/s41586-020-2153-8) & *Gigantopithecus blacki* from [Welker 2019 et. al.](https://www.nature.com/articles/s41586-019-1728-8). The goal here is not to support the specific phylogenetic placement of these species, but rather to showcase how running the different modules of PaleoProPhyler in conjunction with the published paleo-proteomes can easily reproduce the results presented in those publications. The tutorial is written with a non-bioinformatics-background audience in mind and proceeds in a step by step manner, trying to explain as much as possible in each step. 
 
 <br/><br/>
 <br/><br/>
