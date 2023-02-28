@@ -233,6 +233,26 @@ conda deactivate
 <br/><br/>
 <br/><br/>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## STEP 2 - Reference Dataset Enrichment / Protein translation
 
 <br/><br/> 
@@ -282,11 +302,11 @@ mv *.cram Workspace/1_OG_BAM_FILES/
 If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file, each line should correspond to one sample. I would suggest keeping at least 2 individuals from the original file.
 
 <br/><br/> 
-### Download genetic data to translate (VCF files)
+### Download genetic data to translate (VCF files) and prepare them
 
-If you want to explore the ability to translate VCF files, we can additionally download some of the archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors but their VCF files have been more carefully curated and called by the researchers who specialise in this kind of work.
+If you want to explore the ability to translate VCF files, we can additionally download some of the archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors but their VCF files have been more carefully curated and called by the researchers who specialise in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use. Make sure your VCF file is readable with bcftools (``` bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it.
 
-We can download and format the VCF files for 1 Neanderthal and 1 Denisovan usign the following commands:
+We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an example, usign the following commands:
 
 ```bash
 cd Workspace/0_VCF_FILES/
@@ -296,8 +316,13 @@ wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/h
 
 cd ../..
 ```
-Unfortunatelly these VCF files are split into chromosome specific VCFs, so we will have to merge them together (the files are large, so this process might take a while, you can increase the number of threads to make it faster, if your computer has that capability):
+The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are split into chromosome specific VCFs and are not index, so we will have to merge them together ourselves (the files are large, so this process might take a while, you can increase the number of threads to make it faster, if your computer has that capability):
+
 ```bash
+
+bcftools index  AltaiNea.hg19_1000g.*.mod.vcf.gz --threads 8
+bcftools index  T_hg19_1000g.*.mod.vcf.gz --threads 8
+
 ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
 ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
 
@@ -420,6 +445,26 @@ cd ..
 <br/><br/>
 <br/><br/>
 <br/><br/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
