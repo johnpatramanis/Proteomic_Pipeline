@@ -320,7 +320,7 @@ The pipeline requires 1 VCF file per sample, where the VCF file should contain g
 
 ```bash
 
-bcftools index  AltaiNea.hg19_1000g.*.mod.vcf.gz --threads 8
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do bcftools index  AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4;bcftools index  T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
 bcftools index  T_hg19_1000g.*.mod.vcf.gz --threads 8
 
 ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
