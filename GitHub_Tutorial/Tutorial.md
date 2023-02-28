@@ -238,7 +238,7 @@ conda deactivate
 <br/><br/> 
 
 
-We now have the ‘skeleton’ of our reference dataset ready and if we wanted we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial we will also go through STEP 2 and ‘enhance’ our dataset with protein data translated from available genomic data. To do this we can use the 2nd Module. Activate the module by typing:
+We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the 2nd Module. Activate the module by typing:
 
 ```bash
 conda activate Translator
