@@ -203,7 +203,7 @@ FTP is a unique 'resource' for this module that makes sure you are not making to
 
 <br/><br/> 
 
-### Check the output the first module
+### Check the output the first module and deactivate environment
 
 Once the pipeline finishes running you can check the results by diving into the ```Workspace``` folder. There are many output files that we will use later on, but the most important ones for now are located in:
 ```Workspace/3_FASTA_Seqs/All_Sequences.fa```
@@ -237,6 +237,7 @@ conda deactivate
 
 <br/><br/> 
 
+### Activate the second module
 
 We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the 2nd Module. Activate the module by typing:
 
@@ -249,6 +250,10 @@ and move into the right folder:
 ```bash
 cd ./Dataset_Construction/
 ```
+
+
+
+### Download genetic data to translate (BAM/CRAM files)
 
 First we need to download some data to translate though! For this example we will build a subset of the reference dataset presented in the publication of PaleoProPhyler {Link to Publication when its out}. For now we can use any of the following datasets:
 
@@ -277,7 +282,10 @@ mv *.cram Workspace/1_OG_BAM_FILES/
 If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file, each line should correspond to one sample. I would suggest keeping at least 2 individuals from the original file.
 
 
-Additionally we can download some of the archaic human samples. For these it is suggested to use the VCF files. Ancient DNA samples (e.g. their BAM files) tend to contain multiple  errors and the VCF files have been more carefully called by the researchers who specialise in this work.
+### Download genetic data to translate (VCF files)
+
+If you want to explore the ability to translate VCF files, we can additionally download some of the archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors but their VCF files have been more carefully curated and called by the researchers who specialise in this kind of work.
+
 We can download and format the VCF files for 1 Neanderthal and 1 Denisovan usign the following commands:
 
 ```bash
