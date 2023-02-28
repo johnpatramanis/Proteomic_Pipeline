@@ -252,7 +252,7 @@ cd ./Dataset_Construction/
 ```
 
 
-
+<br/><br/> 
 ### Download genetic data to translate (BAM/CRAM files)
 
 First we need to download some data to translate though! For this example we will build a subset of the reference dataset presented in the publication of PaleoProPhyler {Link to Publication when its out}. For now we can use any of the following datasets:
@@ -281,7 +281,7 @@ mv *.cram Workspace/1_OG_BAM_FILES/
 ```
 If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file, each line should correspond to one sample. I would suggest keeping at least 2 individuals from the original file.
 
-
+<br/><br/> 
 ### Download genetic data to translate (VCF files)
 
 If you want to explore the ability to translate VCF files, we can additionally download some of the archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors but their VCF files have been more carefully curated and called by the researchers who specialise in this kind of work.
@@ -311,6 +311,8 @@ cd ../..
 ```
 
 
+### 
+<br/><br/> 
 Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly, the data are mapped on to. Considering the data we downloaded correspond to different reference genomes (Modern humans are mapped onto GrCh38 and ancient ones are mapped onto GrCh37), we have to run the pipeline multiple times separately for each reference (2 times). 
 
 As we just mentioned, translation requires a couple of resources. First we need the location (chromosome/scaffold, position & strand) of the gene that produces the protein. Most genes require splicing, so we also need the exon and intron information . Finally, a reference amino acid sequence of the protein is also necessary. Given that we have run Pipeline 1 for the proteins of interest and the organisms and reference versions of interest (Homo sapiens GRCh37 & GRCh38), all of this data has been downloaded and is available to us!
@@ -334,6 +336,9 @@ We can take a look at how the file looks with:
 less Samples.txt
 ```
 
+<br/><br/> 
+
+###
 
 With these two files set up, we don’t need anything else. If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those.
 All we need to do now, is execute the pipeline:
@@ -360,6 +365,8 @@ and we can store the result somewhere as
 ```bash
 cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Great_Apes_and_Modern_Humans.fa
 ```
+<br/><br/> 
+####
 
 Next we want to translate a different dataset, namely [Prufer et al 2017](https://pubmed.ncbi.nlm.nih.gov/28982794/). This dataset consists of multiple ancient individuals mapped onto GRCh37 and carefully had their genotypes called. In order to translate them, first we need to switch our reference genome by editing the ```Organism.txt``` file
 
