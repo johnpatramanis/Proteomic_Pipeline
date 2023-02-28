@@ -298,7 +298,7 @@ cd ../..
 ```
 Unfortunatelly these VCF files are split into chromosome specific VCFs, so we will have to merge them together:
 ```bash
-
+ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
 ```
 
 
