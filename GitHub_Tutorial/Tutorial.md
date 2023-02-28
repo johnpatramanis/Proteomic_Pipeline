@@ -180,7 +180,7 @@ less Proteins.txt
 less Organism.txt
 ```
 
-As you can see the proteins we will be using are enamel related and the organisms will be hominids or closely related primates.
+As you can see the proteins we will be using are all enamel-related and the organisms are hominids or closely related primates.
 You may want to edit these files and add some proteins or some species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
 If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html)
 
