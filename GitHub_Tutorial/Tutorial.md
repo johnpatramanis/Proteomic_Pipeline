@@ -180,8 +180,7 @@ less Proteins.txt
 less Organism.txt
 ```
 
-As you can see the proteins we will be using are all enamel-related and the organisms are hominids or closely related primates.
-You may want to edit these files and add some proteins or some species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
+As you can see the proteins we will be using are all enamel-related and the organisms are hominids or closely related primates. This is of course on purpose since we are analysing the enamel proteins of extinct hominids. You may want to edit these 2 files and add some proteins or some species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
 If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html)
 
 ```bash
@@ -193,14 +192,14 @@ nano Organism.txt
 
 ### Run the first module
 
-For this example the proteins we are interested in are the ones recovered for the *H.antecessor* and *G.blacki* and the species we are interested in are thought to be at least somewhat related to these two extinct species. If everything looks fine, its now time to execute the pipeline by simply typing:
+If everything looks fine, its now time to execute the pipeline by simply typing:
 
 ```bash
 snakemake -j4 --resources FTP=7
 ```
 
 Depending on the computing power of your computer, you can increase the number of cores being used, by typing -j8 or  -j16 if you want to utilize 8 or 16 cores instead of 4. 
-FTP is a unique 'resource' for this module that makes sure you are not making too many requests per second from Ensembl. If you do, Ensembl might shut you out for a few moments, leading to the script crashing. I highly suggest not using anything more than FTP=7 (you can use less , it might make things slightly slower)
+FTP is a unique 'resource' for this module that makes sure you are not making too many requests-per-second from Ensembl. If you do, Ensembl might shut you out for a few moments, leading to the script crashing. I highly suggest not using anything more than FTP=7 (you can use less , it might make things slightly slower)
 
 <br/><br/> 
 
@@ -208,14 +207,13 @@ FTP is a unique 'resource' for this module that makes sure you are not making to
 
 Once the pipeline finishes running you can check the results by diving into the ```Workspace``` folder. There are many output files that we will use later on, but the most important ones for now are located in:
 ```Workspace/3_FASTA_Seqs/All_Sequences.fa```
-
 where all your proteins for all your species are stored.
 Different subsets of this fasta file can be found here: 
 
 ```/Dataset_Initialization/Workspace/3_FASTA_Seqs/Combined_Per_Species/```
 ```/Dataset_Initialization/Workspace/3_FASTA_Seqs/Combined_Per_Protein/```
 
-We can save this simple reference dataset we have created using shell commands:
+We can save this simple reference dataset we have created using the shell commands:
 
 ```bash
 cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa >> Reference_Proteomes.fa
