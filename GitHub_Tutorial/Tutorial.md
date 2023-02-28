@@ -256,12 +256,11 @@ https://www.biorxiv.org/content/10.1101/2021.02.06.430068v2.full
 
 https://pubmed.ncbi.nlm.nih.gov/28982794/
 
-https://www.nature.com/articles/nature12228  ## Remapped data need to be uploaded somewhere
-
 https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub ### Remapped data need to be uplaoded somewhere
 
+
 WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is 270 GB
-If you have the disk space, proceed as bellow. If not you can move straight to Module 3.
+If you have the disk space, proceed as bellow. If not you can download only some of the files or simply move straight to Module 3.
 
 We will first download 9 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
 and you can download them using this loop:
@@ -284,8 +283,8 @@ We can download and format the VCF files for 1 Neanderthal and 1 Denisovan usign
 ```bash
 cd Workspace/0_VCF_FILES/
 
-wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ( 70 Giga bytes )
-wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/; (54 Giga bytes )
+wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Giga bytes )
+wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Giga bytes )
 
 cd ../..
 ```
