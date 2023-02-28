@@ -296,9 +296,18 @@ wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/h
 
 cd ../..
 ```
-Unfortunatelly these VCF files are split into chromosome specific VCFs, so we will have to merge them together:
+Unfortunatelly these VCF files are split into chromosome specific VCFs, so we will have to merge them together (the files are large, so this process might take a while, you can increase the number of threads to make it faster, if your computer has that capability):
 ```bash
 ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
+ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
+
+bcftools merge -l Altai.txt -Oz -o Altai.vcf.gz --threads 4
+bcftools merge -l Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
+
+rm -rf AltaiNea.hg19_1000g.*.mod.vcf.gz
+rm -rf T_hg19_1000g.*.mod.vcf.gz
+
+cd ../..
 ```
 
 
