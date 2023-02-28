@@ -141,7 +141,7 @@ cd ./Dataset_Initialization/
 conda activate Initiator
 ```
 
-With the above commands we are now inside the folder of Module 1 and have ‘activated’ the Conda environment of this 1st module of the pipeline. This environment has now also unlocked new software on our command line, which the pipeline will use. An example of this is [snakemake](https://snakemake.readthedocs.io/en/stable/), a tool which all of the pipelines are based upon. You can test if snakemake is available to you by typing:
+With the above commands we are now inside the folder of Module 1 and have ‘activated’ the Conda environment of this 1st module of the pipeline. This environment has now unlocked new software on our command line, which the pipeline will make use of. An example of this is [snakemake](https://snakemake.readthedocs.io/en/stable/), a tool which all of the pipelines are based upon. You can test if snakemake is available to you by typing:
 
 ```bash
 snakemake --help
@@ -156,7 +156,8 @@ For now, all you need to know is that activating the right environment is needed
 ### Prepare input of the first module
 
 To use this module of the pipeline we just need two input files:
-a) 1 txt file, named ```Proteins.txt``` with the gene names of the proteins we are interested in. For example if we were interested in Enamelin, we would add ```ENAM``` into that file. Only one gene name per line should be provided
+
+a) 1 txt file, named ```Proteins.txt``` with the gene names of the proteins we are interested in. For example if we were interested in Enamelin, we would add ```ENAM``` into that file. Only one gene name per line should be provided.
 
 b) 1 txt file, named ```Organism.txt``` with the scientific names of the species we are interested in. For this version of the pipeline you can only select from species present in the [Ensembl database](https://www.ensembl.org/info/about/species.html). The species name should be without capital letters and with underscores instead of spaces e.g. ```homo_sapiens```. Once again only one species per line should be provided. Additionally if you want to use a specific reference version/asembly of a species, you can do that. Simply add a tab or a space after the species name and then write the assembly version e.g. ```homo_sapiens GRCh37```. If no specific assembly is provided the latest version of Ensembl will be used. Be aware of the proper name of each assembly as it needs to match pefectly with what Ensembl has in its database (e.g. "GRch37" would not work). You can look some of the assembly names [here](https://www.ensembl.org/info/website/archives/assembly.html). The safest way to find an valid name of an assembly is to look for it in the webpage of a gene: 
 
@@ -179,7 +180,8 @@ less Proteins.txt
 less Organism.txt
 ```
 
-and you may want to edit them and add some proteins or species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
+As you can see the proteins we will be using are enamel related and the organisms will be hominids or closely related primates.
+You may want to edit these files and add some proteins or some species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
 If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html)
 
 ```bash
