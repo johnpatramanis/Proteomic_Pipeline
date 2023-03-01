@@ -317,7 +317,7 @@ wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/h
 cd ../..
 ```
 <br/><br/> 
-The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to re-zip them, index them and then merge them together ourselves (the files are large, so this process might take a while, you can increase the number of threads to make it faster, if your computer has that capability):
+The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to re-zip them, index them and then merge them together ourselves. The files are large, so this process might take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
 
 ```bash
 
@@ -326,7 +326,7 @@ for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do gun
 for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do bgzip AltaiNea.hg19_1000g.$i.mod.vcf;bgzip T_hg19_1000g.$i.mod.vcf; done
 
 
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4;bcftools index  T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4;bcftools index -f T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
 
 
 
@@ -344,9 +344,20 @@ rm -rf T_hg19_1000g.*.mod.vcf.gz
 cd ../..
 ```
 
-
-### Prepare to translate from BAM/CRAM files
 <br/><br/> 
+### Download modern genetic data to translate (VCF files) 
+$$$ Under Work$$
+This is an alternative example on how to translate from a VCF file. The data here is from modern humans and require less pre-processing than the Leipzig VCF files.
+
+
+
+
+
+
+
+<br/><br/>
+### Prepare to translate from BAM/CRAM files
+
 Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly, the data are mapped on to. Considering the data we downloaded correspond to different reference genomes (Modern humans are mapped onto GrCh38 and ancient ones are mapped onto GrCh37), we have to run the pipeline multiple times separately for each reference (2 times). 
 
 As we just mentioned, translation requires a couple of resources. First we need the location (chromosome/scaffold, position & strand) of the gene that produces the protein. Most genes require splicing, so we also need the exon and intron information . Finally, a reference amino acid sequence of the protein is also necessary. Given that we have run Pipeline 1 for the proteins of interest and the organisms and reference versions of interest (Homo sapiens GRCh37 & GRCh38), all of this data has been downloaded and is available to us!
