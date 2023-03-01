@@ -259,7 +259,7 @@ conda deactivate
 
 ### Activate the second module
 
-We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the 2nd Module. Activate the module by typing:
+We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the PaleoProPhyler's 2nd Module. First, activate the module by typing:
 
 ```bash
 conda activate Translator
@@ -275,19 +275,20 @@ cd ./Dataset_Construction/
 <br/><br/> 
 ### Download modern genetic data to translate (BAM/CRAM files)
 
-First we need to download some data to translate though! For this example we will build a subset of the reference dataset presented in the publication of PaleoProPhyler {Link to Publication when its out}. For now we can use any of the following datasets:
+Now we need to download some data to translate. For this example we will build a subset of the reference dataset presented in the [publication of PaleoProPhyler](https://www.biorxiv.org/content/10.1101/2022.12.12.519721v1). We can use any of the following datasets:
 
 https://www.biorxiv.org/content/10.1101/2021.02.06.430068v2.full
 
 https://pubmed.ncbi.nlm.nih.gov/28982794/
 
-https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub ### Remapped data need to be uplaoded somewhere
+https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub 
 
 
 WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is 270 GB
 If you have the disk space, proceed as bellow. If not you can download only some of the files or simply move straight to Module 3.
 
-We will first download 9 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
+
+For this simple example, will download 9 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
 and you can download them using this loop:
 
 ```bash
@@ -299,12 +300,12 @@ do
 done
 mv *.cram Workspace/1_OG_BAM_FILES/
 ```
-If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file, each line should correspond to one sample. I would suggest keeping at least 2 individuals from the original file.
+If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the 1KG_samples file should correspond to one sample. I would suggest keeping at least 2 individuals from the original file.
 
 <br/><br/> 
 ### Download and prepare ancient genetic data to translate (VCF files) 
 
-If you want to explore the ability to translate VCF files, we can additionally download some of the archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors but their VCF files have been more carefully curated and called by the researchers who specialise in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use. Make sure your VCF file is readable with bcftools (``` bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it.
+If you want to explore the ability to translate VCF files, we can additionally download some of the archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors, but their VCF files have been more carefully curated and called by the researchers who published then, who specialise in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use (e.g. scroll down a bit to modern VCF file). Always make sure your VCF file is readable with bcftools (``` bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it.
 
 We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an example, usign the following commands:
 
