@@ -317,26 +317,18 @@ wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/h
 cd ../..
 ```
 <br/><br/> 
-The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to re-zip them, index them and then merge them together ourselves. The files are large, so this process might take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
+The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. The files are large, so this process might take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
 
 ```bash
-
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do gunzip AltaiNea.hg19_1000g.$i.mod.vcf.gz;gunzip T_hg19_1000g.$i.mod.vcf.gz; done
-
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do bgzip AltaiNea.hg19_1000g.$i.mod.vcf;bgzip T_hg19_1000g.$i.mod.vcf; done
-
-
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4;bcftools index -f T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
-
-
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4;bcftools index -f T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
 
 
 ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
 ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
 
 
-bcftools merge -l Altai.txt -Oz -o Altai.vcf.gz --threads 4
-bcftools merge -l Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
+bcftools concat -f Altai.txt -Oz -o Altai.vcf.gz --threads 4
+bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
 
 rm -rf AltaiNea.hg19_1000g.*.mod.vcf.gz
 rm -rf T_hg19_1000g.*.mod.vcf.gz
