@@ -1,6 +1,7 @@
    
 # Tutorial
-## How to build the 'Paleo Proteomic Hominid Reference Dataset' and how to use it to reconstruct the phylogeny of H. antecessor:
+## How to use PaleoProPhyler's modules.
+Build a Reference Dataset and use it to reconstruct the phylogeny of *H. antecessor* and *G.blacki*:
 
 <br/><br/> 
 
