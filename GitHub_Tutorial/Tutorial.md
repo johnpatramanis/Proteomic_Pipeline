@@ -317,9 +317,14 @@ wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/h
 cd ../..
 ```
 <br/><br/> 
-The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are split into chromosome specific VCFs and are not index, so we will have to merge them together ourselves (the files are large, so this process might take a while, you can increase the number of threads to make it faster, if your computer has that capability):
+The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to re-zip them, index them and then merge them together ourselves (the files are large, so this process might take a while, you can increase the number of threads to make it faster, if your computer has that capability):
 
 ```bash
+
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do gunzip AltaiNea.hg19_1000g.$i.mod.vcf.gz;gunzip T_hg19_1000g.$i.mod.vcf.gz; done
+
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do bgzip AltaiNea.hg19_1000g.$i.mod.vcf;bgzip T_hg19_1000g.$i.mod.vcf; done
+
 
 for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT; do bcftools index  AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4;bcftools index  T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
 
