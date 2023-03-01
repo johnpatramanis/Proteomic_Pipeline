@@ -1,8 +1,9 @@
    
 # Tutorial
 ## How to use PaleoProPhyler's modules.
-Build a Reference Dataset and use it to reconstruct the phylogeny of *H. antecessor* and *G.blacki*:
+Build a Reference Dataset and use it to reconstruct the phylogeny of *H. antecessor* and *G.blacki*.
 
+<br/><br/>
 <br/><br/> 
 
 ## INTRODUCTION
