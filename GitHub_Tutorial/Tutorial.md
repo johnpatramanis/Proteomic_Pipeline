@@ -305,7 +305,7 @@ mv *.cram Workspace/1_OG_BAM_FILES/
 If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the 1KG_samples file should correspond to one sample. I would suggest keeping at least 2 individuals from the original file.
 
 <br/><br/> 
-### Download and prepare ancient genetic data to translate (VCF files) 
+### Download and pre-process ancient genetic data to translate (VCF files) 
 
 If you want to explore the ability to translate VCF files, we can additionally download some of the archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors, but their VCF files have been more carefully curated and called by the researchers who published then, who specialise in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use (e.g. scroll down a bit to modern VCF file). Always make sure your VCF file is readable with bcftools (``` bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it.
 
@@ -342,7 +342,7 @@ cd ../..
 ```
 
 <br/><br/> 
-### Download modern genetic data to translate (VCF files) 
+### Download and pre-process modern genetic data to translate (VCF files) 
 
 Instead of downloading and processing the Neanderthal & Denisovan VCF files we can use some modern data instead.
 Below we will download the SGDP data, remapped onto GrCh38. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ ?? GB)
@@ -362,7 +362,7 @@ This is an alternative example on how to translate from a VCF file. The data her
 
 
 <br/><br/>
-### Prepare to translate from BAM/CRAM files
+### Prepare input for BAM/CRAM file translation
 
 Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly, the data are mapped on to. Considering the data we downloaded correspond to different reference genomes (Modern humans are mapped onto GrCh38 and ancient ones are mapped onto GrCh37), we have to run the pipeline multiple times separately for each reference (2 times). 
 
@@ -416,8 +416,9 @@ and we can store the result somewhere as
 ```bash
 cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Great_Apes_and_Modern_Humans.fa
 ```
+
 <br/><br/> 
-#### Prepare for translation of (ancient) VCF files 
+### Prepare input for (ancient) VCF file translation and run translation
 
 Next we want to translate a different dataset, namely [Prufer et al 2017](https://pubmed.ncbi.nlm.nih.gov/28982794/). This dataset consists of multiple ancient individuals mapped onto GRCh37 and carefully had their genotypes called. In order to translate them, first we need to switch our reference genome by editing the ```Organism.txt``` file
 
@@ -450,7 +451,8 @@ We are now set for the new translation and we can execute it again, by typing
 snakemake -j4
 ```
 
-
+<br/><br/> 
+### Prepare input for (modern) VCF file translation and run translation
 
 
 ### Merge Ancient proteins, 'scaffold' produced by module 1 and translated data produced by module 2
