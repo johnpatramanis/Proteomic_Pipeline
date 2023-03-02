@@ -317,7 +317,7 @@ cd Workspace/0_VCF_FILES/
 wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Giga bytes )
 wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Giga bytes )
 
-cd ../..
+
 ```
 <br/><br/> 
 The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
@@ -348,6 +348,8 @@ Instead of downloading and processing the Neanderthal & Denisovan VCF files we c
 Below we will download the SGDP data, remapped onto GrCh38. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ ?? GB)
 
 ```bash
+cd Workspace/0_VCF_FILES/
+
 wget -r -np -nH --cut-dirs=3 -R index.html https://sharehost.hms.harvard.edu/genetics/reich_lab/sgdp/phased_data2021/;
 cd phased_data2021/
 ls chr.sgdp.pub.*.bcf > SGDP.txt
@@ -355,6 +357,8 @@ bcftools concat -f SGDP.txt -o SGDP.vcf.gz -Oz
 cd ..
 mv phased_data2021/SGDP.vcf.gz ./
 rm -rf phased_data2021
+
+cd ../../
 ```
 
 This is an alternative example on how to translate from a VCF file. The data here is from modern humans and require less pre-processing than the Leipzig VCF files.
