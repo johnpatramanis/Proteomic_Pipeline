@@ -349,8 +349,12 @@ Below we will download the SGDP data, remapped onto GrCh38. All they need is to 
 
 ```bash
 wget -r -np -nH --cut-dirs=3 -R index.html https://sharehost.hms.harvard.edu/genetics/reich_lab/sgdp/phased_data2021/;
-
-
+cd phased_data2021/
+ls chr.sgdp.pub.*.bcf > SGDP.txt
+bcftools concat -f SGDP.txt -o SGDP.vcf.gz -Oz
+cd ..
+mv phased_data2021/SGDP.vcf.gz ./
+rm -rf phased_data2021
 ```
 
 This is an alternative example on how to translate from a VCF file. The data here is from modern humans and require less pre-processing than the Leipzig VCF files.
