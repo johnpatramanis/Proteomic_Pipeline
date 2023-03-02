@@ -345,7 +345,7 @@ cd ../..
 ### Download and pre-process modern genetic data to translate (VCF files) 
 
 Instead of downloading and processing the Neanderthal & Denisovan VCF files we can use some modern data instead.
-Below we will download the SGDP data, remapped onto GrCh38. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ ?? GB)
+Below we will download the SGDP data, remapped onto GrCh38. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ ?? GB) so this will still take some time. The benefit however is that there are hundreds of samples in this VCF. In the interest of time however we will only use a handful of them  this tutorial.
 
 ```bash
 cd Workspace/0_VCF_FILES/
