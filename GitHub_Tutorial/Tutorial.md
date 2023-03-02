@@ -320,7 +320,9 @@ wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/h
 cd ../..
 ```
 <br/><br/> 
-The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. The files are large, so this process might take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
+The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
+
+The files are large, so this process might take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
 
 ```bash
 for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4;bcftools index -f T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
@@ -341,7 +343,16 @@ cd ../..
 
 <br/><br/> 
 ### Download modern genetic data to translate (VCF files) 
-$$$ Under Work$$
+
+Instead of downloading and processing the Neanderthal & Denisovan VCF files we can use some modern data instead.
+Below we will download the SGDP data, remapped onto GrCh38. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ ?? GB)
+
+```bash
+wget -r -np -nH --cut-dirs=3 -R index.html https://sharehost.hms.harvard.edu/genetics/reich_lab/sgdp/phased_data2021/;
+
+
+```
+
 This is an alternative example on how to translate from a VCF file. The data here is from modern humans and require less pre-processing than the Leipzig VCF files.
 
 
