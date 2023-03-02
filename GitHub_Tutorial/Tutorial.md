@@ -325,18 +325,24 @@ The pipeline requires 1 VCF file per sample, where the VCF file should contain g
 The files are large, so this process might take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
 
 ```bash
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4;bcftools index -f T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
-
-
+#### For Neanderthal
+cd VCF
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4; done
 ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
-ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
-
-
 bcftools concat -f Altai.txt -Oz -o Altai.vcf.gz --threads 4
-bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
+cd ..
+mv VCF/Altai.vcf.gz ./
+rm -rf VCF
 
-rm -rf AltaiNea.hg19_1000g.*.mod.vcf.gz
+
+##### For Denisovan
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
+ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
+bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
 rm -rf T_hg19_1000g.*.mod.vcf.gz
+
+
+
 
 cd ../..
 ```
