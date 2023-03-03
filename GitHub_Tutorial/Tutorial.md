@@ -379,17 +379,18 @@ This is an alternative example on how to translate from a VCF file. The data her
 <br/><br/>
 ### Prepare input for BAM/CRAM file translation
 
-Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly, the data are mapped on to. Considering the data we downloaded correspond to different reference genomes (Modern humans are mapped onto GrCh38 and ancient ones are mapped onto GrCh37), we have to run the pipeline multiple times separately for each reference (2 times). 
+Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly that the genome was mapped on to. Considering the data we downloaded correspond to different reference genomes (Modern humans are mapped onto GrCh38 and ancient ones are mapped onto GrCh37), we have to run the pipeline at least 2 times separately for each reference. 
 
-As we just mentioned, translation requires a couple of resources. First we need the location (chromosome/scaffold, position & strand) of the gene that produces the protein. Most genes require splicing, so we also need the exon and intron information . Finally, a reference amino acid sequence of the protein is also necessary. Given that we have run Pipeline 1 for the proteins of interest and the organisms and reference versions of interest (Homo sapiens GRCh37 & GRCh38), all of this data has been downloaded and is available to us!
+As we just mentioned, translation requires a couple of resources. First we need the location (chromosome/scaffold, position & strand) of the gene that produces the protein. Most genes require splicing, so we also need the exon and intron information. Finally, a reference amino acid sequence of the protein is also necessary. This sounds like a lot, but given that we have run Pipeline 1 for the proteins of interest and the organisms and reference versions of interest (Homo sapiens GRCh37 & GRCh38), all of this data has already been downloaded and is available to us!
 
-We’ll start with the 2 first datasets, which are both mapped on to GRCh38. First we need a txt file named ```Organism.txt```, where the organism and reference version for the translation are given. For GRCh38 one is already in place and we can take a look at it with
+In this first example we will deal with the BAM files of the modern humans, which are mapped onto the  GrCh38 reference.
+First we need a txt file named ```Organism.txt```, where the organism and reference version for the translation are given. For GRCh38 one is already in place and we can take a look at it with
 
 ```bash
 less Organism.txt
 ```
 
-Then we need a list of the samples we want to translate from, in the form of a txt file named ‘Samples.txt’. Since all of them are BAM files inside the folder ```Dataset_Construction/Workspace/1_OG_BAM_FILES/```we can use:
+Then we need a list of the samples we want to translate, in the form of a txt file named ‘Samples.txt’. Since all of them are BAM files inside the folder ```Dataset_Construction/Workspace/1_OG_BAM_FILES/```we can use:
 
 ```bash
 ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.bam | cut -d ‘.’  -f 1 > Samples.txt
@@ -406,7 +407,20 @@ less Samples.txt
 
 ### Run the second module (Translation)
 
-With these two files set up, we don’t need anything else. If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those.
+With these two files set up, we don’t need anything else. Which proteins are being translated though? If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those porteins. You can test-run the pipeline to see if everything is set up with:
+
+```bash
+snakemake -n -r
+```
+
+You can also take a look at which proteins are being translated by looking into the file '' by typing
+
+```bash
+less Samples.txt
+```
+
+
+
 All we need to do now, is execute the pipeline:
 
 ```bash
