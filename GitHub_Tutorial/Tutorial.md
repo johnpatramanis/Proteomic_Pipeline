@@ -326,6 +326,7 @@ The files are large, so this process might take a while. You can increase the nu
 
 ```bash
 #### For Neanderthal
+
 cd VCF
 for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4; done
 ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
@@ -336,10 +337,10 @@ rm -rf VCF
 
 
 ##### For Denisovan
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f T_hg19_1000g.$i.mod.vcf.gz --threads 4; done
+
 ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
 bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
-rm -rf T_hg19_1000g.*.mod.vcf.gz
+rm -rf T_hg19_1000g.*.mod.vcf.gz*
 
 
 
