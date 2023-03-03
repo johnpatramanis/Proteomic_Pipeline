@@ -413,10 +413,10 @@ With these two files set up, we don’t need anything else. Which proteins are b
 snakemake -n -r
 ```
 
-You can also take a look at which proteins are being translated by looking into the file '' by typing
+You can also take a look at which proteins are being translated by looking into the file 'Gene_locs.txt'. This files also contains the information on the location of the gene that codes the proteins. Take a look into the file by typing:
 
 ```bash
-less Samples.txt
+less Gene_locs.txt
 ```
 
 
