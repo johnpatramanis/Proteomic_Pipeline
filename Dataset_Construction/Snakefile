@@ -714,8 +714,7 @@ rule Isolate_Gene_from_fasta:
 
         #### If input is Fasta file from VCF, just rename it to .fa in appropriate folder
         if ( X=='VCFA' ):
-            for GENE in GENES:
-                shell("cp Workspace/0_VCF_FILES/{wildcards.sample}_{GENE}.VCFA  Workspace/5_GENE_FASTA_FILES/{wildcards.sample}_{GENE}.fa")
+            shell("cp Workspace/0_VCF_FILES/{wildcards.sample}_{GENE}.VCFA  Workspace/5_GENE_FASTA_FILES/{wildcards.sample}_{GENE}.fa")
 
 
 
