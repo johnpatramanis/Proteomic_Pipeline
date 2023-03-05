@@ -541,7 +541,7 @@ rule Output_FASTA_FROM_VCF:
             line=line.strip().split()
             if line[0]==wildcards.GENE:
                 LOC='{}:{}-{}'.format(line[1],line[2],line[3])
-        shell("samtools faidx {input[1]} {LOC} | bcftools consensus {input[0]}  --missing ? -s {wildcards.sample} > {output}")
+        shell("samtools faidx {input[1]} {LOC} -c | bcftools consensus {input[0]}  --missing ? -s {wildcards.sample} > {output}")
 
 
 
