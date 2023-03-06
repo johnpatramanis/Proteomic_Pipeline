@@ -441,12 +441,7 @@ snakemake -j4
 
 This will take some time! Again, in the example above we use 4 cores, but if your computer is more powerful, you can try increasing the number of cores (e.g. -j32 ) to increase efficiency and decrease waiting time. Once this dataset finishes, we can take a look at the results by:
 
-If disk space is an issue for you, we can use one of Snakemake's features to reduce the amount of output the pipeline generates. Specifically we can use the parameter 
-``` --all-temp ``` which will make sure that any outputs between the input and the final output are deleted once used by the pipeline. To use it simply run
 
-```bash
-snakemake -j4 --all-temp 
-```
 
 ```bash
 less Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa
@@ -455,7 +450,7 @@ less Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa
 and we can store the result somewhere as
 
 ```bash
-cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Great_Apes_and_Modern_Humans.fa
+cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Modern_Humans_from_BAM.fa
 ```
 
 <br/><br/> 
@@ -465,32 +460,40 @@ Next we want to translate a different dataset, namely [Prufer et al 2017](https:
 
 ```bash
 echo ‘Homo_sapiens	GRCh37’ > Organism.txt
-
 ```
-Then, since our data are now VCF files, we need a slightly different method of translating them. 
-WE have downloaded earlier the VCF files and placed them into ```Workspace/0_VCF_FILES/```
-In order to prepare them for the translation, we can use a custom python script.
-
-```bash
-python3 Workspace/0_VCF_FILES/VCF_sample_list_generator.py -V (comma sep list of VCF) -R GRCh37.fa
-mv Workspace/0_VCF_FILES/VCF_Samples.txt ./
-```
-
-If we take a look at this new VCF_Samples.txt file, we can see the format required for the samples: A file with 3 space separated columns, one with the name of the sample inside the vcf, one with the name of the vcf file and one with the reference fasta file that corresponds to the sample.
-
-```bash
-less VCF_Samples.txt 
-```
-We also need to delete the previous Samples.txt file, otherwise the pipeline will attempt to retranslate those as well
+Then, let's empty the Samples.txt from the samples that are already finished:
 
 ```bash
 rm Samples.txt
 ```
-We are now set for the new translation and we can execute it again, by typing
+
+Finally, since our data are now VCF files, we need a slightly different method of translating them. 
+Earlier we have downloaded the VCF files and placed them into ```Workspace/0_VCF_FILES/```
+Now we need to specify which samples we want to translate, which VCF file contains those samples and which reference fasta to use for their translation.
+For our example the input file is pre-made. You can copy it over using:
+
+```bash
+cp GitHub_Tutorial/VCF_Samples_Ancient.txt VCF_Samples.txt
+```
+
+The samples that you want to translate must be in a file named 'VCF_Samples.txt'.If we take a look at this new VCF_Samples.txt file, we can see the format required for the samples: A file with 3 separated columns, one with the name of the sample inside the vcf, one with the name of the vcf file and one with the reference fasta file that corresponds to the sample:
+
+Sample_Name VCF_File_Name Reference_File_Name
+
+The columns are seperated by a tab and all the files must be in their proper folder, VCF inside 'Workspace/0_VCF_FILES/' and the reference fasta inside 'Reference'
+
+Take a look at the file to see:
+```bash
+less VCF_Samples.txt 
+```
+
+
+We are now set for the new translation and we can execute it again, by typing:
 
 ```bash
 snakemake -j4
 ```
+Again remember you can increase the number of cores (-j4) to make it faster.
 
 <br/><br/> 
 ### Prepare input for (modern) VCF file translation and run translation
@@ -503,7 +506,7 @@ And once this is also finished, we can combine the resulting translations into o
 
 ```bash
 cat Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa >> Translated.fa
-cat Great_Apes_and_Modern_Humans.fa >> Translated.fa
+cat Modern_Humans_from_BAM.fa >> Translated.fa
 conda deactivate
 cd ..
 ```   
