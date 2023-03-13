@@ -324,6 +324,7 @@ In addition to that translating from a VCF file requires the reference which the
 
 ```bash
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
+gunzip ./Reference/hg19.fa.gz
 ```
 
 #### Data prep
@@ -381,6 +382,7 @@ The data are mapped on to GrCh38, so we need to download that reference as well:
 
 ```bash
 wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz -P ./Reference/
+gunzip ./Reference/hg38.fa.gz
 ```
 
 
