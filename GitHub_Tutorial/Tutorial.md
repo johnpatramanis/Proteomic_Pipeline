@@ -320,7 +320,7 @@ wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/h
 
 ```
 
-In addition to that translating from a VCF file requires the reference which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference fasta comes in and fills in the gaps. You can download the GrCh37 (also known as hg19) reference using:
+In addition to that translating from a VCF file requires the reference which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference fasta comes in and fills in the gaps. This file MUST be '.fa' file and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
 
 ```bash
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
