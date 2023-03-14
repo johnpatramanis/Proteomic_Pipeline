@@ -361,7 +361,7 @@ cd ../..
 ### Download and pre-process modern genetic data to translate (VCF files) 
 
 Instead of downloading and processing the Neanderthal & Denisovan VCF files we can use some modern data instead.
-Below we will download the SGDP data, remapped onto GrCh38. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ ?? GB) so this will still take some time. The benefit however is that there are hundreds of samples in this VCF. In the interest of time however we will only use a handful of them  this tutorial.
+Below we will download the SGDP data, mapped onto GrCh37. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ ?? GB) so this will still take some time. The benefit however is that there are hundreds of samples in this VCF. In the interest of time however we will only use a handful of them  this tutorial.
 
 ```bash
 cd Workspace/0_VCF_FILES/
@@ -378,11 +378,11 @@ cd ../../
 ```
 
 This is an alternative example on how to translate from a VCF file. The data here is from modern humans and require less pre-processing than the Leipzig VCF files.
-The data are mapped on to GrCh38, so we need to download that reference as well:
-
+The data are mapped on to GrCh37, so we still need to download that reference:
+(If you run this step for the Neanderthal/Denisovan example, you don't need to repeat it)
 ```bash
-wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz -P ./Reference/
-gunzip ./Reference/hg38.fa.gz
+wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
+gunzip ./Reference/hg19.fa.gz
 ```
 
 
