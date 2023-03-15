@@ -500,6 +500,46 @@ Again remember you can increase the number of cores (-j4) to make it faster.
 <br/><br/> 
 ### Prepare input for (modern) VCF file translation and run translation
 
+Finally let's translate the SGDP-modern humans dataset. This dataset consists of multiple modern individuals (~300 individuals) mapped onto GRCh37. In order to translate them, first we need to switch our reference genome by editing the ```Organism.txt``` file.
+(If you just did this step for the Neaderthal/Denisovan samples you don't need to do it again, go stragiht to the copying VCF_Samples.txt step.)
+
+```bash
+echo ‘Homo_sapiens	GRCh37’ > Organism.txt
+```
+Then, let's empty the Samples.txt from the samples that are already finished:
+
+```bash
+rm Samples.txt
+```
+
+Finally, since our data are now VCF files, we need a slightly different method of translating them. 
+Earlier we have downloaded the VCF files and placed them into ```Workspace/0_VCF_FILES/```
+Now we need to specify which samples we want to translate, which VCF file contains those samples and which reference fasta to use for their translation.
+For our example the input file is pre-made. You can copy it over using:
+
+```bash
+cp GitHub_Tutorial/VCF_Samples_Modern.txt VCF_Samples.txt
+```
+
+The samples that you want to translate must be in a file named 'VCF_Samples.txt'.If we take a look at this new VCF_Samples.txt file, we can see the format required for the samples: A file with 3 separated columns, one with the name of the sample inside the vcf, one with the name of the vcf file and one with the reference fasta file that corresponds to the sample:
+
+Sample_Name VCF_File_Name Reference_File_Name
+
+The columns are seperated by a tab and all the files must be in their proper folder, VCF inside 'Workspace/0_VCF_FILES/' and the reference fasta inside 'Reference'
+
+Take a look at the file to see:
+```bash
+less VCF_Samples.txt 
+```
+
+
+We are now set for the new translation and we can execute it again, by typing:
+
+```bash
+snakemake -j4
+```
+Again remember you can increase the number of cores (-j4) to make it faster.
+
 
 ### Merge Ancient proteins, 'scaffold' produced by module 1 and translated data produced by module 2
 
