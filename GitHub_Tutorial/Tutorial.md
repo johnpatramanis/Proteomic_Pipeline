@@ -497,6 +497,12 @@ snakemake -j4
 ```
 Again remember you can increase the number of cores (-j4) to make it faster.
 
+Finally when this is done you can check for the results in Workspace/9_FINAL_OUTPUT. If everything looks alright, copy over the resulting fasta files using:
+
+```bash
+cat Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa >> Translated.fa
+```
+
 <br/><br/> 
 ### Prepare input for (modern) VCF file translation and run translation
 
