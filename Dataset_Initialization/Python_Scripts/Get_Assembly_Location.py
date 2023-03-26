@@ -75,7 +75,18 @@ if ((r!=[]) and (SERVICE==1)):
             
             print('\nAcquiring Positions of Genes for requested Assembly\n ')
             print('\nCurrent assembly is: {} \n'.format(CURRENT_ASSEMBLY))
-            print('Your chosen assembly is: {} \n'.format(ASSEMBLY))
+            print('Your chosen assembly is: {} \n'.format(ASSEMBLY)) ### User selected assembly, will print 'CURRENT' if the user hasn't chosen one
+            
+            
+            
+            
+            USER_HAS_NOT_SELECTED_ASSEMBLY=0
+            ### If the assembly is the current one, copy over all content to 'CURRENT' folder
+            if (ASSEMBLY=='CURRENT'):
+                USER_HAS_NOT_SELECTED_ASSEMBLY=1
+            
+            
+            
             
             #if user provided with alternative assembly
             if (ASSEMBLY!='CURRENT') and (CURRENT_ASSEMBLY!=ASSEMBLY):
@@ -101,6 +112,10 @@ if ((r!=[]) and (SERVICE==1)):
                         print('Error in finding position of Gene: {} in requested assembly'.format(GENE))
                 else:
                     print('Error in finding position of Gene: {} in requested assembly'.format(GENE))
+            
+
+                
+            
             
 print('\nGenerating Gene info for Gene: {}\nLocation: {}:{}-{}\tstrand:{}\nAssembly Name: {}\n Will default to current online assembly if possible.'.format(GENE,SEQ_REGION,START,END,STRAND,CURRENT_ASSEMBLY))             
             
@@ -145,6 +160,43 @@ if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID
         
 LOC_FILE.close()
 STARTS_FILE.close()
+
+
+
+########################################################################################################
+#### If the user has not selected the assembly, add the current results into the 'CURRENT' folder
+if USER_HAS_NOT_SELECTED_ASSEMBLY==1:
+    
+    LOC_FILE='Workspace/5_Loc_Files/{}/CURRENT/Gene_locs.txt'.format(ORGANISM)
+    STARTS_FILE='Workspace/5_Loc_Files/{}/CURRENT/starts.txt'.format(ORGANISM)
+    
+    LOC_FILE=open(LOC_FILE,'a')
+    STARTS_FILE=open(STARTS_FILE,'a')
+
+
+
+
+    if ((START!='') and (END!='') and (STRAND!='') and (SEQ_REGION!='') and (GENE_ID!='')):
+        #Append the 'Gene_locs.txt' file for that organism/assembly, if Gene info is not missing
+        LOC_FILE.write('{}\t{}\t{}\t{}\t{}.fa\n'.format(TRANSCRIPT_NAME,str(SEQ_REGION),str(START),str(END),TRANSCRIPT_NAME))
+        if IS_CANON==1:
+            LOC_FILE.write('{}\t{}\t{}\t{}\t{}.fa\n'.format(GENE,str(SEQ_REGION),str(START),str(END),GENE))
+        
+        #Append the 'Starts.txt' file for that organism/assembly
+        STARTS_FILE.write('{}\t{}\t{}\n'.format(TRANSCRIPT_NAME,str(STARTS_START),STRAND))
+        if IS_CANON==1:
+            STARTS_FILE.write('{}\t{}\t{}\n'.format(GENE,str(STARTS_START),STRAND))
+    
+    LOC_FILE.close()
+    STARTS_FILE.close()
+
+########################################################################################################
+
+
+
+
+
+
 
 
    
