@@ -87,6 +87,7 @@ if ((r!=[]) and (SERVICE==1)):
         else:
 
             for TRNSCRPT_ID in TRNSCRPT_IDS:
+                TRNSCRPT_ID=TRNSCRPT_ID.replace('/','-')### Fix for proteins that have '/' in their name
                 OUTPUT_FILE=open('Workspace/2_Transcript_IDs/{}/{}'.format(ORGANISM,GENE),'a')
                 if TRNSCRPT_ID!=[]:
                     OUTPUT_FILE.write(str(TRNSCRPT_ID)+'\n')
