@@ -109,6 +109,7 @@ ALL_NAMES=c()
 CONC=c()
 LENGTH=0
 PARTITIONS=c()
+PARTITIONS_RB=c()
 
 
 for(g in 1:length(genes)){   
@@ -158,6 +159,7 @@ for(g in 1:length(genes)){
         print("------")
 		
 		PARTITIONS=c(PARTITIONS,paste0('charset ',as.character(genes[g]),' = ',as.character((LENGTH-LENGTH_HERE+1)),'-',as.character(LENGTH),';'))
+		PARTITIONS_RB=c(PARTITIONS_RB,paste0('charset ',as.character(genes[g]),' = ',as.character((LENGTH-LENGTH_HERE+1)),' - ',as.character(LENGTH),';'))
 		
 		
     }else{ #this runs in the first loop
@@ -170,24 +172,27 @@ for(g in 1:length(genes)){
         print("------")
 		
 		PARTITIONS=c(PARTITIONS,paste0('charset ',as.character(genes[g]),' = ',as.character(1),'-',as.character(LENGTH),';'))	
+		
+		PARTITIONS_RB=c(PARTITIONS_RB,as.character('BEGIN SETS;'))	
+		PARTITIONS_RB=c(PARTITIONS_RB,paste0('charset ',as.character(genes[g]),' = ',as.character(1),' - ',as.character(LENGTH),';'))	
     }
     
 	print(CONC[,1])
 	
 }
 
-###Some formating fixes
+### Some formating fixes
 ALL_NAMES=ALL_NAMES[!duplicated(ALL_NAMES)] ##here are all the unique names
 CONC=data.table(CONC) 
 f_dowle(CONC, "?")
 
 
 
-#Finalise partitions to be used by MrBayes or any other partion-requiring software
+## Finalise partitions to be used by MrBayes or any other partion-requiring software
 PARTITIONS=c(PARTITIONS,paste0('partition BY_PROTEIN = ',as.character(length(PARTITIONS)),': ',paste(genes,collapse=', '),';'))
 PARTITIONS=c(PARTITIONS,as.character('set partition=BY_PROTEIN;'))
 
-
+PARTITIONS_RB=c(PARTITIONS_RB,as.character('END;'))
 
 
 
@@ -309,6 +314,7 @@ writeXStringSet(FINAL_SEQ, "CONCATINATED_o.fa")
 
 #write out partion help file
 write(paste(PARTITIONS,collapse='\n'), file = "Partition_Helper")
+write(paste(PARTITIONS_RB,collapse='\n'), file = "Partition_Helper_RB")
 
 
 
