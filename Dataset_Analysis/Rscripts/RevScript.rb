@@ -1,4 +1,4 @@
-data <- readDiscreteCharacterData("CONCATINATED_o_Rev.nex") #load Elephant data - concatenated
+# data <- readDiscreteCharacterData("CONCATINATED_o_Rev.nex") #load Elephant data - concatenated
 
 ## Helpful integers
 num_taxa <- data[1].ntaxa()
@@ -97,5 +97,20 @@ mymcmc.run(generations=50000, tuningInterval=100, checkpointInterval=100, checkp
 treetrace = readAncestralStateTreeTrace("output_RevBayes/CONCATINATED_rev.trees", treetype="non-clock")
 map_tree = mapTree(treetrace,"output_RevBayes/CONCATINATED_MAP_rev.trees")
 
+
+
+
+
+
+### Query probability of clade
+# Lemuroidea <- clade("Cheirogaleus_major",
+                    # "Daubentonia_madagascariensis",
+                    # "Lemur_catta",
+                    # "Lepilemur_hubbardorum",
+                    # "Microcebus_murinus",
+                    # "Propithecus_coquereli",
+                    # "Varecia_variegata_variegata")
+
+# treetrace.cladeProbability( Lemuroidea )
 
 q()

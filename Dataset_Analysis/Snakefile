@@ -120,6 +120,7 @@ rule all:
         expand('Workspace/2_DATASETS/{sample}/PhyML_Individual_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/PhyML_Concatenated_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/MrBayes_Concatenated_Genes_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/RevBayes_Concatenated_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/Collected_Alignments/Alignments_Collected',sample=SAMPLES)
 
 
@@ -481,19 +482,22 @@ rule Run_RevBayes_Concatenated_Genes:
         shell("""RAND=$(( $RANDOM %999));\
         rm -rf Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/output_RevBayes;\
         
-        cp Rscripts/RevScript.rb Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/RevScript.rb;\
+        echo -e 'data <- readDiscreteCharacterData("Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o_Rev.nex")' > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/RevScript.rb;\
+        
+        cat Rscripts/RevScript.rb >> Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/RevScript.rb;\
         
         cp Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o_Rev.nex;\
         
         cat Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/Partition_Helper_RB >> Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o_Rev.nex ;\
         
-        mpirun -np {threads} rb-mpi  Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/RevScript.rb > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/log_RB.txt;\
-        
-        echo "RevBayes Run Done";\
         """)
         shell("""touch Workspace/2_DATASETS/{wildcards.sample}/RevBayes_Concatenated_Genes_Done; """)
 
-
+        # 
+        
+        # mpirun -np {threads} rb-mpi  Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/RevScript.rb > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/log_RB.txt;\
+        
+        # echo "RevBayes Run Done";\
 
 
 ## 
