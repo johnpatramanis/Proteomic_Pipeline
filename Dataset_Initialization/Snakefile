@@ -1,7 +1,12 @@
-#Run using "snakemake -j4 --resources FTP=7"
+## Run using "snakemake -j4 --resources FTP=7"
+## Install prerequisites manually:
+## conda install -c conda-forge -c bioconda snakemake
+## or
+## conda install -c conda-forge mamba
+## mamba install -c conda-forge -c bioconda snakemake
 
 
-#Dependancies to be used: Snakemake/python3
+
 #conda env export --from-history > environment.yaml
 #conda env create --name testenv --file environment.yaml
 
