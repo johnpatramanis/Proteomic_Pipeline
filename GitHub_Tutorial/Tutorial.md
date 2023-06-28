@@ -96,7 +96,14 @@ For the third module:
 conda create -n Analyser  -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes trimal bioconductor-shortread r-stringr r-data.table r-phyclust seqmagick
 ```
 
-If this still doen't get the installation to work
+If this still doen't get the installation to work, you can try installing it using Conda & Mamba:
+
+For the first module:
+```bash
+conda create -n Initiator mamba
+conda activate Intiator
+mamba install -c conda-forge -c bioconda snakemake
+```
 
 <br/><br/>
 
