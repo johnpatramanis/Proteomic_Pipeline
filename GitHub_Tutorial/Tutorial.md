@@ -88,16 +88,20 @@ For the first module:
 ```bash
 conda create -n Initiator -c conda-forge -c bioconda snakemake
 ```
-
+<br/><br/>
 For the second module:
 ```bash
 conda create -n Translator -c conda-forge -c bioconda  openssl=1.1 bioconductor-shortread angsd blast samtools bcftools biopython snakemake
 ```
-
+<br/><br/>
 For the third module:
 ```bash
 conda create -n Analyser  -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes trimal bioconductor-shortread r-stringr r-data.table r-phyclust seqmagick
 ```
+
+<br/><br/>
+<br/><br/>
+
 
 If this still doen't get the installation to work, you can try installing it using Conda & Mamba:
 
@@ -107,7 +111,7 @@ conda create -n Initiator -c conda-forge mamba
 conda activate Intiator
 mamba install -c conda-forge -c bioconda snakemake
 ```
-
+<br/><br/>
 
 For the second module:
 ```bash
@@ -115,7 +119,7 @@ conda create -n Translator -c conda-forge mamba
 conda activate Translator
 mamba install -c conda-forge -c bioconda  openssl=1.1 bioconductor-shortread angsd blast samtools bcftools biopython snakemake
 ```
-
+<br/><br/>
 
 For the third module:
 ```bash
@@ -125,7 +129,8 @@ mamba install -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes 
 ```
 
 <br/><br/>
-
+<br/><br/>
+<br/><br/>
 ### Download and format the published palaeoproteomic data
 
 Finally, since our goal here is to reconstruct the enamel phylogeny of *H.antecessor* and *G.blacki* as they were presented in their original publications, we will download the protein sequences from the publications themselves. We will then apply some shell magic to prepare the files, remove the *H.erectus* sample that is also included the dataset and modify the labels to suit the pipeline.
