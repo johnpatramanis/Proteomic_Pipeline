@@ -1,9 +1,12 @@
 ## Run using "snakemake -j4 --resources FTP=7"
 ## Install prerequisites manually:
+
 ## conda create --name Initiator
 ## conda activate Initiator
 ## conda install -c conda-forge -c bioconda snakemake
+
 ## or
+
 ## conda install -c conda-forge mamba
 ## mamba install -c conda-forge -c bioconda snakemake
 
