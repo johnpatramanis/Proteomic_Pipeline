@@ -132,18 +132,19 @@ for(g in 1:length(genes)){              #### for every gene
     
 	for (NUMBER_HERE in 1:nrow(fatabble)){
 		
-		ROW_NAME=row.names(fatabble)[NUMBER_HERE]
-		ROW_NAME=strsplit(ROW_NAME,'.', fixed=T)
+		ROW_NAME=names(fa)[NUMBER_HERE]
+		ROW_NAME=strsplit(ROW_NAME,'/', fixed=T)
 		
 		#### if name contains '.' already
-		if (length(ROW_NAME[[1]])>3){
-			ROW_NAME=ROW_NAME[[1]][1:(length(ROW_NAME[[1]])-2)]
-			ROW_NAME=paste(ROW_NAME,sep=' ',collapse='.')
+		if (length(ROW_NAME[[1]])>=3){
+			ROW_NAME=ROW_NAME[[1]][1:(length(ROW_NAME[[1]])-1)]
+			ROW_NAME=paste(ROW_NAME,sep=' ',collapse='/')
 	
 			}else{## If it doesnt'
 			ROW_NAME=ROW_NAME[[1]][1]
 				}
 		rownames(fatabble)[NUMBER_HERE]<-ROW_NAME
+		
 		}
 	
     

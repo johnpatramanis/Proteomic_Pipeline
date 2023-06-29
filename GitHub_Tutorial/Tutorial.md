@@ -76,7 +76,66 @@ You can always check which conda environments are installed on your machine by t
 ```bash
 conda env list
 ```
+<br/><br/>
+<br/><br/> 
+<br/><br/> 
 
+#### Installation erros / Alternative Installations
+
+There are some cases where the conda environments provided here cannot be installed. This tends to happen when base conda already has some packages installed. In these cases you will probably get an error in one of the above steps and the environment will not be (properly) installed. Below you will find alternative commands to install each conda environment by manually installing each the necessary tools into a new environment:
+
+For the first module:
+```bash
+conda create -n Initiator -c conda-forge -c bioconda snakemake
+```
+
+<br/><br/>
+
+For the second module:
+```bash
+conda create -n Translator -c conda-forge -c bioconda  openssl=1.1 bioconductor-shortread angsd blast samtools bcftools biopython snakemake
+```
+
+<br/><br/>
+
+For the third module:
+```bash
+conda create -n Analyser  -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes trimal bioconductor-shortread r-stringr r-data.table r-phyclust seqmagick
+```
+
+<br/><br/>
+<br/><br/>
+
+
+#### If this still doen't get the installation to work, you can try installing it using Conda & Mamba:
+
+For the first module:
+```bash
+conda create -n Initiator -c conda-forge mamba
+conda activate Intiator
+mamba install -c conda-forge -c bioconda snakemake
+```
+
+<br/><br/>
+
+For the second module:
+```bash
+conda create -n Translator -c conda-forge mamba
+conda activate Translator
+mamba install -c conda-forge -c bioconda  openssl=1.1 bioconductor-shortread angsd blast samtools bcftools biopython snakemake
+```
+
+<br/><br/>
+
+For the third module:
+```bash
+conda create -n Analyser -c conda-forge mamba
+conda activate Analyser
+mamba install -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes trimal bioconductor-shortread r-stringr r-data.table r-phyclust seqmagick
+```
+
+<br/><br/>
+<br/><br/>
 <br/><br/>
 
 ### Download and format the published palaeoproteomic data
@@ -629,7 +688,8 @@ All we need to do now is let the pipeline know which datasets we want to run and
 
 
 ```bash
-echo ‘Reference_Data.fa	H_antecessor’ > Datasets.txt
+echo Dataset	Ancient_Samples > Datasets.txt
+echo Reference_Data.fa	Atapuerca_H_antecessor > Datasets.txt
 ```
 
 

@@ -3,6 +3,18 @@
 import os
 import os.path
 
+### To manually install the required environment: mamba install -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes trimal bioconductor-shortread r-stringr r-data.table r-phyclust seqmagick
+
+
+## Install prerequisites manually:
+## conda create --name Analyser
+## conda activate Initiator
+## conda install -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes trimal bioconductor-shortread r-stringr r-data.table r-phyclust seqmagick
+## or
+## conda install -c conda-forge mamba
+## mamba install -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes trimal bioconductor-shortread r-stringr r-data.table r-phyclust seqmagick
+
+
 
 
 ##### Load Input Files and usefull info  #####
@@ -120,6 +132,7 @@ rule all:
         expand('Workspace/2_DATASETS/{sample}/PhyML_Individual_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/PhyML_Concatenated_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/MrBayes_Concatenated_Genes_Done',sample=SAMPLES),
+        expand('Workspace/2_DATASETS/{sample}/RevBayes_Concatenated_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/Collected_Alignments/Alignments_Collected',sample=SAMPLES)
 
 
@@ -449,20 +462,55 @@ rule Run_MrBayes_Concatenated_Genes:
     threads: 32
 
     run:
-        DIV=int(threads/4)
-        DIV_2=int(DIV/2)
+        DIV=max(int(threads/4),2)
+        DIV_2=max(int(DIV/2),2)
 
         shell("""RAND=$(( $RANDOM %999));\
-        rm Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex.*;\
+        rm -rf Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex.*;\
         echo -e 'set autoclose=yes\nexecute Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex'>Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
         cat Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/Partition_Helper >> Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
         echo -e 'prset aamodelpr = mixed;\nmcmc nchains = {DIV} nruns={DIV_2} ngen = 5000000 samplefreq=100 printfreq=100 diagnfreq=1000;\nsumt relburnin = yes burninfrac = 0.25;\nsump;\nquit;'>>Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
-        mpirun -np {DIV} mb-mpi < Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/log.txt;\
+        mpirun -np {DIV} mb-mpi < Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/log_MB.txt;\
         echo "MrBayes Run Done";\
         """)
         shell("""touch Workspace/2_DATASETS/{wildcards.sample}/MrBayes_Concatenated_Genes_Done; """)
         #### To unlink partitions # unlink statefreq=(all) revmat=(all) shape=(all) pinvar=(all);\n
         ###### \nstoprule=yes; \nmcmcp stopval=0.01;
+
+
+## 
+# Do a RevBayes run on the concatenated dataset
+rule Run_RevBayes_Concatenated_Genes:
+    input:
+        'Workspace/2_DATASETS/{sample}/NEXUS_Concatenated_Genes_Done'
+    output:
+        'Workspace/2_DATASETS/{sample}/RevBayes_Concatenated_Genes_Done'
+    threads: 16
+
+    run:
+
+
+        shell("""RAND=$(( $RANDOM %999));\
+        rm -rf Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/output_RevBayes;\
+        
+        cp Rscripts/RevScript.rb Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/RevScript.rb;\
+        
+        cp Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o_Rev.nex;\
+        
+        cat Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/Partition_Helper_RB >> Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o_Rev.nex ;\
+        
+        cd Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/
+        
+        mpirun -np {threads} rb-mpi  RevScript.rb > log_RB.txt;\
+        
+        echo "RevBayes Run Done";\
+        """)
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/RevBayes_Concatenated_Genes_Done; """)
+
+        ### Old commands
+        ###echo -e 'data <- readDiscreteCharacterData("Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o_Rev.nex")' > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/RevScript.rb;\
+        ###cat Rscripts/RevScript.rb >> Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/RevScript.rb;\
+
 
 
 ## 
