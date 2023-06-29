@@ -76,6 +76,9 @@ You can always check which conda environments are installed on your machine by t
 ```bash
 conda env list
 ```
+<br/><br/>
+<br/><br/> 
+<br/><br/> 
 
 #### Installation erros / Alternative Installations
 
@@ -100,9 +103,25 @@ If this still doen't get the installation to work, you can try installing it usi
 
 For the first module:
 ```bash
-conda create -n Initiator mamba
+conda create -n Initiator -c conda-forge mamba
 conda activate Intiator
 mamba install -c conda-forge -c bioconda snakemake
+```
+
+
+For the second module:
+```bash
+conda create -n Translator -c conda-forge mamba
+conda activate Translator
+mamba install -c conda-forge -c bioconda  openssl=1.1 bioconductor-shortread angsd blast samtools bcftools biopython snakemake
+```
+
+
+For the third module:
+```bash
+conda create -n Analyser -c conda-forge mamba
+conda activate Analyser
+mamba install -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes trimal bioconductor-shortread r-stringr r-data.table r-phyclust seqmagick
 ```
 
 <br/><br/>
