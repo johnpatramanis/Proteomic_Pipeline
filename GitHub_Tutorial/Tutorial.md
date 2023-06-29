@@ -107,7 +107,7 @@ conda create -n Analyser  -c bioconda -c conda-forge snakemake phyml mafft mrbay
 <br/><br/>
 
 
-If this still doen't get the installation to work, you can try installing it using Conda & Mamba:
+#### If this still doen't get the installation to work, you can try installing it using Conda & Mamba:
 
 For the first module:
 ```bash
