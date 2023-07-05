@@ -132,7 +132,7 @@ rule all:
         expand('Workspace/2_DATASETS/{sample}/PhyML_Individual_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/PhyML_Concatenated_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/MrBayes_Concatenated_Genes_Done',sample=SAMPLES),
-        expand('Workspace/2_DATASETS/{sample}/RevBayes_Concatenated_Genes_Done',sample=SAMPLES),
+        # expand('Workspace/2_DATASETS/{sample}/RevBayes_Concatenated_Genes_Done',sample=SAMPLES),
         expand('Workspace/2_DATASETS/{sample}/Collected_Alignments/Alignments_Collected',sample=SAMPLES)
 
 
@@ -400,7 +400,7 @@ rule Run_PhyML_for_Individual_Gene:
             shell("""
             cd Workspace/2_DATASETS/{wildcards.sample}/{GENE}/;\
             RAND=$(( $RANDOM %99999));\
-            mpirun -n {threads} phyml-mpi -i {GENE}_aln_e.phy -d aa -b 100 -m JTT -c 4 -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 3 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check < /dev/null;
+            mpirun -n {threads} --oversubscribe phyml-mpi -i {GENE}_aln_e.phy -d aa -b 100 -m JTT -c 4 -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 3 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check < /dev/null;
             """)
             shell("""touch Workspace/2_DATASETS/{wildcards.sample}/PhyML_Individual_Genes_Done;""")
 
@@ -426,7 +426,7 @@ rule Run_PhyML_Concatenated_Genes:
         shell( """
         cd  Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/;\
         RAND=$(( $RANDOM %999));\
-        mpirun -n {threads} phyml-mpi -i CONCATINATED_aln_e.phy -d aa -b 100 -m JTT -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 4 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check < /dev/null;""")
+        mpirun -n {threads} --oversubscribe phyml-mpi -i CONCATINATED_aln_e.phy -d aa -b 100 -m JTT -a e -s BEST -v e -o tlr -f m --rand_start --n_rand_starts 4 --r_seed $RAND --print_site_lnl --print_trace --no_memory_check < /dev/null;""")
         shell("""touch Workspace/2_DATASETS/{wildcards.sample}/PhyML_Concatenated_Genes_Done;""")
 
 ## Run PhyML on the concatenated datasets
@@ -470,7 +470,7 @@ rule Run_MrBayes_Concatenated_Genes:
         echo -e 'set autoclose=yes\nexecute Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex'>Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
         cat Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/Partition_Helper >> Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
         echo -e 'prset aamodelpr = mixed;\nmcmc nchains = {DIV} nruns={DIV_2} ngen = 5000000 samplefreq=100 printfreq=100 diagnfreq=1000;\nsumt relburnin = yes burninfrac = 0.25;\nsump;\nquit;'>>Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt;\
-        mpirun -np {DIV} mb-mpi < Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/log_MB.txt;\
+        mpirun -np {DIV} --oversubscribe mb-mpi < Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/MrBatch.txt > Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/log_MB.txt;\
         echo "MrBayes Run Done";\
         """)
         shell("""touch Workspace/2_DATASETS/{wildcards.sample}/MrBayes_Concatenated_Genes_Done; """)
@@ -501,7 +501,7 @@ rule Run_RevBayes_Concatenated_Genes:
         
         cd Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/
         
-        mpirun -np {threads} rb-mpi  RevScript.rb > log_RB.txt;\
+        mpirun -np {threads} --oversubscribe  rb-mpi  RevScript.rb > log_RB.txt;\
         
         echo "RevBayes Run Done";\
         """)
