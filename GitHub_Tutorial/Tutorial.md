@@ -14,7 +14,7 @@ This tutorial aims to introduce the functionality of the pipelines by easily rec
 <br/><br/>
 ## REQUIREMENTS
 A computer running on Linux OS and has conda installed. If you don't have conda installed, look below for info.
-The tutorial should be a ble to run in a personal computer, but I would suggest running it on a server. If your server is using a queing system like slurm, I would suggest running the tutorial in an 'interactive session', instead of submitting job queues. Furthermore, regardless of server or presonal machine, I would also suggest using at least 8GB of ram and a disc space of more than 20GB. Using module number 2 can also require much greater disc space, but that depends on the size of the genomic data you want to translate.
+The tutorial should be a ble to run in a personal computer, but I would suggest running it on a server machine. If your server is using a queing system like slurm, I would suggest running the tutorial in an 'interactive session', instead of submitting job queues. In those cases I would also suggest using 32+ GB of RAM for your session, along with a lengthy time limit of 2+ hours. Furthermore, regardless of server or presonal machine, I would suggest having at least a disc space of 20GB or more. Using module number 2 can also require much greater disc space (100+ GB), but that depends on the size of the genomic data you want to translate, so thats optional.
 
 
 ## STEP 0 - Installation and Data preparation
@@ -86,7 +86,7 @@ conda env list
 
 #### Installation erros / Alternative Installations
 
-There are some cases where the conda environments provided here cannot be installed. This tends to happen when base conda already has some packages installed. In these cases you will probably get an error in one of the above steps and the environment will not be (properly) installed. Below you will find alternative commands to install each conda environment by manually installing each the necessary tools into a new environment:
+There are some cases where the conda environments provided here cannot be installed. This tends to happen when base conda already has some packages installed. In these cases you will probably get an error in one of the above steps and the environment will not be (properly) installed.Below you will find alternative commands to install each conda environment by manually installing each the necessary tools into a new environment.
 
 For the first module:
 ```bash
