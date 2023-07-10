@@ -367,15 +367,15 @@ https://pubmed.ncbi.nlm.nih.gov/28982794/
 https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub 
 
 
-WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is 270 GB
-If you have the disk space, proceed as bellow. If not you can download only some of the files or simply move straight to Module 3.
+WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is 200+ GB
+If you have the disk space, proceed as bellow. If not, you can download only **some** of the files or simply move straight to Module 3.
 
 
-For this simple example, will download 9 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
+For this simple example, will download 4 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
 and you can download them using this loop:
 
 ```bash
-FILE="GitHub_Tutorial\1KG_Samples.txt";
+FILE="..\GitHub_Tutorial\1KG_Samples.txt";
 LINES=$(cat $FILE);
 for SAMPLE in $LINES
 do
@@ -383,7 +383,7 @@ do
 done
 mv *.cram Workspace/1_OG_BAM_FILES/
 ```
-If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the 1KG_samples file should correspond to one sample. I would suggest keeping at least 2 individuals from the original file.
+If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the '1KG_samples' file should correspond to one sample. I would suggest trying this tutorila with at least one sample, so removing every line from that file besides the first one. 
 
 <br/><br/> 
 ### Download and pre-process ancient genetic data to translate (VCF files) 
