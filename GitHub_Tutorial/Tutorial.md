@@ -291,12 +291,16 @@ Different subsets of this fasta file can be found here:
 ```/Dataset_Initialization/Workspace/3_FASTA_Seqs/Combined_Per_Species/```
 ```/Dataset_Initialization/Workspace/3_FASTA_Seqs/Combined_Per_Protein/```
 
-We can save this simple reference dataset we have created using the shell commands:
+Feel free to navigate into those folders and look at the files that have been created inside ```/Dataset_Initialization/Workspace/```
+Come back to the main folder directory ```/Dataset_Initialization/``` once you are finished.
+<br/><br/> 
+
+Now save this simple reference dataset we have created, using the shell commands:
 
 ```bash
-cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa >> Reference_Proteomes.fa
+cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa Reference_Proteomes.fa
 ```  
-We can now also de-activate Module's 1 environment, since we are moving on to Module 2
+We can now also de-activate Module's 1 environment, since we are done here and moving on to Module 2
 
 ```bash
 conda deactivate
