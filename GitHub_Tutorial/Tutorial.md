@@ -71,6 +71,7 @@ and then one by one, type the commands below:
 conda env create -f ./Dataset_Initialization/Initiator.yml
 ```
 There could be some messages popping up, simply types 'y' if asked to confirm the installation.
+If there is an error instead, look below for an alternative way to install the environment.
 
 <br/><br/>
 
