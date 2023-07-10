@@ -360,7 +360,7 @@ cd ./Dataset_Construction/
 
 Now we need to download some data to translate. For this example we will build a subset of the reference dataset presented in the [publication of PaleoProPhyler](https://www.biorxiv.org/content/10.1101/2022.12.12.519721v1). We can use any of the following datasets:
 
-https://www.biorxiv.org/content/10.1101/2021.02.06.430068v2.full
+https://pubmed.ncbi.nlm.nih.gov/36055201/
 
 https://pubmed.ncbi.nlm.nih.gov/28982794/
 
@@ -375,7 +375,7 @@ For this simple example, will download 4 modern human individuals from the 1000 
 and you can download them using this loop:
 
 ```bash
-FILE="..\GitHub_Tutorial\1KG_Samples.txt";
+FILE="../GitHub_Tutorial/1KG_Samples.txt";
 LINES=$(cat $FILE);
 for SAMPLE in $LINES
 do
@@ -384,6 +384,8 @@ done
 mv *.cram Workspace/1_OG_BAM_FILES/
 ```
 If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the '1KG_samples' file should correspond to one sample. I would suggest trying this tutorila with at least one sample, so removing every line from that file besides the first one. 
+
+Note: Some servers block access to users downloading large files. This will manifest in the above loop attempting to connect but without success. In these cases you should contact the person responsible for your server. Remember that you need to download genetic data in order to do the translations, but you can always instead move to module 3.
 
 <br/><br/> 
 ### Download and pre-process ancient genetic data to translate (VCF files) 
