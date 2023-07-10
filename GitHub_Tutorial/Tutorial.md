@@ -300,10 +300,11 @@ Now save this simple reference dataset we have created, using the shell commands
 ```bash
 cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa Reference_Proteomes.fa
 ```  
-We can now also de-activate Module's 1 environment, since we are done here and moving on to Module 2
+We can now also de-activate Module's 1 environment, since we are done here and moving on to Module 2 and leave the folder.
 
 ```bash
 conda deactivate
+cd ..
 ```
 
 <br/><br/>
