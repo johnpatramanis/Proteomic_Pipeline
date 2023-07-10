@@ -264,6 +264,8 @@ nano Proteins.txt
 nano Organism.txt
 ```
 
+This is of course optional and you can also just leave these files as they are and move one.
+
 <br/><br/> 
 
 ### Run the first module
