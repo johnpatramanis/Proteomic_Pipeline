@@ -175,6 +175,7 @@ And the Antecessor is ready to go! You can check the content of the file we just
 less H_antecessor.fa
 ```
 
+Press 'q' to exit the file.
 Similarly we can also download and prepare the Gigantopethicus data.
 
 ```bash
