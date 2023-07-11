@@ -428,17 +428,18 @@ The files are large, so this process might take a while. You can increase the nu
 ```bash
 #### For Neanderthal
 
-cd VCF
+cd Workspace/0_VCF_FILES/VCF/
 for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4; done
 ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
 bcftools concat -f Altai.txt -Oz -o Altai.vcf.gz --threads 4
 cd ..
 mv VCF/Altai.vcf.gz ./
-rm -rf VCF
+```
 
 
+
+```bash
 ##### For Denisovan
-
 ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
 bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
 rm -rf T_hg19_1000g.*.mod.vcf.gz*
@@ -446,8 +447,18 @@ rm -rf T_hg19_1000g.*.mod.vcf.gz*
 
 
 
+
+```
+
+```bash
+#### Check that it worked
+bcftools query -f '%CHROM\t%POS\t%INFO\n' -r chr2:1-1500  Altai.vcf.gz
+bcftools query -f '%CHROM\t%POS\t%INFO\n' -r chr2:1-1500  Denisovan.vcf.gz
+
+#### Go back to main directory
 cd ../..
 ```
+
 
 <br/><br/> 
 ### Download and pre-process modern genetic data to translate (VCF files) 
