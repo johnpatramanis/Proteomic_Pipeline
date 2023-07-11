@@ -419,6 +419,8 @@ wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Refe
 gunzip ./Reference/hg19.fa.gz
 ```
 
+<br/><br/> 
+
 #### Data prep
 <br/><br/> 
 The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
@@ -442,7 +444,7 @@ mv VCF/Altai.vcf.gz ./
 ##### For Denisovan
 ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
 bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
-rm -rf T_hg19_1000g.*.mod.vcf.gz*
+
 
 
 
@@ -452,10 +454,16 @@ rm -rf T_hg19_1000g.*.mod.vcf.gz*
 
 ```bash
 #### Check that it worked
-bcftools query -f '%CHROM\t%POS\t%INFO\n' -r chr2:1-1500  Altai.vcf.gz
-bcftools query -f '%CHROM\t%POS\t%INFO\n' -r chr2:1-1500  Denisovan.vcf.gz
+bcftools head  Altai.vcf.gz
+bcftools head  Denisovan.vcf.gz
+
+#### If the above prints something, it worked, remove original vcf files
+rm -rf VCF
+rm -rf T_hg19_1000g.*.mod.vcf.gz*
+
 
 #### Go back to main directory
+clear
 cd ../..
 ```
 
