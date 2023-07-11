@@ -342,7 +342,7 @@ cd ..
 
 ### Activate the second module
 
-We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However for the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the PaleoProPhyler's 2nd Module. First, activate the module by typing:
+We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the PaleoProPhyler's 2nd Module. Unfortunatelly this requires downloading some large genomic-data files. Both the Neanderthal and the Denisovan genome we will use are high coverage (>30x) and thus multiple Gigabits. Additionally they require a few edits before they are usable. This part of the tutorial will guide you through this process both for BAM files (modern humans) and for VCF files (NEanderthal & Denisovan). IF you are not interested in the transaltion part of the pipelines, please move to module number 3. If you translating genomes is your main interest, please follow the steps below to understand the process. First, activate the module by typing:
 
 ```bash
 conda activate Translator
@@ -371,7 +371,7 @@ WARNING: The following few steps download a couple of large files. The minimum d
 If you have the disk space, proceed as bellow. If not, you can download only **some** of the files or simply move straight to Module 3.
 
 
-For this simple example, will download 4 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
+For this simple example, we will download 4 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
 and you can download them using this loop:
 
 ```bash
@@ -383,20 +383,20 @@ do
 done
 mv *.cram Workspace/1_OG_BAM_FILES/
 ```
-If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the '1KG_samples' file should correspond to one sample. I would suggest trying this tutorila with at least one sample, so removing every line from that file besides the first one. 
+If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the '/GitHub_Tutorial/1KG_Samples.txt' file should correspond to one sample. I would suggest trying this tutorila with at least one sample, so removing every line from that file besides the first one. 
 
-Note: Some servers block access to users downloading large files. This will manifest in the above loop attempting to connect but without success. In these cases you should contact the person responsible for your server. Remember that you need to download genetic data in order to do the translations, but you can always instead move to module 3.
+Note: Some servers block access to users downloading files using ftp. This will manifest in the above loop attempting to connect but without success. In these cases you should contact the person responsible for your server. Remember that you need to download genetic data in order to do the translations, but you can always instead move to module 3.
 
 <br/><br/> 
 ### Download and pre-process ancient genetic data to translate (VCF files) 
 
-If you want to explore the ability to translate VCF files, we can additionally download some of the archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors, but their VCF files have been more carefully curated and called by the researchers who published then, who specialise in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use (e.g. scroll down a bit to modern VCF file). Always make sure your VCF file is readable with bcftools (``` bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it.
+If you want to explore the ability to translate VCF files or are interested in using archaic humans in you dataset, we can additionally download some of the available high coverage archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors, but their VCF files have been more carefully curated and called by the researchers who published then, who specialise in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use (e.g. scroll down a bit to find modern VCF files). Always make sure your VCF file is in a format that is readable with bcftools (```bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it!
 
 We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an example, usign the following commands:
 
 ```bash
 cd Workspace/0_VCF_FILES/
-
+### Download step
 wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Giga bytes )
 wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Giga bytes )
 
@@ -412,7 +412,7 @@ cd ../..
 ```
 
 
-In addition to that translating from a VCF file requires the reference which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference fasta comes in and fills in the gaps. This file MUST be '.fa' file and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
+In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be file endign with '.fa' and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
 
 ```bash
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
