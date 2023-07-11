@@ -400,8 +400,17 @@ cd Workspace/0_VCF_FILES/
 wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Giga bytes )
 wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Giga bytes )
 
+```
+
+Check that the files are are in there and go back to the main repository
+
+```bash
+
+ls VCF/
+cd ../..
 
 ```
+
 
 In addition to that translating from a VCF file requires the reference which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference fasta comes in and fills in the gaps. This file MUST be '.fa' file and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
 
