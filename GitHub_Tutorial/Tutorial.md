@@ -423,7 +423,7 @@ gunzip ./Reference/hg19.fa.gz
 <br/><br/> 
 The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
 
-The files are large, so this process might take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
+The files are large, so this process will take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
 
 ```bash
 #### For Neanderthal
