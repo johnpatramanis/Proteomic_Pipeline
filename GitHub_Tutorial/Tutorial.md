@@ -614,7 +614,7 @@ less Samples.txt
 With these two files set up, we don’t need anything else. Which proteins are being translated though? If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those porteins. You can test-run the pipeline to see if everything is set up with:
 
 ```bash
-snakemake -n -r
+snakemake -n -r -j4
 ```
 
 You can also take a look at which proteins are being translated by looking into the file 'Gene_locs.txt'. This files also contains the information on the location of the gene that codes the proteins. Take a look into the file by typing:
@@ -668,10 +668,10 @@ Now we need to specify which samples we want to translate, which VCF file contai
 For our example the input file is pre-made. You can copy it over using:
 
 ```bash
-cp GitHub_Tutorial/VCF_Samples_Ancient.txt VCF_Samples.txt
+cp GitHub_Tutorial/VCF_Samples.txt VCF_Samples.txt
 ```
 
-The samples that you want to translate must be in a file named 'VCF_Samples.txt'.If we take a look at this new VCF_Samples.txt file, we can see the format required for the samples: A file with 3 separated columns, one with the name of the sample inside the vcf, one with the name of the vcf file and one with the reference fasta file that corresponds to the sample:
+The samples that you want to translate must be in a file named 'VCF_Samples.txt'. If we take a look at this new VCF_Samples.txt file, we can see the format required for the samples: A file with 3 separated columns, one with the name of the sample inside the vcf, one with the name of the vcf file and one with the reference fasta file that corresponds to the sample:
 
 Sample_Name VCF_File_Name Reference_File_Name
 
@@ -681,7 +681,7 @@ Take a look at the file to see:
 ```bash
 less VCF_Samples.txt 
 ```
-
+In the case that you only downloaded and set up some of these samples (either Neanderthal, Denisovan or modern humans) simply keep the samples you want to translate and remove all others.
 
 We are now set for the new translation and we can execute it again, by typing:
 
