@@ -356,7 +356,6 @@ cd ./Dataset_Construction/
 
 
 <br/><br/> 
-### Download modern genetic data to translate (BAM/CRAM files)
 
 Now we need to download some data to translate. For this example we will build a subset of the reference dataset presented in the [publication of PaleoProPhyler](https://www.biorxiv.org/content/10.1101/2022.12.12.519721v1). We can use any of the following datasets:
 
@@ -370,6 +369,9 @@ https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub
 WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is 200+ GB
 If you have the disk space, proceed as bellow. If not, you can download only **some** of the files or simply move straight to Module 3.
 
+<br/><br/> 
+
+### Download modern genetic data to translate (BAM/CRAM files)
 
 For this simple example, we will download 4 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
 and you can download them using this loop:
@@ -388,11 +390,15 @@ If you don't want to download all of them, you can remove some of the links from
 Note: Some servers block access to users downloading files using ftp. This will manifest in the above loop attempting to connect but without success. In these cases you should contact the person responsible for your server. Remember that you need to download genetic data in order to do the translations, but you can always instead move to module 3.
 
 <br/><br/> 
+
 ### Download and pre-process ancient genetic data to translate (VCF files) 
 
 If you want to explore the ability to translate VCF files or are interested in using archaic humans in you dataset, we can additionally download some of the available high coverage archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors, but their VCF files have been more carefully curated and called by the researchers who published then, who specialise in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use (e.g. scroll down a bit to find modern VCF files). Always make sure your VCF file is in a format that is readable with bcftools (```bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it!
 
-We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an example, usign the following commands:
+We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an example, usign the commands that follow.
+
+<br/><br/> 
+### Download and pre-process Neanderthal (VCF files) 
 
 ```bash
 cd Workspace/0_VCF_FILES/
@@ -421,7 +427,7 @@ gunzip ./Reference/hg19.fa.gz
 
 <br/><br/> 
 
-#### Data prep
+#### Data prep for workflow
 <br/><br/> 
 The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
 
@@ -452,6 +458,92 @@ bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
 
 ```
 
+## Check that sample works
+
+```bash
+#### Check that it worked
+bcftools head  Altai.vcf.gz
+bcftools head  Denisovan.vcf.gz
+
+#### If the above prints something, it worked, remove original vcf files
+rm -rf VCF
+rm -rf T_hg19_1000g.*.mod.vcf.gz*
+
+
+#### Go back to main directory
+clear
+cd ../..
+```
+
+
+
+<br/><br/>
+<br/><br/> 
+## Download and pre-process Denisovan (VCF files) 
+
+
+```bash
+cd Workspace/0_VCF_FILES/
+### Download step
+wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Giga bytes )
+wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Giga bytes )
+
+```
+
+Check that the files are are in there and go back to the main repository
+
+```bash
+
+ls VCF/
+cd ../..
+
+```
+
+
+In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be file endign with '.fa' and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
+
+```bash
+wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
+gunzip ./Reference/hg19.fa.gz
+```
+
+<br/><br/> 
+
+#### Data prep for workflow
+<br/><br/> 
+The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
+
+The files are large, so this process will take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
+
+```bash
+#### For Neanderthal
+
+cd Workspace/0_VCF_FILES/VCF/
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4; done
+ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
+bcftools concat -f Altai.txt -Oz -o Altai.vcf.gz --threads 4
+cd ..
+mv VCF/Altai.vcf.gz ./
+```
+
+
+
+```bash
+##### For Denisovan
+ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
+bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
+
+
+
+
+
+
+```
+
+
+
+## Check that sample works
+
 ```bash
 #### Check that it worked
 bcftools head  Altai.vcf.gz
@@ -469,6 +561,7 @@ cd ../..
 
 
 <br/><br/> 
+
 ### Download and pre-process modern genetic data to translate (VCF files) 
 
 Instead of downloading and processing the Neanderthal & Denisovan VCF files we can use some modern data instead.
