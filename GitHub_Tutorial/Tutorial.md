@@ -598,8 +598,10 @@ less Organism.txt
 Then we need a list of the samples we want to translate, in the form of a txt file named ‘Samples.txt’. Since all of them are CRAM files inside the folder ```Dataset_Construction/Workspace/1_OG_BAM_FILES/``` we can use:
 
 ```bash
-ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.cram | cut -d ‘.’  -f 1 > Samples.txt
+ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.cram | cut -d '.'  -f 1 > Samples.txt
 ```
+Note: if you never downloaded the 1000 genomes cram files, the above command will not work.
+
 
 Notice that for the list the file extension should not be mentioned, just the name of the bam file.
 We can take a look at how the file looks with:
@@ -607,6 +609,7 @@ We can take a look at how the file looks with:
 ```bash
 less Samples.txt
 ```
+
 
 <br/><br/> 
 
