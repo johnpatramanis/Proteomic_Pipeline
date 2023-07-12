@@ -1,0 +1,6 @@
+DenisovaPinky	Denisovan.vcf.gz	hg19.fa
+AltaiNea	Altai.vcf.gz	hg19.fa
+S_Iranian-1.DG	SGDP.vcf.gz	hg19.fa
+S_Russian-1.DG	SGDP.vcf.gz	hg19.fa
+S_Ju_hoan_North-3.DG	SGDP.vcf.gz	hg19.fa
+S_Khomani_San-2.DG	SGDP.vcf.gz	hg19.fa
