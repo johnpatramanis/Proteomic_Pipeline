@@ -658,7 +658,7 @@ cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Modern_Humans_from_BAM.fa
 Alternatively if you downloaded the archaic genomes or the SGDP modern humans, you would want to use the GRCh37 reference genome, since all this data were generated using that reference. In order to translate them, first we need to switch our reference genome by editing the ```Organism.txt``` file
 
 ```bash
-echo ‘Homo_sapiens	GRCh37’ > Organism.txt
+echo homo_sapiens    GRCh37 > Organism.txt
 ```
 Then, let's empty the Samples.txt from the samples that are already finished:
 
