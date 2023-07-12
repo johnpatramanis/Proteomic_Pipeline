@@ -396,6 +396,8 @@ Note: Some servers block access to users downloading files using ftp. This will 
 
 ### Download and pre-process ancient genetic data to translate (VCF files) 
 
+<br/><br/> 
+
 If you want to explore the ability to translate VCF files or are interested in using archaic humans in you dataset, we can additionally download some of the available high coverage archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors, but their VCF files have been more carefully curated and called by the researchers who published then, who specialise in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use (e.g. scroll down a bit to find modern VCF files). Always make sure your VCF file is in a format that is readable with bcftools (```bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it!
 
 We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an example, usign the commands that follow.
@@ -403,6 +405,8 @@ We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an
 <br/><br/> 
 <br/><br/> 
 ## Download and pre-process Neanderthal (VCF files) 
+
+<br/><br/> 
 
 ```bash
 cd Workspace/0_VCF_FILES/
@@ -421,14 +425,11 @@ cd ../..
 
 In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be file endign with '.fa' and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
 
-
-
 ```bash
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
 gunzip ./Reference/hg19.fa.gz
 ```
 
-<br/><br/> 
 <br/><br/> 
 
 The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes (Neanderthal and Denisovan) were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference and don't need to do anything else.
@@ -466,8 +467,10 @@ cd ../..
 
 <br/><br/>
 <br/><br/> 
+
 ## Download and pre-process Denisovan (VCF files) 
 
+<br/><br/> 
 
 ```bash
 cd Workspace/0_VCF_FILES/
@@ -530,6 +533,8 @@ cd ../..
 
 
 ### Download and pre-process modern genetic data to translate (VCF files) 
+
+<br/><br/> 
 
 Instead of downloading and processing the Neanderthal & Denisovan VCF files we can use some modern data instead.
 Below we will download the SGDP data, mapped onto GrCh37. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ ?? GB) so this will still take some time. The benefit however is that there are hundreds of samples in this VCF. In the interest of time however we will only use a handful of them  this tutorial.
