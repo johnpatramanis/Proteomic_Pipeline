@@ -398,23 +398,21 @@ If you want to explore the ability to translate VCF files or are interested in u
 We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an example, usign the commands that follow.
 
 <br/><br/> 
+<br/><br/> 
 ### Download and pre-process Neanderthal (VCF files) 
 
 ```bash
 cd Workspace/0_VCF_FILES/
 ### Download step
 wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Giga bytes )
-wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Giga bytes )
 
 ```
 
 Check that the files are are in there and go back to the main repository
 
 ```bash
-
 ls VCF/
 cd ../..
-
 ```
 
 
@@ -429,7 +427,7 @@ gunzip ./Reference/hg19.fa.gz
 
 #### Data prep for workflow
 <br/><br/> 
-The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
+The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes (Neanderthal and Denisovan) were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
 
 The files are large, so this process will take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
 
@@ -446,29 +444,14 @@ mv VCF/Altai.vcf.gz ./
 
 
 
-```bash
-##### For Denisovan
-ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
-bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
-
-
-
-
-
-
-```
-
 ## Check that sample works
 
 ```bash
 #### Check that it worked
 bcftools head  Altai.vcf.gz
-bcftools head  Denisovan.vcf.gz
 
 #### If the above prints something, it worked, remove original vcf files
 rm -rf VCF
-rm -rf T_hg19_1000g.*.mod.vcf.gz*
-
 
 #### Go back to main directory
 clear
@@ -485,7 +468,6 @@ cd ../..
 ```bash
 cd Workspace/0_VCF_FILES/
 ### Download step
-wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Giga bytes )
 wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Giga bytes )
 
 ```
@@ -494,13 +476,13 @@ Check that the files are are in there and go back to the main repository
 
 ```bash
 
-ls VCF/
+ls T_hg19_1000g.*.mod.vcf.gz
 cd ../..
 
 ```
 
 
-In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be file endign with '.fa' and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
+In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be file endign with '.fa' and placed inside the appropriate folder named '/Reference/'. Ifyou have already done this for the Neanderthal sample you can ignore this step. You can download the GrCh37 (also known as hg19) reference using:
 
 ```bash
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
@@ -516,27 +498,9 @@ The pipeline requires 1 VCF file per sample, where the VCF file should contain g
 The files are large, so this process will take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
 
 ```bash
-#### For Neanderthal
-
-cd Workspace/0_VCF_FILES/VCF/
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4; done
-ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
-bcftools concat -f Altai.txt -Oz -o Altai.vcf.gz --threads 4
-cd ..
-mv VCF/Altai.vcf.gz ./
-```
-
-
-
-```bash
 ##### For Denisovan
 ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
 bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
-
-
-
-
-
 
 ```
 
@@ -546,11 +510,9 @@ bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
 
 ```bash
 #### Check that it worked
-bcftools head  Altai.vcf.gz
 bcftools head  Denisovan.vcf.gz
 
 #### If the above prints something, it worked, remove original vcf files
-rm -rf VCF
 rm -rf T_hg19_1000g.*.mod.vcf.gz*
 
 
@@ -561,6 +523,7 @@ cd ../..
 
 
 <br/><br/> 
+
 
 ### Download and pre-process modern genetic data to translate (VCF files) 
 
