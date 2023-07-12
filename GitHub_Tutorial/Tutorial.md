@@ -396,6 +396,7 @@ Note: Some servers block access to users downloading files using ftp. This will 
 
 <br/><br/> 
 
+### Bonus Step
 ### Download and pre-process ancient genetic data to translate (VCF files) 
 
 <br/><br/> 
@@ -544,8 +545,8 @@ cd ../..
 
 <br/><br/> 
 
-
-## Download and pre-process modern genetic data to translate (SGDP dataset - VCF files) 
+### Bonus Step
+### Download and pre-process modern human genetic data to translate (SGDP dataset - VCF files) 
 
 <br/><br/> 
 
@@ -582,21 +583,21 @@ gunzip ./Reference/hg19.fa.gz
 <br/><br/>
 #### Prepare input for BAM/CRAM file translation
 
-Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly that the genome was mapped on to. Considering the data we downloaded correspond to different reference genomes (Modern humans are mapped onto GrCh38 and ancient ones are mapped onto GrCh37), we have to run the pipeline at least 2 times separately for each reference. 
+Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly that the genome was mapped on to. Considering the data we downloaded correspond to different reference genomes (1000 genomes modern humans are mapped onto GrCh38 and the SGDP and archaic humans are mapped onto GrCh37), we have to run the pipeline at least 2 times separately for each reference.
 
 As we just mentioned, translation requires a couple of resources. First we need the location (chromosome/scaffold, position & strand) of the gene that produces the protein. Most genes require splicing, so we also need the exon and intron information. Finally, a reference amino acid sequence of the protein is also necessary. This sounds like a lot, but given that we have run Pipeline 1 for the proteins of interest and the organisms and reference versions of interest (Homo sapiens GRCh37 & GRCh38), all of this data has already been downloaded and is available to us!
 
-In this first example we will deal with the BAM files of the modern humans, which are mapped onto the  GrCh38 reference.
+In this first example we will deal with the BAM files of the 1000 genomes modern humans, which are mapped onto the  GrCh38 reference.
 First we need a txt file named ```Organism.txt```, where the organism and reference version for the translation are given. For GRCh38 one is already in place and we can take a look at it with
 
 ```bash
 less Organism.txt
 ```
 
-Then we need a list of the samples we want to translate, in the form of a txt file named ‘Samples.txt’. Since all of them are BAM files inside the folder ```Dataset_Construction/Workspace/1_OG_BAM_FILES/```we can use:
+Then we need a list of the samples we want to translate, in the form of a txt file named ‘Samples.txt’. Since all of them are CRAM files inside the folder ```Dataset_Construction/Workspace/1_OG_BAM_FILES/``` we can use:
 
 ```bash
-ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.bam | cut -d ‘.’  -f 1 > Samples.txt
+ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.cram | cut -d ‘.’  -f 1 > Samples.txt
 ```
 
 Notice that for the list the file extension should not be mentioned, just the name of the bam file.
@@ -645,9 +646,12 @@ cp Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa Modern_Humans_from_BAM.fa
 ```
 
 <br/><br/> 
-### Prepare input for (ancient) VCF file translation and run translation
+<br/><br/> 
+<br/><br/> 
+### Bonus step
+### Alternative datasets translation
 
-Next we want to translate a different dataset, namely [Prufer et al 2017](https://pubmed.ncbi.nlm.nih.gov/28982794/). This dataset consists of multiple ancient individuals mapped onto GRCh37 and carefully had their genotypes called. In order to translate them, first we need to switch our reference genome by editing the ```Organism.txt``` file
+Alternatively if you downloaded the archaic genomes or the SGDP modern humans, you would want to use the GRCh37 reference genome, since all this data were generated using that reference. In order to translate them, first we need to switch our reference genome by editing the ```Organism.txt``` file
 
 ```bash
 echo ‘Homo_sapiens	GRCh37’ > Organism.txt
@@ -658,7 +662,7 @@ Then, let's empty the Samples.txt from the samples that are already finished:
 rm Samples.txt
 ```
 
-Finally, since our data are now VCF files, we need a slightly different method of translating them. 
+Finally, since our data are now VCF files instead of CRAM or BAM files, we need a slightly different method of translating them. 
 Earlier we have downloaded the VCF files and placed them into ```Workspace/0_VCF_FILES/```
 Now we need to specify which samples we want to translate, which VCF file contains those samples and which reference fasta to use for their translation.
 For our example the input file is pre-made. You can copy it over using:
