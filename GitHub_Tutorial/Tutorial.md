@@ -17,6 +17,9 @@ A computer running on Linux OS and has conda installed. If you don't have conda 
 The tutorial should be a ble to run in a personal computer, but I would suggest running it on a server machine. If your server is using a queing system like slurm, I would suggest running the tutorial in an 'interactive session', instead of submitting job queues. In those cases I would also suggest using 32+ GB of RAM for your session, along with a lengthy time limit of 2+ hours. Furthermore, regardless of server or presonal machine, I would suggest having at least a disc space of 20GB or more. Using module number 2 can also require much greater disc space (100+ GB), but that depends on the size of the genomic data you want to translate, so thats optional.
 
 
+<br/><br/>
+<br/><br/>
+
 ## STEP 0 - Installation and Data preparation
 
 <br/><br/>
@@ -417,6 +420,8 @@ cd ../..
 
 
 In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be file endign with '.fa' and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
+
+<br/><br/> 
 
 ```bash
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
