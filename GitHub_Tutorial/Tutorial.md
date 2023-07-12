@@ -502,6 +502,7 @@ The files are large, so this process will take a while. You can increase the num
 
 ```bash
 ##### For Denisovan
+cd Workspace/0_VCF_FILES/
 ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
 bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
 
