@@ -408,6 +408,7 @@ We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an
 
 <br/><br/> 
 
+Download the data:
 ```bash
 cd Workspace/0_VCF_FILES/
 ### Download step
@@ -465,6 +466,15 @@ cd ../..
 
 
 
+
+
+
+
+
+
+
+
+
 <br/><br/>
 <br/><br/> 
 
@@ -472,6 +482,7 @@ cd ../..
 
 <br/><br/> 
 
+Download the data:
 ```bash
 cd Workspace/0_VCF_FILES/
 ### Download step
