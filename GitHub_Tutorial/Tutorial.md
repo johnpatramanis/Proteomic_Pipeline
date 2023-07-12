@@ -376,7 +376,7 @@ If you have the disk space, proceed as bellow. If not, you can download only **s
 
 <br/><br/> 
 
-### Download modern genetic data to translate (BAM/CRAM files)
+### Download modern genetic data to translate (1000 Genomes Dataset - BAM/CRAM files)
 
 For this simple example, we will download 4 modern human individuals from the 1000 genomes project. The links for the samples are located in ```GitHub_Tutorial\1KG_Samples.txt ```
 and you can download them using this loop:
@@ -545,7 +545,7 @@ cd ../..
 <br/><br/> 
 
 
-### Download and pre-process modern genetic data to translate (VCF files) 
+## Download and pre-process modern genetic data to translate (SGDP dataset - VCF files) 
 
 <br/><br/> 
 
