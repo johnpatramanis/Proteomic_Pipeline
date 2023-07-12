@@ -672,7 +672,7 @@ Now we need to specify which samples we want to translate, which VCF file contai
 For our example the input file is pre-made. You can copy it over using:
 
 ```bash
-cp GitHub_Tutorial/VCF_Samples.txt VCF_Samples.txt
+cp ../GitHub_Tutorial/VCF_Samples.txt VCF_Samples.txt
 ```
 
 The samples that you want to translate must be in a file named 'VCF_Samples.txt'. If we take a look at this new VCF_Samples.txt file, we can see the format required for the samples: A file with 3 separated columns, one with the name of the sample inside the vcf, one with the name of the vcf file and one with the reference fasta file that corresponds to the sample:
