@@ -547,7 +547,7 @@ cd ../..
 <br/><br/> 
 
 ### Bonus Step
-### Download and pre-process modern human genetic data to translate (SGDP dataset - VCF files) 
+### Download and pre-process modern humans (SGDP dataset - VCF files) 
 
 <br/><br/> 
 
@@ -743,7 +743,7 @@ snakemake -j4
 ```
 Again remember you can increase the number of cores (-j4) to make it faster.
 
-
+<br/><br/>
 ### Merge Ancient proteins, 'scaffold' produced by module 1 and translated data produced by module 2
 
 
