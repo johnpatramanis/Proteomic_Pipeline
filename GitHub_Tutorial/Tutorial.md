@@ -2,7 +2,7 @@
 # Tutorial
 ## How to use PaleoProPhyler's modules.
 A step by step guid on how to use the 3 modules of PaleoProPhyler.
-Create a Reference Dataset, enhance it with transaled date and use it to reconstruct the phylogeny of *H. antecessor* and *G.blacki*.
+Create a Reference Dataset, enhance it with translated data and use it to reconstruct the phylogeny of two palaeoproteomic samples: *H. antecessor* and *G.blacki*.
 
 <br/><br/>
 <br/><br/> 
