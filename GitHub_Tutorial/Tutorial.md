@@ -15,8 +15,8 @@ This tutorial aims to introduce the functionality of the pipelines by easily rec
 <br/><br/>
 <br/><br/>
 ## REQUIREMENTS
-A computer running on Linux OS and has conda installed. If you don't have conda installed, look below for info.
-The tutorial should be a ble to run in a personal computer, but I would suggest running it on a server machine. If your server is using a queing system like slurm, I would suggest running the tutorial in an 'interactive session', instead of submitting job queues. In those cases I would also suggest using 32+ GB of RAM for your session, along with a lengthy time limit of 2+ hours. Furthermore, regardless of server or presonal machine, I would suggest having at least a disc space of 20GB or more. Using module number 2 can also require much greater disc space (100+ GB), but that depends on the size of the genomic data you want to translate, so thats optional.
+A computer running on Linux OS and has ['Conda'](https://docs.conda.io/en/latest/) installed. If you don't have Conda installed, look below for info.
+The tutorial should be a ble to run in a personal computer, but I would suggest running it on a server machine. If your server is using a queing system like ["Slurm"](https://slurm.schedmd.com/documentation.html), I would suggest running the tutorial in an 'interactive session', instead of submitting job queues. In those cases I would also suggest using 32+ GB of RAM for your session, along with a lengthy time limit of 2+ hours. Furthermore, regardless of server or presonal machine, I would suggest having at least a disc space of 20GB or more. Using module number 2 can also require much greater disc space (100+ GB), but that depends on the size of the genomic data you want to translate, so thats optional.
 
 
 <br/><br/>
