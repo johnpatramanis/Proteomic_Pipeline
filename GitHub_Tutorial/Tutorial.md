@@ -61,7 +61,7 @@ mv Proteomic_Pipeline-main Proteomic_Pipeline
 
 <br/><br/>
 
-### Install the Conda environments
+### Install the Conda environments (30 minutes to 2 hours, depending on machine)
 
 To install all 3 sub-Modules of the pipeline enter the `‘Proteomic Pipeline’` folder using
 
@@ -209,7 +209,7 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 
 
-## STEP 1 - Reference Dataset Initialisation
+## STEP 1 - Reference Dataset Initialisation (30 mnutes - 1 hour for the example provided)
 
 <br/><br/>
 ### Activate the first module
@@ -340,7 +340,7 @@ cd ..
 
 
 
-## STEP 2 - Reference Dataset Enrichment / Protein translation
+## STEP 2 - Reference Dataset Enrichment / Protein translation (3+ hours, depending on the speed of the connection. This is due to the size of the genetic data used in the examples.)
 
 <br/><br/> 
 
@@ -408,7 +408,7 @@ We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an
 
 <br/><br/> 
 <br/><br/> 
-## Download and pre-process Neanderthal (VCF files) 
+## Download and pre-process Neanderthal Genetic Data (high quality VCF files - multiple hours to download and pre-process the first time) 
 
 <br/><br/> 
 
@@ -482,7 +482,7 @@ cd ../..
 <br/><br/>
 <br/><br/> 
 
-## Download and pre-process Denisovan (VCF files) 
+## Download and pre-process Denisovan Genetic Data (high quality VCF files - multiple hours to download and pre-process the first time)
 
 <br/><br/> 
 
@@ -547,11 +547,11 @@ cd ../..
 <br/><br/> 
 
 ### Bonus Step
-### Download and pre-process modern humans (SGDP dataset - VCF files) 
+### Download and pre-process modern humans (SGDP dataset - VCF files with a large number of individuals) 
 
 <br/><br/> 
 
-Instead of downloading and processing the Neanderthal & Denisovan VCF files we can use some modern data instead.
+Instead of (or in addition to) downloading and processing the Neanderthal & Denisovan VCF files we can use some modern data instead.
 Below we will download the SGDP data, mapped onto GrCh37. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ 67 GB) so this will still take some time. The benefit however is that there are hundreds of samples in this VCF. In the interest of time however we will only use a handful of them  this tutorial.
 
 ```bash
