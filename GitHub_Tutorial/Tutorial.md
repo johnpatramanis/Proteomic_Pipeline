@@ -126,7 +126,7 @@ conda create -n Analyser  -c bioconda -c conda-forge snakemake phyml mafft mrbay
 <br/><br/>
 
 
-#### If this still doen't get the installation to work, you can try installing it using Conda & Mamba:
+#### If this still doesn't get the installation to work, you can try installing it using Conda & Mamba:
 
 For the first module:
 ```bash
@@ -210,7 +210,7 @@ If all 3 pipelines were installed without an error and the data was successfully
 
 
 
-## STEP 1 - Reference Dataset Initialisation (30 mnutes - 1 hour for the example provided)
+## STEP 1 - Reference Dataset Initialisation (30 minutes - 1 hour for the example provided)
 
 <br/><br/>
 ### Activate the first module
@@ -240,7 +240,7 @@ To use this module of the pipeline we just need two input files:
 
 a) 1 txt file, named ```Proteins.txt``` with the gene names of the proteins we are interested in. For example if we were interested in Enamelin, we would add ```ENAM``` into that file. Only one gene name per line should be provided. If you are interested in a specific [isoform](https://en.wikipedia.org/wiki/Protein_isoform) of a protein, you can select that by adding '::' after the gene name followed by the name of the isoform in Ensembl e.g. ```ENAM::ENAM-202```. If you want to get all possible isoforms follow the same strategy but add the word "ALL" e.g. ```ENAM:ALL```.
 
-b) 1 txt file, named ```Organism.txt``` with the scientific names of the species we are interested in. For this version of the pipeline you can only select from species present in the [Ensembl database](https://www.ensembl.org/info/about/species.html). The species name should be without capital letters and with underscores instead of spaces e.g. ```homo_sapiens```. Once again only one species per line should be provided. Additionally if you want to use a specific reference version/asembly of a species, you can do that. Simply add a tab or a space after the species name and then write the assembly version e.g. ```homo_sapiens GRCh37```. If no specific assembly is provided the latest version of Ensembl will be used. Be aware of the proper name of each assembly as it needs to match pefectly with what Ensembl has in its database (e.g. "GRch37" would not work). You can look some of the assembly names [here](https://www.ensembl.org/info/website/archives/assembly.html). The safest way to find an valid name of an assembly is to look for it in the webpage of a gene: 
+b) 1 txt file, named ```Organism.txt``` with the scientific names of the species we are interested in. For this version of the pipeline you can only select from species present in the [Ensembl database](https://www.ensembl.org/info/about/species.html). The species name should be without capital letters and with underscores instead of spaces e.g. ```homo_sapiens```. Once again only one species per line should be provided. Additionally if you want to use a specific reference version/assembly of a species, you can do that. Simply add a tab or a space after the species name and then write the assembly version e.g. ```homo_sapiens GRCh37```. If no specific assembly is provided the latest version of Ensembl will be used. Be aware of the proper name of each assembly as it needs to match perfectly with what Ensembl has in its database (e.g. "GRch37" would not work). You can look some of the assembly names [here](https://www.ensembl.org/info/website/archives/assembly.html). The safest way to find an valid name of an assembly is to look for it in the webpage of a gene: 
 
 ![alt text](https://github.com/johnpatramanis/Proteomic_Pipeline/blob/main/GitHub_Tutorial/Images/Assembly_Loc.PNG?raw=true)
 
@@ -261,7 +261,7 @@ less Proteins.txt
 less Organism.txt
 ```
 
-As you can see the proteins we will be using are all enamel-related and the organisms are hominids or closely related primates. This is of course on purpose since we are analysing the enamel proteins of extinct hominids. You may want to edit these 2 files and add some proteins or some species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
+As you can see the proteins we will be using are all enamel-related and the organisms are hominids or closely related primates. This is of course on purpose since we are analyzing the enamel proteins of extinct hominids. You may want to edit these 2 files and add some proteins or some species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
 If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html)
 
 ```bash
@@ -275,7 +275,7 @@ This is of course optional and you can also just leave these files as they are a
 
 ### Run the first module
 
-If everything looks fine, its now time to execute the pipeline by simply typing:
+If everything looks fine, it's now time to execute the pipeline by simply typing:
 
 ```bash
 snakemake -j4 --resources FTP=7
@@ -305,7 +305,7 @@ Now save this simple reference dataset we have created, using the shell commands
 ```bash
 cp ./Workspace/3_FASTA_Seqs/All_Sequences.fa Reference_Proteomes.fa
 ```  
-We can now also de-activate Module's 1 environment, since we are done here and moving on to Module 2 and leave the folder.
+We can now also deactivate Module's 1 environment, since we are done here and moving on to Module 2 and leave the folder.
 
 ```bash
 conda deactivate
@@ -347,7 +347,7 @@ cd ..
 
 ### Activate the second module
 
-We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the PaleoProPhyler's 2nd Module. Unfortunatelly this requires downloading some large genomic-data files. First the modern human BAM files are around 15 Gb each. You can try downloading between 1-4 of them. Then, both the Neanderthal and the Denisovan genome (VVCF files) we will download to use, are high coverage (>30x) and thus multiple Gigabits in size. These 2 also require a few edits before they are usable. Finally there are some other modern human VCF files which we can also use in this tutorial. The tutorial will guide you through this process for all of these files but you can choose to only download some of them. If you are not interested in the transaltion part of the pipelines, please move to module number 3. If you translating genomes is your main interest, please follow the steps below to understand the process for each data format.
+We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the PaleoProPhyler's 2nd Module. Unfortunately this requires downloading some large genomic-data files. First the modern human BAM files are around 15 Gb each. You can try downloading between 1-4 of them. Then, both the Neanderthal and the Denisovan genome (VVCF files) we will download to use, are high coverage (>30x) and thus multiple Gigabits in size. These 2 also require a few edits before they are usable. Finally there are some other modern human VCF files which we can also use in this tutorial. The tutorial will guide you through this process for all of these files but you can choose to only download some of them. If you are _not_ interested in the translation part of the pipelines, please move to module number 3. If translating genomes is your main interest, please follow the steps below to understand the process for each data format.
 
 First, activate the module by typing:
 
@@ -374,7 +374,7 @@ https://www.sciencedirect.com/science/article/pii/S0960982217312459?via%3Dihub
 
 
 WARNING: The following few steps download a couple of large files. The minimum disk space that will be required is 200+ GB
-If you have the disk space, proceed as bellow. If not, you can download only **some** of the files or simply move straight to Module 3.
+If you have the disk space, proceed as below. If not, you can download only **some** of the files or simply move straight to Module 3.
 
 <br/><br/> 
 
@@ -392,24 +392,24 @@ do
 done
 mv *.cram Workspace/1_OG_BAM_FILES/
 ```
-If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the '/GitHub_Tutorial/1KG_Samples.txt' file should correspond to one sample. I would suggest trying this tutorila with at least one sample, so removing every line from that file besides the first one. 
+If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the '/GitHub_Tutorial/1KG_Samples.txt' file should correspond to one sample. I would suggest trying this tutorial with at least one sample, so removing every line from that file besides the first one. 
 
 Note: Some servers block access to users downloading files using ftp. This will manifest in the above loop attempting to connect but without success. In these cases you should contact the person responsible for your server. Remember that you need to download genetic data in order to do the translations, but you can always instead move to module 3.
 
 <br/><br/> 
 
 ### Bonus Step
-### Download and pre-process ancient genetic data to translate (VCF files) 
+### Download and preprocess ancient genetic data to translate (VCF files) 
 
 <br/><br/> 
 
-If you want to explore the ability to translate VCF files or are interested in using archaic humans in you dataset, we can additionally download some of the available high coverage archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors, but their VCF files have been more carefully curated and called by the researchers who published then, who specialise in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use (e.g. scroll down a bit to find modern VCF files). Always make sure your VCF file is in a format that is readable with bcftools (```bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it!
+If you want to explore the ability to translate VCF files or are interested in using archaic humans in you dataset, we can additionally download some of the available high coverage archaic human samples. By default I would always suggest using VCF files for ancient DNA samples. Ancient DNA samples tend to contain multiple sequencing errors, but their VCF files have been more carefully curated and called by the researchers who published then, who specialize in this kind of work. The process of downloading and preparing the following VCF files will take some time so feel free to find an alternative VCF file to use (e.g. scroll down a bit to find modern VCF files). Always make sure your VCF file is in a format that is readable with bcftools (```bcftools head VCF_FILE ```), otherwise the pipeline won't be able to precess it!
 
-We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an example, usign the commands that follow.
+We can download and format the VCF files for 1 Neanderthal and 1 Denisovan as an example, using the commands that follow.
 
 <br/><br/> 
 <br/><br/> 
-## Download and pre-process Neanderthal Genetic Data (high quality VCF files - multiple hours to download and pre-process the first time) 
+## Download and preprocess Neanderthal Genetic Data (high quality VCF files - multiple hours to download and preprocess the first time) 
 
 <br/><br/> 
 
@@ -417,7 +417,7 @@ Download the data:
 ```bash
 cd Workspace/0_VCF_FILES/
 ### Download step
-wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Giga bytes )
+wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Gigabytes )
 
 ```
 
@@ -429,7 +429,7 @@ cd ../..
 ```
 
 
-In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be file endign with '.fa' and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
+In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be a file ending with '.fa' and placed inside the appropriate folder named '/Reference/'. You can download the GrCh37 (also known as hg19) reference using:
 
 ```bash
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
@@ -438,7 +438,7 @@ gunzip ./Reference/hg19.fa.gz
 
 <br/><br/> 
 
-The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes (Neanderthal and Denisovan) were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference and don't need to do anything else.
+The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunately the VCF files from the Leipzig repository are a bit difficult to work with and need some preprocessing. We will have to index them and then merge them together ourselves. Finally these 2 genomes (Neanderthal and Denisovan) were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference and don't need to do anything else.
 
 The files are large, so this process will take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
 
@@ -483,7 +483,7 @@ cd ../..
 <br/><br/>
 <br/><br/> 
 
-## Download and pre-process Denisovan Genetic Data (high quality VCF files - multiple hours to download and pre-process the first time)
+## Download and preprocess Denisovan Genetic Data (high quality VCF files - multiple hours to download and preprocess the first time)
 
 <br/><br/> 
 
@@ -491,7 +491,7 @@ Download the data:
 ```bash
 cd Workspace/0_VCF_FILES/
 ### Download step
-wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Giga bytes )
+wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Gigabytes )
 
 ```
 
@@ -505,7 +505,7 @@ cd ../..
 ```
 
 
-In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be file endign with '.fa' and placed inside the appropriate folder named '/Reference/'. Ifyou have already done this for the Neanderthal sample you can ignore this step. You can download the GrCh37 (also known as hg19) reference using:
+In addition to that, translating from a VCF file requires a reference genome which the VCF was created from. VCF files only contain 'variant' positions, so for any non variant position we have no idea what base was there. This is where the reference genomes (fasta file) comes in and fills in the gaps. This file MUST be a file ending with '.fa' and placed inside the appropriate folder named '/Reference/'. If you have already done this for the Neanderthal sample you can ignore this step. You can download the GrCh37 (also known as hg19) reference using:
 
 ```bash
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
@@ -515,7 +515,7 @@ gunzip ./Reference/hg19.fa.gz
 <br/><br/> 
 <br/><br/> 
 
-The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunatelly the VCF files from the Leipzig repository are a bit difficult to work with and need some pre-processing. We will have to index them and then merge them together ourselves. Finally these 2 genomes were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
+The pipeline requires 1 VCF file per sample, where the VCF file should contain genome-wide variation or at least the information for all the locations where the genes of interest are. Unfortunately the VCF files from the Leipzig repository are a bit difficult to work with and need some preprocessing. We will have to index them and then merge them together ourselves. Finally these 2 genomes were mapped onto GrCh37, which is an older version of the human reference genome. However if you followed the steps of module 1, you should have also downloaded the files for that reference.
 
 The files are large, so this process will take a while. You can increase the number of threads wherever possible to make the process faster, if your computer has that capability of course. Alternatively you can use a different modern VCF file that is 'ready to go'. (Scroll down)
 
@@ -548,7 +548,7 @@ cd ../..
 <br/><br/> 
 
 ### Bonus Step
-### Download and pre-process modern humans (SGDP dataset - VCF files with a large number of individuals) 
+### Download and preprocess modern humans (SGDP dataset - VCF files with a large number of individuals) 
 
 <br/><br/> 
 
@@ -569,7 +569,7 @@ rm -rf phased_data2021
 cd ../../
 ```
 
-This is an alternative example on how to translate from a VCF file. The data here is from modern humans and require less pre-processing than the Leipzig VCF files.
+This is an alternative example on how to translate from a VCF file. The data here is from modern humans and require less preprocessing than the Leipzig VCF files.
 The data are mapped on to GrCh37, so we still need to download that reference:
 (If you run this step for the Neanderthal/Denisovan example, you don't need to repeat it)
 ```bash
@@ -585,11 +585,11 @@ gunzip ./Reference/hg19.fa.gz
 <br/><br/>
 #### Prepare input for BAM/CRAM file translation
 
-Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly that the genome was mapped on to. Considering the data we downloaded correspond to different reference genomes (1000 genomes modern humans are mapped onto GrCh38 and the SGDP and archaic humans are mapped onto GrCh37), we have to run the pipeline at least 2 times separately for each reference.
+Now that we have downloaded our datasets we are ready to set up the translation. The translation of a genome requires a number of resources specific to the reference assembly that the genome was mapped on to. Considering the data we downloaded correspond to different reference genomes (1000 genomes of modern humans are mapped onto GrCh38 and the SGDP and archaic humans are mapped onto GrCh37), we have to run the pipeline at least 2 times separately for each reference.
 
 As we just mentioned, translation requires a couple of resources. First we need the location (chromosome/scaffold, position & strand) of the gene that produces the protein. Most genes require splicing, so we also need the exon and intron information. Finally, a reference amino acid sequence of the protein is also necessary. This sounds like a lot, but given that we have run Pipeline 1 for the proteins of interest and the organisms and reference versions of interest (Homo sapiens GRCh37 & GRCh38), all of this data has already been downloaded and is available to us!
 
-In this first example we will deal with the BAM files of the 1000 genomes modern humans, which are mapped onto the  GrCh38 reference.
+In this first example we will deal with the BAM files of the 1000 genomes of modern humans, which are mapped onto the  GrCh38 reference.
 First we need a txt file named ```Organism.txt```, where the organism and reference version for the translation are given. For GRCh38 one is already in place and we can take a look at it with
 
 ```bash
@@ -616,13 +616,13 @@ less Samples.txt
 
 ### Run the second module (Translation)
 
-With these two files set up, we don’t need anything else. Which proteins are being translated though? If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those porteins. You can test-run the pipeline to see if everything is set up with:
+With these two files set up, we don’t need anything else. Which proteins are being translated though? If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those proteins. You can test-run the pipeline to see if everything is set up with:
 
 ```bash
 snakemake -n -r -j4
 ```
 
-You can also take a look at which proteins are being translated by looking into the file 'Gene_locs.txt'. This files also contains the information on the location of the gene that codes the proteins. Take a look into the file by typing:
+You can also take a look at which proteins are being translated by looking into the file 'Gene_locs.txt'. This file also contains the information on the location of the gene that codes the proteins. Take a look into the file by typing:
 
 ```bash
 less Gene_locs.txt
@@ -680,7 +680,7 @@ The samples that you want to translate must be in a file named 'VCF_Samples.txt'
 
 Sample_Name VCF_File_Name Reference_File_Name
 
-The columns are seperated by a tab and all the files must be in their proper folder, VCF inside 'Workspace/0_VCF_FILES/' and the reference fasta inside 'Reference'
+The columns are separated by a tab and all the files must be in their proper folder, VCF inside 'Workspace/0_VCF_FILES/' and the reference fasta inside 'Reference'
 
 Take a look at the file to see:
 ```bash
@@ -839,7 +839,7 @@ Now all we have to do is run the pipeline and wait.
 ```bash
 snakemake -j4
 ```
-Once this finishes running you will have a generated tree for each of your porteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins.
+Once this finishes running you will have a generated tree for each of your proteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins.
 
 <br/><br/>
 <br/><br/>
