@@ -862,8 +862,8 @@ Once this finishes running you will have a generated tree for each of your prote
 | [Nano](https://en.wikipedia.org/wiki/GNU_nano) | A basic Linux tool to edit text files. It's a bit tricky to use at first but suitable for small edits into the text of files in Linux. |
 | [Shell](https://en.wikipedia.org/wiki/Shell_(computing))  | The 'black box' informatics people have open all the time in front of them. Its a tool that uses a basic language to comunicate with your computer. Can do basic things such as moving between directories to more advanced things like searching for patterns inside a document.|
 | [TXT](https://en.wikipedia.org/wiki/Text_file) | One of the most commonly used filetypes. It contains information in the format of letters of text. Can be opened by multiple software including Notepad or Word. |
-| empty | empty |
-| empty | empty |
+| [Reference Genome](https://en.wikipedia.org/wiki/Reference_genome)  | The whole genome of a specific organism. Reference genomes are usefull as a model everyone can point to to describe the genome of an organism. They usually don't have any biological meaning behind them (e.g. it's not the most ancestral genome of a species) and usually correspond to the first individual that was sequenced in high coverage from a species (Human genomes are an exception to this). When genetic variation is described, it's usually against a certain reference genome.|
+| [Reference Proteome](https://en.wikipedia.org/wiki/Proteome) | Similarly to the Reference Genome above, a reference proteome are the sequences of the proteins of an organism that serve as a model for said organism. This term is not used so much, but it describes this section of [Uniprot's Reference Proteomes](https://www.uniprot.org/proteomes/?query=*)|
 
 <br/><br/>
 <br/><br/>
