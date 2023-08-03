@@ -865,7 +865,9 @@ Once this finishes running you will have a generated tree for each of your prote
 | [Shell](https://en.wikipedia.org/wiki/Shell_(computing))  | The 'black box' informatics people have open all the time in front of them. Its a tool that uses a basic language to comunicate with your computer. Can do basic things such as moving between directories to more advanced things like searching for patterns inside a document.|
 | [TXT](https://en.wikipedia.org/wiki/Text_file) | One of the most commonly used filetypes. It contains information in the format of letters of text. Can be opened by multiple software including Notepad or Word. |
 |[VCF](https://en.wikipedia.org/wiki/Variant_Call_Format) | File format that contains genetic data. VCFs are produced (usually from BAM files) by comparing a genome to a _reference genome_ to identify locations on the genome where the two differ. These sites are known as _variant_ sites. The VCF files usually only contain information on variant sites (any site that is the same as the reference genome is omitted). They can contain information from one to hundreds of individuals. VCF files can be opened by txt reading software but are more easily handeld by specialised tools such as 'vcftools'. |
-|[VCF.GZ](https://www.biostars.org/p/59492/) | Exactly the same as a VCF file but more compact packaging. Can only be opened by specific tools like 'vcftools'.|
+|[VCF.GZ](https://www.biostars.org/p/59492/) | Exactly the same as a VCF file but more compact packaging. Can only be opened by specific tools like 'vcftools'. |
+
+
 <br/><br/>
 <br/><br/>
 <br/><br/>
