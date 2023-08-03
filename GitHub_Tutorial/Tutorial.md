@@ -855,9 +855,16 @@ Once this finishes running you will have a generated tree for each of your prote
 | Term  | Description |
 | ------------- | ------------- |
 | [BAM](https://en.wikipedia.org/wiki/Binary_Alignment_Map) | File format. Contains DNA reads that have been aligned onto a reference genome. As the name suggests, its content are in a binary language and thus cannot be read by a human. You can use tools such as bcftools to read, extract or edit its content. |
+| [Conda](https://docs.conda.io/en/latest/)  | "Package, dependency and environment management for any language". Conda is a tool that can install other tools. It's most prominent feature is the ability to detect 'conflicts' between the tools you want to install and other existing software in the computer. |
 | [CRAM](https://en.wikipedia.org/wiki/CRAM_(file_format))  | File format. Its a more compressed version of a BAM file. Works almost the same way.  |
-| [FASTA](https://en.wikipedia.org/wiki/FASTA_format)  | File format that describe one or more sequences of proteins or DNA (or eny other data that uses a sequence of letters). Easy to read and edit, can be opened with any txt editing tool such as the humble Windows notepad  |
-   
+| [FASTA](https://en.wikipedia.org/wiki/FASTA_format)  | File format that describe one or more sequences of proteins or DNA (or eny other data that uses a sequence of letters). Easy to read and edit, can be opened with any txt editing tool such as the humble Windows notepad but also with some specific tools like [Jalview](https://www.jalview.org/) which can provide you with a much nicer way to vissualise the sequences. |
+| [Mamba](https://github.com/mamba-org/mamba) | An upgrade to Conda (requires Conda). More capable and faster at detecting system conflicts. |
+| [Nano](https://en.wikipedia.org/wiki/GNU_nano) | A basic Linux tool to edit text files. It's a bit tricky to use at first but suitable for small edits into the text of files in Linux. |
+| [Shell](https://en.wikipedia.org/wiki/Shell_(computing))  | The 'black box' informatics people have open all the time in front of them. Its a tool that uses a basic language to comunicate with your computer. Can do basic things such as moving between directories to more advanced things like searching for patterns inside a document.|
+| [TXT](https://en.wikipedia.org/wiki/Text_file) | One of the most commonly used filetypes. It contains information in the format of letters of text. Can be opened by multiple software including Notepad or Word. |
+| empty | empty |
+| empty | empty |
+
 <br/><br/>
 <br/><br/>
 <br/><br/>
