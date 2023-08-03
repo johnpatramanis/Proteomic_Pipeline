@@ -850,12 +850,19 @@ Once this finishes running you will have a generated tree for each of your prote
 <br/><br/>
 <br/><br/>
 
+## Glossary
+
+| Term  | Description |
+| ------------- | ------------- |
+| BAM  | Content Cell  |
+| CRAM  | Content Cell  |
+| FASTA  | Content Cell  |
    
 <br/><br/>
 <br/><br/>
 <br/><br/>
 <br/><br/>
-   
+<br/><br/>
 
 
 ## Keeping up to date
