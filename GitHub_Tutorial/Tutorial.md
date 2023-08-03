@@ -854,9 +854,9 @@ Once this finishes running you will have a generated tree for each of your prote
 
 | Term  | Description |
 | ------------- | ------------- |
-| BAM  | Content Cell  |
-| CRAM  | Content Cell  |
-| FASTA  | Content Cell  |
+| [BAM](https://en.wikipedia.org/wiki/Binary_Alignment_Map) | File format. Contains DNA reads that have been aligned onto a reference genome. As the name suggests, its content are in a binary language and thus cannot be read by a human. You can use tools such as bcftools to read, extract or edit its content. |
+| [CRAM](https://en.wikipedia.org/wiki/CRAM_(file_format))  | File format. Its a more compressed version of a BAM file. Works almost the same way.  |
+| [FASTA](https://en.wikipedia.org/wiki/FASTA_format)  | File format that describe one or more sequences of proteins or DNA (or eny other data that uses a sequence of letters). Easy to read and edit, can be opened with any txt editing tool such as the humble Windows notepad  |
    
 <br/><br/>
 <br/><br/>
