@@ -878,14 +878,20 @@ Once this finishes running you will have a generated tree for each of your prote
 
 ## Reporting Issues
 Errors, issues and suggestions can be reported either directly to my current work email : ioannis.patramanis@sund.ku.dk , or more preferably through this github repository's issue page [here](https://github.com/johnpatramanis/Proteomic_Pipeline/issues).
+
 When reporting errors, please include the following information:
+
 a) On which module the error occurs?
+
 b) Was the installation of the module successful?
+
 c) Are there any output file generated?
+
 d) Can you provide a screenshot or a copy of the error message, if there is any.
 
 
-
+<br/><br/>
+<br/><br/>
 
 ## Keeping up to date
 
