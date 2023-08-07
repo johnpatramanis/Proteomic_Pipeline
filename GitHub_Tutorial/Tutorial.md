@@ -839,7 +839,9 @@ Now all we have to do is run the pipeline and wait.
 ```bash
 snakemake -j4
 ```
-Once this finishes running you will have a generated tree for each of your proteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins.
+Once this finishes running you will have a generated tree for each of your proteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins. The full output of the analysis is located within Dataset_Analysis/Workspace/1_OG_Dataset/2_DATASETS/ in a folder with the name of the name of the original fasta dataset, which in our case is 'Reference_Data'.
+
+Inside this folder are located multiple other folders. Most of these folders will have the name and correspond to a single protein used in your analysis (e.g. 'ENAM', 'AMELX'). Inside each one of those folders are a couple of fasta alignment files and the resulting files from a maximum likelihood tree generation. 
 
 ### OPTIONAL - MASKING MODERN SAMPLES AS ANCIENT
 The user has the further optional ability to 'mask' some of the modern samples with the missingness of one of the ancient samples. Modern sample that has been masked with the missingness of an ancient sample will either still be placed in its original clade or be shifted somewhere else, because of the missing data. This may help the user determine the amount of phylogenetic information their ancient samples contain and the effect of the missingness on their phylogenetic palcement. To use the masking option add a simple txt file named 'MASKED' inside the main /Dataset_Analysis/ folder. This file should contain 2 columns seperated by a tab, one with the name of the modern sample you want to mask and one with the name of the ancient sample which you want to copy its missingness.
