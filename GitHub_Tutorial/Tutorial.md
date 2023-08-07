@@ -101,7 +101,7 @@ conda env list
 <br/><br/> 
 <br/><br/> 
 
-#### Installation erros / Alternative Installations
+#### Installation Errors / Alternative Installations
 
 There are some cases where the conda environments provided here cannot be installed. This tends to happen when base conda already has some packages installed. In these cases you will probably get an error in one of the above steps and the environment will not be (properly) installed. Below you will find alternative commands to install each conda environment by manually installing each the necessary tools into a new environment.
 
