@@ -217,7 +217,8 @@ If all 3 pipelines were installed without an error and the data was successfully
 <br/><br/>
 ### Activate the first module
 
-The only sequences we have on our hands right now are the proteins of *H.antecessor* and *G.blacki*. In order to explore their phylogeny, we first need to set up a reference dataset with which we can compare their sequences to. To do that, we can use Module 1 of the pipeline, and create the ‘scaffold’ of a reference dataset. We can do that by using the reference proteomes of different species that we expect to be somewhat related to both *H.antecessor* and *G.blacki*. So let’s get ready to do that.
+The only sequences we have on our hands right now are the proteins of *H.antecessor* and *G.blacki*. In order to explore their phylogeny, we first need to set up a reference dataset with which we can compare their sequences to. We can use the reference proteomes of different species that we expect to be somewhat related to both *H.antecessor* and *G.blacki*. We will use Module 1 of the pipeline, to create the ‘scaffold’ of a reference dataset.  Reference proteomes, like reference genomes, serve as the 'default' representatives of a species. They can be utilised to easily compare organisms with each other and in our case with a new sample of relatively unknown phylogenetic placement. Although practically very useful, reference proteomes cannot represent a species true protein diversity however, which 
+ in the worse case scenario will lead to wrong evolutionary inferences. On the other hand, comparing a single ancient sample with hundreds of (translated) modern proteomes can potentially diminish your phylogenetic signal of a only few amino acids. For now let's focus on creating the representative dataset:
 
 ```bash
 cd ./Dataset_Initialization/
