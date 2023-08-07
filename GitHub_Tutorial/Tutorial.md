@@ -841,7 +841,22 @@ snakemake -j4
 ```
 Once this finishes running you will have a generated tree for each of your proteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins. The full output of the analysis is located within Dataset_Analysis/Workspace/1_OG_Dataset/2_DATASETS/ in a folder with the name of the name of the original fasta dataset, which in our case is 'Reference_Data'.
 
-Inside this folder are located multiple other folders. Most of these folders will have the name and correspond to a single protein used in your analysis (e.g. 'ENAM', 'AMELX'). Inside each one of those folders are a couple of fasta alignment files and the resulting files from a maximum likelihood tree generation. 
+Inside this folder are located multiple other folders. Most of these folders will have the name and correspond to a single protein used in your analysis (e.g. 'ENAM', 'AMELX'). Inside each one of those folders are a couple of fasta alignment files and the resulting files from a maximum likelihood tree generation. The most important files here are: 
+
+a) 'Protein-Name'_aln_e.fa which contains the final alignment of you data for this protein.
+b) 'Protein-Name'_aln_e.phy_phyml_tree.txt which is the phylogenetic tree of this protein in newick format.
+
+Both fasta alignment files and newick trees can be transported and vissualised on your personal computer using some external tools. For fasta files I like to use [Jalview](https://www.jalview.org/) and for newick trees [Figtree](http://tree.bio.ed.ac.uk/software/figtree/). Any viewing tool will do however and there are indeed multiple to choose from!
+
+Most importantly, there is also a single folder named 'CONCATINATED'. This folder contains the results of the concatenation of all the available proteins and the trees generated using that concatenation. All files starting with the name ~CONCATINATED_aln_e.phy~ are a result of the maximum likelihood analysis and all files starting with ~CONCATINATED_o.nex~ are a result of the Bayesian analysis. Again **the most important files** in the folder are:
+
+a) CONCATINATED_o.fa , which contains the final alignment of you data for all the concatenated proteins.
+b) CONCATINATED_o.nex.con.tre and CONCATINATED_aln_e.phy_phyml_tree.txt , which contain the resulting newick tree from the Bayesian and maximum likelihood anaysis accordingly.
+
+And once again, you can transport those files to your personal computer and vissualise them using the tool of your choice. For the phylogenetic trees, make sure you also plot the bootstraps or posterior probabilities so you can understand how much support your phylogeny has. Finally, keep in mind that given the low number of genetic loci (proteins) we are using in palaeoproteomics, all trees we create may not accurately depict the full genetic history of a species.
+
+<br/><br/>
+<br/><br/>
 
 ### OPTIONAL - MASKING MODERN SAMPLES AS ANCIENT
 The user has the further optional ability to 'mask' some of the modern samples with the missingness of one of the ancient samples. Modern sample that has been masked with the missingness of an ancient sample will either still be placed in its original clade or be shifted somewhere else, because of the missing data. This may help the user determine the amount of phylogenetic information their ancient samples contain and the effect of the missingness on their phylogenetic palcement. To use the masking option add a simple txt file named 'MASKED' inside the main /Dataset_Analysis/ folder. This file should contain 2 columns seperated by a tab, one with the name of the modern sample you want to mask and one with the name of the ancient sample which you want to copy its missingness.
