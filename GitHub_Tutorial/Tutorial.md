@@ -832,10 +832,7 @@ All we need to do now is let the pipeline know which datasets we want to run and
 ```bash
 echo Dataset	Ancient_Samples > Datasets.txt
 echo Reference_Data.fa	Atapuerca_H_antecessor > Datasets.txt
-```
-
-
-(OPTIONAL - MASKING MODERN SAMPLES AS ANCIENT)
+``
 
 Now all we have to do is run the pipeline and wait.
 
@@ -843,6 +840,11 @@ Now all we have to do is run the pipeline and wait.
 snakemake -j4
 ```
 Once this finishes running you will have a generated tree for each of your proteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins.
+
+### OPTIONAL - MASKING MODERN SAMPLES AS ANCIENT
+The user has the further optional ability to 'mask' some of the modern samples with the missingness of one of the ancient samples. Modern sample that has been masked with the missingness of an ancient sample will either still be placed in its original clade or be shifted somewhere else, because of the missing data. This may help the user determine the amount of phylogenetic information their ancient samples contain and the effect of the missingness on their phylogenetic palcement. To use the masking option add a simple txt file named 'MASKED' inside the main /Dataset_Analysis/ folder. This file should contain 2 columns seperated by a tab, one with the name of the modern sample you want to mask and one with the name of the ancient sample which you want to copy its missingness.
+
+
 
 <br/><br/>
 <br/><br/>
