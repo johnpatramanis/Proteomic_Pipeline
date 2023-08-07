@@ -849,7 +849,7 @@ b) 'Protein-Name'_aln_e.phy_phyml_tree.txt which is the phylogenetic tree of thi
 
 Both fasta alignment files and newick trees can be transported and vissualised on your personal computer using some external tools. For fasta files I like to use [Jalview](https://www.jalview.org/) and for newick trees [Figtree](http://tree.bio.ed.ac.uk/software/figtree/). Any viewing tool will do however and there are indeed multiple to choose from!
 
-Most importantly, there is also a single folder named 'CONCATINATED'. This folder contains the results of the concatenation of all the available proteins and the trees generated using that concatenation. All files starting with the name ~CONCATINATED_aln_e.phy~ are a result of the maximum likelihood analysis and all files starting with ~CONCATINATED_o.nex~ are a result of the Bayesian analysis. Again **the most important files** in the folder are:
+Most importantly, there is also a single folder named 'CONCATINATED'. This folder contains the results of the concatenation of all the available proteins and the trees generated using that concatenation. All files starting with the name 'CONCATINATED_aln_e.phy' are a result of the maximum likelihood analysis and all files starting with 'CONCATINATED_o.nex' are a result of the Bayesian analysis. Again **the most important files** in the folder are:
 
 a) CONCATINATED_o.fa , which contains the final alignment of you data for all the concatenated proteins.
 
