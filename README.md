@@ -49,8 +49,31 @@ Note *:The links only work if you download the pdf file, unfortunately Github's 
 The pipelines/workflows presented here use, multiple publicly available software. All of the software and packages used by the pipelines are installed through the conda environments available here ( see [Tutorial](GitHub_Tutorial/Tutorial.md) ). For the full list of the software and packages used, check out the last pages of [the supplementary file](GitHub_Tutorial/Supplementary.pdf):
 
 
+<br/><br/>
+<br/><br/>
+
+
 ## User Extentions
 Users with experience in conding/bioinformatics are free to alter, add or remove steps of the pipelines if they see fit. If you do that however and use the altered version of the pipeline in a publication, make sure you record and mention every alteration! I would suggest updating the conda environments with any new software that you add and uploading on Github the entire folder of the altered workflows.
+
+
+<br/><br/>
+<br/><br/>
+
+## Reporting Issues
+Errors, issues and suggestions can be reported either directly to my current work email : ioannis.patramanis@sund.ku.dk , or more preferably through this github repository's issue page [here](https://github.com/johnpatramanis/Proteomic_Pipeline/issues).
+
+When reporting errors, please include the following information:
+
+a) On which module the error occurs?
+
+b) Was the installation of the module successful?
+
+c) Are there any output file generated?
+
+d) Can you provide a screenshot or a copy of the error message, if there is any.
+
+
 
 ## License
 PalaeoProPhyler is released under the [MIT License](LICENSE.md)
