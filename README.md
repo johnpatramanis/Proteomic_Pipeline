@@ -65,13 +65,13 @@ Errors, issues and suggestions can be reported either directly to my current wor
 
 When reporting errors, please include the following information:
 
-a) On which module the error occurs?
+a) On which module does the error occur?
 
 b) Was the installation of the module successful?
 
 c) Are there any output file generated?
 
-d) Can you provide a screenshot or a copy of the error message, if there is any.
+d) Can you please provide a screenshot or a copy of the error message, if there is any.
 
 
 
