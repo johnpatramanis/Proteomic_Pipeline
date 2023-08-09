@@ -207,8 +207,8 @@ rule all:
         #FASTA=expand("Workspace/5_GENE_FASTA_FILES/{sample}_{GENE}.fa",GENE=GENES,sample=SAMPLES),
         #BLAST_RESULTS=expand("Workspace/7_BLASTED_GENES/{sample}_{GENE}_spliced.blast",GENE=GENES,sample=SAMPLES),
         #FINAL_FASTA_RESULTS=expand( "Workspace/8_PROTEINS_FASTAS/{sample}_{GENE}_translated.fa",GENE=GENES,sample=SAMPLES),
-        # ALL_PRTOEINS_ALL_SAMPLES=expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
-        # ALL_SAMPLES_PER_PROTEIN=expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
+        ALL_PRTOEINS_ALL_SAMPLES=expand("Workspace/9_FINAL_OUTPUT/ALL_PROT_REFERENCE.fa"),
+        ALL_SAMPLES_PER_PROTEIN=expand("Workspace/9_FINAL_OUTPUT/PER_PROTEIN/{GENE}_PROT_REFERENCE.fa",GENE=GENES),
         ALL_PROTEINS_PER_SAMPLE=expand("Workspace/9_FINAL_OUTPUT/PER_SAMPLE/{sample}_PROT_REFERENCE.fa",sample=SAMPLES)
 
 
