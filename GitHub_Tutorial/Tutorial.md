@@ -193,7 +193,7 @@ Similarly we can also download and prepare the Gigantopethicus data.
 
 ```bash
 wget https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-019-1728-8/MediaObjects/41586_2019_1728_MOESM3_ESM.txt -O Gigantopethicus_Raw.fa
-cat Gigantopethicus_Raw.fa | sed  's/.\+\(Gigantopithecus\).\+GN=\(.\+\)/\1_\2/' | cut -d ' ' -f 1 > Gigantopethicus.fa
+cat Gigantopethicus_Raw.fa | sed  's/.\+\(Gigantopithecus\).\+GN=\(.\+\)/>\1_\2/' | cut -d ' ' -f 1 > Gigantopethicus.fa
 ```
 
 
