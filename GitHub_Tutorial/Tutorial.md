@@ -397,7 +397,7 @@ FILE="../GitHub_Tutorial/1KG_Samples.txt";
 LINES=$(cat $FILE);
 for SAMPLE in $LINES
 do
-wget --continue --progress=dot:mega --tries=30 --timeout=60 " $SAMPLE "&
+wget --continue --progress=dot:mega --tries=30 --timeout=60 "$SAMPLE"&
 echo Sample Downloaded;
 done;
 mv *.cram Workspace/1_OG_BAM_FILES/
