@@ -181,6 +181,7 @@ END_LINE=$(grep -o -i -n -m 1 Dmanisi_H_ere  PaleoProteome.fa | cut -d ':' -f 1)
 END_LINE=$(expr $END_LINE - 1)
 head -n $END_LINE PaleoProteome.fa > H_antecessor.fa
 sed -i 's/\(>Atapuerca_H_antecessor_.\+\)GN.\+/\1/' H_antecessor.fa
+sed -i 's/ *$//' H_antecessor.fa
 ```
 And the Antecessor is ready to go! You can check the content of the file we just created using 
 ```bash
