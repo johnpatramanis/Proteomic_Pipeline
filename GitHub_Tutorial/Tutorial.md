@@ -838,9 +838,11 @@ All we need to do now is let the pipeline know which datasets we want to run and
 ```bash
 echo Dataset   Ancient_Samples > Datasets.txt
 echo Reference_Data.fa   Atapuerca_H_antecessor >> Datasets.txt
-``
+```
+
 
 Now all we have to do is run the pipeline and wait.
+
 
 ```bash
 snakemake -j4
