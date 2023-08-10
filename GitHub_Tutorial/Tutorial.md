@@ -810,7 +810,7 @@ cd ..
 We now have the paleo-proteomic data ( ```H_antecessor.fa``` & ```Gigantopethicus.fa```) , the reference proteomes from STEP 1 (```Reference_Proteomes.fa```) and the translated sequences from STEP 2( ```Translated.fa``` ), which we can all merge together into the dataset which we want to run a phylogenetic analysis on. If you didn't complete one of the relevant steps, just ignore the command that adds that dataset (e.g. if you didn't run STEP 2, don't run cat Dataset_Construction/Translated.fa >> Reference_Data.fa).
 
 ```bash
-cat H_antecessor.fa >>  Reference_Data.fa
+cat H_antecessor.fa >  Reference_Data.fa
 cat Gigantopethicus.fa >>  Reference_Data.fa
 cat Dataset_Initialization/Reference_Proteomes.fa  >> Reference_Data.fa
 cat Dataset_Construction/Translated.fa >> Reference_Data.fa
