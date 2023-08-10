@@ -396,8 +396,9 @@ FILE="../GitHub_Tutorial/1KG_Samples.txt";
 LINES=$(cat $FILE);
 for SAMPLE in $LINES
 do
-       wget --continue --progress=dot:mega --tries=30 --timeout=60 "$SAMPLE";
-done
+wget --continue --progress=dot:mega --tries=30 --timeout=60 " $SAMPLE "&
+echo Sample Downloaded;
+done;
 mv *.cram Workspace/1_OG_BAM_FILES/
 ```
 If you don't want to download all of them, you can remove some of the links from the ```GitHub_Tutorial/1KG_Samples.txt ``` file and then run the above command block. Each line of the '/GitHub_Tutorial/1KG_Samples.txt' file should correspond to one sample. I would suggest trying this tutorial with at least one sample, so removing every line from that file besides the first one. 
@@ -837,7 +838,7 @@ All we need to do now is let the pipeline know which datasets we want to run and
 
 ```bash
 echo Dataset   Ancient_Samples > Datasets.txt
-echo Reference_Data.fa   Atapuerca_H_antecessor >> Datasets.txt
+echo Reference_Data.fa   Atapuerca_H_antecessor,Gigantopithecus >> Datasets.txt
 ```
 
 
