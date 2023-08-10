@@ -103,7 +103,7 @@ conda env list
 
 #### Installation Errors / Alternative Installations
 
-There are some cases where the conda environments provided here cannot be installed. This tends to happen when base conda already has some packages installed. In these cases you will probably get an error in one of the above steps and the environment will not be (properly) installed. Below you will find alternative commands to install each conda environment by manually installing each the necessary tools into a new environment.
+There are some cases where the conda environments provided here cannot be installed. This tends to happen when base conda already has some packages installed. In these cases you will probably get an error in one of the above steps and the environment will not be (properly) installed. Below you will find alternative commands to install each conda environment by manually installing each the necessary tools into a new environment. If the installation seems to be taking too long (e.g. more than 2 hours) I would suggest terminating it using Control+Z and moving to the next method of installation.
 
 Now, for the first module you can manually install it copying the text below:
 ```bash
@@ -129,12 +129,14 @@ conda create -n Analyser  -c bioconda -c conda-forge snakemake phyml mafft mrbay
 
 
 #### If this still doesn't get the installation to work or the installation seems to be taking **too** long, you can try installing it using Conda & Mamba:
+This installation method ustilises [Mamba](https://github.com/mamba-org/mamba) instead of the base conda to 'solve' which software have incompatibilities.
 
 For the first module:
 ```bash
 conda create -n Initiator -c conda-forge mamba
 conda activate Intiator
 mamba install -c conda-forge -c bioconda snakemake
+conda deactivate
 ```
 
 <br/><br/>
@@ -144,6 +146,7 @@ For the second module:
 conda create -n Translator -c conda-forge mamba
 conda activate Translator
 mamba install -c conda-forge -c bioconda  openssl=1.1 bioconductor-shortread angsd blast samtools bcftools biopython snakemake
+conda deactivate
 ```
 
 <br/><br/>
@@ -153,6 +156,7 @@ For the third module:
 conda create -n Analyser -c conda-forge mamba
 conda activate Analyser
 mamba install -c bioconda -c conda-forge snakemake phyml mafft mrbayes revbayes trimal bioconductor-shortread r-stringr r-data.table r-phyclust seqmagick
+conda deactivate
 ```
 
 <br/><br/>
