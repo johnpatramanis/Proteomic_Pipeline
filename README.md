@@ -55,7 +55,12 @@ The pipelines/workflows presented here use, multiple publicly available software
 
 ## User Extentions
 Users with experience in conding/bioinformatics are free to alter, add or remove steps of the pipelines if they see fit. If you do that however and use the altered version of the pipeline in a publication, make sure you record and mention every alteration! I would suggest updating the conda environments with any new software that you add and uploading on Github the entire folder of the altered workflows.
+<br/><br/>
+<br/><br/>
 
+## Known Issues
+### Module 3:
+It appears the current conda version of MrBayes has some issues running on some server systems. So far it's unclear what the problem is exactly, the tool will install but will not execute. So far, only servers that use Slurm have had this issue. MrBayes has thus been 'turned off' by default in the pipeline. Users can look to the RevBayes output as a Bayesian 'substitute' tool. Users who still want to try running MrBayes however, can turn it back on but removing the '#' on this file: Proteomic_Pipeline/blob/main/Dataset_Analysis/Snakefile on line 134, in their locally installed version of the pipeline.
 
 <br/><br/>
 <br/><br/>
