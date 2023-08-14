@@ -866,11 +866,13 @@ b) 'Protein-Name'_aln_e.phy_phyml_tree.txt which is the phylogenetic tree of thi
 
 Both fasta alignment files and newick trees can be transported and vissualised on your personal computer using some external tools. For fasta files I like to use [Jalview](https://www.jalview.org/) and for newick trees [Figtree](http://tree.bio.ed.ac.uk/software/figtree/). Any viewing tool will do however and there are indeed multiple to choose from!
 
-Most importantly, there is also a single folder named 'CONCATINATED'. This folder contains the results of the concatenation of all the available proteins and the trees generated using that concatenation. All files starting with the name 'CONCATINATED_aln_e.phy' are a result of the maximum likelihood analysis and all files starting with 'CONCATINATED_o.nex' are a result of the Bayesian analysis. Again **the most important files** in the folder are:
+Most importantly, there is also a single folder named 'CONCATINATED'. This folder contains the results of the concatenation of all the available proteins and the trees generated using that concatenation. All files starting with the name 'CONCATINATED_aln_e.phy' are a result of the maximum likelihood analysis. All files starting with 'CONCATINATED_o.nex' are a result of the MrBayes-Bayesian analysis. Finally all files inside the 'output_RevBayes' folder correspond to the RevBayes analysis. Again **the most important files** in the folder are:
 
 a) CONCATINATED_o.fa , which contains the final alignment of you data for all the concatenated proteins.
 
-b) CONCATINATED_o.nex.con.tre and CONCATINATED_aln_e.phy_phyml_tree.txt , which contain the resulting newick tree from the Bayesian and maximum likelihood anaysis accordingly.
+b) CONCATINATED_o.nex.con.tre and CONCATINATED_aln_e.phy_phyml_tree.txt , which contain the resulting newick tree from the MrBayes Bayesian and PhyML maximum likelihood anaysis accordingly.
+
+c) output_RevBayes/CONCATINATED_MAP_rev.trees  which contain the resulting newick tree from the RevBayes Bayesian anaysis.
 
 And once again, you can transport those files to your personal computer and vissualise them using the tool of your choice. For the phylogenetic trees, make sure you also plot the bootstraps or posterior probabilities so you can understand how much support your phylogeny has. Finally, keep in mind that given the low number of genetic loci (proteins) we are using in palaeoproteomics, all trees we create may not accurately depict the full genetic history of a species.
 
