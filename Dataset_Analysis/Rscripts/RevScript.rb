@@ -1,4 +1,4 @@
-# data <- readDiscreteCharacterData("CONCATINATED_o_Rev.nex") #load Elephant data - concatenated
+data <- readDiscreteCharacterData("CONCATINATED_o_Rev.nex") #load nexus data
 
 ## Helpful integers
 num_taxa <- data[1].ntaxa()
@@ -88,7 +88,7 @@ monitors.append( mnScreen(printgen=10, TL) )
 
 ## Run MCMC
 mymcmc = mcmc(mymodel, monitors, moves, nruns=2, combine="mixed")
-mymcmc.run(generations=50000, tuningInterval=100, checkpointInterval=100, checkpointFile="output_RevBayes/CONCATINATED_rev.state")
+mymcmc.run(generations=20000, tuningInterval=100, checkpointInterval=100, checkpointFile="output_RevBayes/CONCATINATED_rev.state")
 
 #### Restart from checkpoint
 #### mymcmc.initializeFromCheckpoint("output/primates_cytb_JC.state")
