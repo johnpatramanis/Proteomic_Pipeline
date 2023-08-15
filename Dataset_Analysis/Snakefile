@@ -478,11 +478,27 @@ rule Run_MrBayes_Concatenated_Genes:
         ###### \nstoprule=yes; \nmcmcp stopval=0.01;
 
 
+
+
+
+rule Generate_RevBayes_NEXUS_format:
+    input:
+        'Workspace/2_DATASETS/{sample}/NEXUS_Concatenated_Genes_Done'
+    output:
+        'Workspace/2_DATASETS/{sample}/NEXUS_RB_Concatenated_Genes_Done'
+    threads:1
+    
+    run:
+        shell("""cp Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o.nex Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o_Rev.nex""")
+        shell("""cat Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/Partition_Helper_RB >> Workspace/2_DATASETS/{wildcards.sample}/CONCATINATED/CONCATINATED_o_Rev.nex""")
+        shell("""touch Workspace/2_DATASETS/{wildcards.sample}/NEXUS_RB_Concatenated_Genes_Done; """)
+
+
 ## 
 # Do a RevBayes run on the concatenated dataset
 rule Run_RevBayes_Concatenated_Genes:
     input:
-        'Workspace/2_DATASETS/{sample}/NEXUS_Concatenated_Genes_Done'
+        'Workspace/2_DATASETS/{sample}/NEXUS_RB_Concatenated_Genes_Done'
     output:
         'Workspace/2_DATASETS/{sample}/RevBayes_Concatenated_Genes_Done'
     threads: 16
