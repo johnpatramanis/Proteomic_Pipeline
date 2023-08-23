@@ -814,6 +814,8 @@ cd ..
 
 ## STEP 3 - Phylogenetic Analysis
 
+### Data preparation
+
 We now have the paleo-proteomic data ( ```H_antecessor.fa``` & ```Gigantopethicus.fa```) , the reference proteomes from STEP 1 (```Reference_Proteomes.fa```) and the translated sequences from STEP 2( ```Translated.fa``` ), which we can all merge together into the dataset which we want to run a phylogenetic analysis on. If you didn't complete one of the relevant steps, just ignore the command that adds that dataset (e.g. if you didn't run STEP 2, don't run cat Dataset_Construction/Translated.fa >> Reference_Data.fa).
 
 ```bash
@@ -831,7 +833,7 @@ This ```Reference_Data.fa``` is the fasta file we will use for the phylogenetic 
 less Reference_Data.fa
 ```
 
-Notice that each sequence follows the same pattern of Sample-name_Protein-name . This is very important as this will allow the next pipeline to understand which sequences correspond to which sample and which protein. All of the sequences we have generated and collected follow this pattern. If any additional sequences should be added, they must also follow this format if they are to be utilized properly. 
+Notice that each sequence follows the same pattern of Sample-name_Protein-name. The sample name is followed by and underscore and finally the name of the protein. If there is anything following the protein name (e.g. Human_AMELX**_400AA**), it should be removed. This is **very important**, as this will allow the next pipeline to understand which sequences correspond to which sample and which protein. All of the sequences we have generated and collected follow this pattern. If any additional sequences should be added, they must also follow this format if they are to be utilized properly. 
 
 Now let's move onto the final pipeline and run the phylogeny.
 
@@ -856,6 +858,10 @@ Now all we have to do is run the pipeline and wait.
 ```bash
 snakemake -j4
 ```
+
+
+### Output files and data visualisation
+
 Once this finishes running you will have a generated tree for each of your proteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins. The full output of the analysis is located within Dataset_Analysis/Workspace/1_OG_Dataset/2_DATASETS/ in a folder with the name of the name of the original fasta dataset, which in our case is 'Reference_Data'.
 
 Inside this folder are located multiple subfolders. Most of these subfolders will have the name and correspond to a single protein used in your analysis (e.g. 'ENAM', 'AMELX'). Inside each one of those folders are a couple of fasta alignment files and the resulting files from a maximum likelihood tree generation. The most important files here are: 
@@ -879,7 +885,7 @@ And once again, you can transport those files to your personal computer and viss
 <br/><br/>
 <br/><br/>
 
-### OPTIONAL - MASKING MODERN SAMPLES AS ANCIENT
+### OPTIONAL - Masking modern samples as ancient
 The user has the further optional ability to 'mask' some of the modern samples with the missingness of one of the ancient samples. Modern sample that has been masked with the missingness of an ancient sample will either still be placed in its original clade or be shifted somewhere else, because of the missing data. This may help the user determine the amount of phylogenetic information their ancient samples contain and the effect of the missingness on their phylogenetic palcement. To use the masking option add a simple txt file named 'MASKED' inside the main /Dataset_Analysis/ folder. This file should contain 2 columns seperated by a tab, one with the name of the modern sample you want to mask and one with the name of the ancient sample which you want to copy its missingness.
 
 
