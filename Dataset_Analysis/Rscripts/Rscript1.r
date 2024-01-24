@@ -46,11 +46,20 @@ for(i in 1:length(genes)){
 	
 	
 	#### Isolate Selected Ancient Samples from modern
-	AS=c()
-	for (S in samples){
+	AS=c() #List of ancient samples, to be filled
+	All_Sample_Names=c() ### sperate names of samples into a different list
+	for(ZNM in names(curfa)){
+		nm_here=strsplit(ZNM,'_') #split sample name from protein name
+		nm_here=nm_here[[1]][-length(nm_here[[1]])]
+		nm_here=paste(nm_here, collapse = '_')
+		
+		All_Sample_Names=c(All_Sample_Names,nm_here)
+	}
 	
-		AS=c(AS,grep(S, names(curfa)))
-
+	
+	#### Isolate ancient samples from modern ones into their own dataset
+	for (S in samples){
+		AS=c(AS,which(All_Sample_Names==S))
 		}
 	
 	
