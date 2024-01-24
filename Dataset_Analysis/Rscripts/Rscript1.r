@@ -16,6 +16,7 @@ samples<-readLines("Samples.txt") #In the 2_DATASETS appropriate folder
 
 mainDir <- getwd()
 
+
 for(i in 1:length(genes)){
 	
 	
@@ -73,6 +74,11 @@ for(i in 1:length(genes)){
 	cursa<-curfa[AS]
 	curva<-curfa[-AS]
 
+	
+	##### Remove Duplicate entries
+	curfa=curfa[!duplicated(names(curfa))]
+	cursa=cursa[!duplicated(names(cursa))]
+	curva=curva[!duplicated(names(curva))]
 	
 	
 
