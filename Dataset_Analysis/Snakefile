@@ -61,6 +61,8 @@ for DATASET,ANC_SAMPLES in DATASETS.items():
 
             TOTAL_GENES=[]
             
+            DUPLICATES_CHECK_LIST=[]
+            
             for SAMPLE in SAMPLES:
                 REF_FASTA=open('Workspace/1_OG_Dataset/{}.{}'.format(DATASET,ENDING_EXT[DATASET]),'r')
                 for line in REF_FASTA:
