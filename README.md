@@ -4,7 +4,7 @@
 
 ## What is this?
 
-Here you will find all the code needed to run the *PaleoProPhyler*.
+Here you will find all the code needed to run *PaleoProPhyler*.
 PaleoProPhyler is a compliation of pipelines to enable easier and more reproducable paleoproteomic phylogenetic analyses.
 These pipelinese take the form of Snakemake scripts coupled with Conda enviroments and below you can find a step by step tutorial on how to run them on your local linux machine or your labs server!
 
