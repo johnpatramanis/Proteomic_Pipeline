@@ -868,7 +868,7 @@ snakemake -j4
 
 ### Output files and data visualisation
 
-Once this finishes running you will have a generated tree for each of your proteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins. The full output of the analysis is located within Dataset_Analysis/Workspace/1_OG_Dataset/2_DATASETS/ in a folder with the name of the name of the original fasta dataset, which in our case is 'Reference_Data'.
+Once this finishes running you will have a generated tree for each of your proteins individually, as well as one Maximum Likelihood and one Bayesian species from the concatenation of these proteins. The full output of the analysis is located within Dataset_Analysis/Workspace/2_DATASETS/ in a folder with the name of the name of the original fasta dataset, which in our case is 'Reference_Data'.
 
 Inside this folder are located multiple subfolders. Most of these subfolders will have the name and correspond to a single protein used in your analysis (e.g. 'ENAM', 'AMELX'). Inside each one of those folders are a couple of fasta alignment files and the resulting files from a maximum likelihood tree generation. The most important files here are: 
 
@@ -892,7 +892,7 @@ And once again, you can transport those files to your personal computer and viss
 <br/><br/>
 
 ### OPTIONAL - Masking modern samples as ancient
-The user has the further optional ability to 'mask' some of the modern samples with the missingness of one of the ancient samples. Modern sample that has been masked with the missingness of an ancient sample will either still be placed in its original clade or be shifted somewhere else, because of the missing data. This may help the user determine the amount of phylogenetic information their ancient samples contain and the effect of the missingness on their phylogenetic palcement. To use the masking option add a simple txt file named 'MASKED' inside the main /Dataset_Analysis/ folder. This file should contain 2 columns seperated by a tab, one with the name of the modern sample you want to mask and one with the name of the ancient sample which you want to copy its missingness.
+The user has the further optional ability to 'mask' some of the modern samples with the missingness of one of the ancient samples. Modern sample that has been masked with the missingness of an ancient sample will either still be placed in its original clade or be shifted somewhere else, because of the missing data. This may help the user determine the amount of phylogenetic information their ancient samples contain and the effect of the missingness on their phylogenetic palcement. To use the masking option add a simple txt file named 'MASKED' inside the main /Dataset_Analysis/ folder. This file should contain 2 columns seperated by a tab or space (any ['whitespace'](https://en.wikipedia.org/wiki/Whitespace_character)), one with the name of the modern sample you want to mask and one with the name of the ancient sample which you want to copy its missingness.
 
 
 
