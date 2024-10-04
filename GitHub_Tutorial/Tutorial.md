@@ -616,9 +616,9 @@ less Organism.txt
 Then we need a list of the samples we want to translate, in the form of a txt file named ‘Samples.txt’. Since all of them are CRAM files inside the folder ```Dataset_Construction/Workspace/1_OG_BAM_FILES/``` we can use:
 
 ```bash
-ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.cram | cut -d '.'  -f 1 > Samples.txt
+ls Dataset_Construction/Workspace/1_OG_BAM_FILES/*.cram | cut -d '/'  -f 4 | cut -d '.' -f 1,2> Samples.txt
 ```
-Note: if you never downloaded the 1000 genomes cram files, the above command will not work.
+Note: The above command will only work, if you have downloaded at least one of the 1000 genomes cram files. It is also tailored to work with those cram file specifically. 
 
 
 Notice that for the list the file extension should not be mentioned, just the name of the bam file.
@@ -627,13 +627,19 @@ We can take a look at how the file looks with:
 ```bash
 less Samples.txt
 ```
-
+For example if you want to translate a file named NA20752.final.cram, you need to first place that cram file inside the '''1_OG_BAM_FILES''' folder then write '''NA20752.final''' as a line inside the '''Dataset_Construction/Samples.txt''' file.
 
 <br/><br/> 
 
 ### Run the second module (Translation)
 
-With these two files set up, we don’t need anything else. Which proteins are being translated though? If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those proteins. You can test-run the pipeline to see if everything is set up with:
+With these two files set up, we don’t need anything else. Which proteins are being translated though? If we have successfully run Pipeline 1 for the proteins of interest, then Pipeline 2 will translate those proteins. If you are not inside the '''Dataset_Construction''' folder, enter it using:
+
+```bash
+cd Dataset_Construction
+```
+
+You can test-run the pipeline to see if everything is set up with:
 
 ```bash
 snakemake -n -r -j4
