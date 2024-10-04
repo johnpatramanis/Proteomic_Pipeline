@@ -276,7 +276,7 @@ less Proteins.txt
 less Organism.txt
 ```
 
-As you can see the proteins we will be using are all enamel-related and the organisms are hominids or closely related primates. This is of course on purpose since we are analyzing the enamel proteins of extinct hominids. You may want to edit these 2 files and add some proteins or some species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
+As you can see, the proteins we will be using are all enamel-related and the organisms are hominids or closely related primates. This is of course on purpose, since we are analyzing the enamel proteome of extinct hominids. You may want to edit these 2 files and add some proteins or some other species using [nano](https://help.ubuntu.com/community/Nano), or any other linux text editor:
 If you have never used nano you can [click here for some help with the commands for it](https://www.nano-editor.org/dist/latest/cheatsheet.html)
 
 ```bash
@@ -284,7 +284,7 @@ nano Proteins.txt
 nano Organism.txt
 ```
 
-This is of course optional and you can also just leave these files as they are and move one.
+This is of course optional and you can also just leave these files as they are and move one. Remember not leave any empty lines in either of these 2 files. If for example you leave the last line of Proteins.txt empty, the tool will consider this the entry of a protein named ' ' and will try to find it, causing issues.
 
 <br/><br/> 
 
