@@ -1,4 +1,4 @@
-DenisovaPinky	Denisovan.vcf.gz	hg19.fa
+Denisova	Denisovan.vcf.gz	hg19.fa
 AltaiNea	Altai.vcf.gz	hg19.fa
 S_Iranian-1.DG	SGDP.vcf.gz	hg19.fa
 S_Russian-1.DG	SGDP.vcf.gz	hg19.fa
