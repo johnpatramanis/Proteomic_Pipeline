@@ -434,14 +434,14 @@ Download the data:
 ```bash
 cd Workspace/0_VCF_FILES/
 ### Download step
-wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/;    ###( 70 Gigabytes )
+wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/Vindija/VCF/Altai/;    ###( 70 Gigabytes )
 
 ```
 
 Check that the files are are in there and go back to the main repository
 
 ```bash
-ls VCF/
+ls Altai/
 cd ../..
 ```
 
@@ -462,12 +462,10 @@ The files are large, so this process will take a while. You can increase the num
 ```bash
 #### For Neanderthal
 
-cd Workspace/0_VCF_FILES/VCF/
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT nonchrom; do bcftools index -f AltaiNea.hg19_1000g.$i.mod.vcf.gz --threads 4; done
-ls AltaiNea.hg19_1000g.*.mod.vcf.gz > Altai.txt
+cd Workspace/0_VCF_FILES/
+ls Altai/chr*vcf.gz > Altai.txt
 bcftools concat -f Altai.txt -Oz -o Altai.vcf.gz --threads 4
-cd ..
-mv VCF/Altai.vcf.gz ./
+
 ```
 
 
@@ -479,7 +477,7 @@ Now lets check that the sample works:
 bcftools head  Altai.vcf.gz
 
 #### If the above prints something, it worked, remove original vcf files
-rm -rf VCF
+rm -rf Altai
 
 #### Go back to main directory
 clear
