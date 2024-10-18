@@ -508,7 +508,7 @@ Download the data:
 ```bash
 cd Workspace/0_VCF_FILES/
 ### Download step
-wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/denisova/VCF/hg19_1000g/;  ####(54 Gigabytes )
+wget -r -np -nH --cut-dirs=3 -R index.html http://cdna.eva.mpg.de/neandertal/Vindija/VCF/Denisova/;  ####(54 Gigabytes )
 
 ```
 
@@ -516,7 +516,7 @@ Check that the files are are in there and go back to the main repository
 
 ```bash
 
-ls T_hg19_1000g.*.mod.vcf.gz
+ls Denisova/chr*vcf.gz
 cd ../..
 
 ```
@@ -539,7 +539,7 @@ The files are large, so this process will take a while. You can increase the num
 ```bash
 ##### For Denisovan
 cd Workspace/0_VCF_FILES/
-ls T_hg19_1000g.*.mod.vcf.gz > Denisovan.txt
+ls Denisova/chr*vcf.gz > Denisovan.txt
 bcftools concat -f Denisovan.txt -Oz -o Denisovan.vcf.gz --threads 4
 
 ```
@@ -553,7 +553,7 @@ Now lets check that the sample works:
 bcftools head  Denisovan.vcf.gz
 
 #### If the above prints something, it worked, remove original vcf files
-rm -rf T_hg19_1000g.*.mod.vcf.gz*
+rm -rf Denisova
 
 
 #### Go back to main directory
