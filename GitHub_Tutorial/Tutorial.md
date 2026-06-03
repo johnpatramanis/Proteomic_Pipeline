@@ -568,18 +568,13 @@ cd ../..
 <br/><br/> 
 
 Instead of (or in addition to) downloading and processing the Neanderthal & Denisovan VCF files we can use some modern data instead.
-Below we will download the SGDP data, mapped onto GrCh37. All they need is to be merged into one VCF file. The size of the total VCFs is still quite large (~ 67 GB) so this will still take some time. The benefit however is that there are hundreds of samples in this VCF. In the interest of time however we will only use a handful of them  this tutorial.
+Below we will download the SGDP data, mapped onto GrCh37. The size of the total VCFs is still quite large (~ 67 GB) so this will still take some time. The benefit however is that there are hundreds of samples in this VCF. In the interest of time however we will only use a handful of them  this tutorial.
 
 ```bash
 cd Workspace/0_VCF_FILES/
 
-wget -r -np -nH --cut-dirs=3 -R index.html https://sharehost.hms.harvard.edu/genetics/reich_lab/sgdp/phased_data2021/;
-cd phased_data2021/
-ls chr.sgdp.pub.*.bcf > SGDP.txt
-bcftools concat -f SGDP.txt -o SGDP.vcf.gz -Oz
-cd ..
-mv phased_data2021/SGDP.vcf.gz ./
-rm -rf phased_data2021
+wget -r -np -nH  https://hgdownload.soe.ucsc.edu/gbdb/hg38/phasedVars/hgdp/hgdp_wgs.20190516.full.vcf.gz;
+mv hgdp_wgs.20190516.full.vcf.gz SGDP.vcf.gz
 
 cd ../../
 ```
