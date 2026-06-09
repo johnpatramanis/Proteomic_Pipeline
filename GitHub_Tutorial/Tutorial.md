@@ -362,7 +362,7 @@ cd ..
 
 ### Activate the second module
 
-We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the PaleoProPhyler's 2nd Module. Unfortunately this requires downloading some large genomic-data files. First the modern human BAM files are around 15 Gb each. You can try downloading between 1-4 of them. Then, both the Neanderthal and the Denisovan genome (VVCF files) we will download to use, are high coverage (>30x) and thus multiple Gigabits in size. These 2 also require a few edits before they are usable. Finally there are some other modern human VCF files which we can also use in this tutorial. The tutorial will guide you through this process for all of these files but you can choose to only download some of them. If you are _not_ interested in the translation part of the pipelines, please move to module number 3. If translating genomes is your main interest, please follow the steps below to understand the process for each data format.
+We now have the ‘scaffold’ of our reference dataset ready and if we wanted to, we could move straight on to STEP 3 and generate a tree from it. However the purpose of this tutorial is to also go through STEP 2 and ‘enhance’ our scaffold dataset with protein data translated from available genomic data. To do this we can use the PaleoProPhyler's 2nd Module. Unfortunately this requires downloading some large genomic-data files. First the modern human BAM files are around 15 Gb each. You can try downloading between 1-4 of them. Then, both the Neanderthal and the Denisovan genome (VCF files) we will download to use, are high coverage (>30x) and thus multiple Gigabits in size. These 2 also require a few edits before they are usable. Finally there are some other modern human VCF files which we can also use in this tutorial. The tutorial will guide you through this process for all of these files but you can choose to only download some of them. If you are _not_ interested in the translation part of the pipelines, please move to module number 3. If translating genomes is your main interest, please follow the steps below to understand the process for each data format.
 
 First, activate the module by typing:
 
@@ -580,11 +580,11 @@ cd ../../
 ```
 
 This is an alternative example on how to translate from a VCF file. The data here is from modern humans and require less preprocessing than the Leipzig VCF files.
-The data are mapped on to GrCh37, so we still need to download that reference:
-(If you run this step for the Neanderthal/Denisovan example, you don't need to repeat it)
+The data are mapped on to GrCh38, so we still need to download that reference fasta too:
+
 ```bash
-wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz -P ./Reference/
-gunzip ./Reference/hg19.fa.gz
+wget https://hgdownload.gi.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz -P ./Reference/
+gunzip ./Reference/hg38.fa.gz
 ```
 
 
